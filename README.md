@@ -8,13 +8,13 @@ A (somewhat) comprehensive list of commands to get started.
 
 ### 1. Install Python dependencies & run server
 
-When you cd into the project, the shell should show that it is loading the .env file. Type 'y' to accept and that should automatically activate the virtual environment.
-
 Run the following command to install all the necessary requirements to run this project. 
 ```shell
 > pip install -r requirements.txt
 > virtualenv CS542
 ```
+
+Go up a directory. When you cd back into the project, the shell should show that it is loading the .env file. Type 'y' to accept and that should automatically activate the virtual environment and set the enviornment variables.
 
  We are using Postgres for our database and Alembic to migrate and update the schema. To configure the project to use a local Postgres database , open the .env file and change the DATABASE_URL as so,
 ```
