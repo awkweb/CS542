@@ -42,10 +42,10 @@ Finally, to get some data loaded into your database, run
 
 ```
 postgres=# COPY employee(first, last, address, phone, email, city, state, zipcode) 
-postgres=# FROM '/path/to/employees.csv' 
+postgres=# FROM '/path/to/data/employees.csv' 
 postgres=# DELIMITER ',' CSV HEADER;
 postgres=# COPY dish(name, desc, cost, category, spicy_level, time_to_cook) 
-postgres=# FROM '/path/to/dishes.csv' 
+postgres=# FROM '/path/to/data/dishes.csv' 
 postgres=# DELIMITER ',' CSV HEADER;
 ```
 

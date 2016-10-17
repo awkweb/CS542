@@ -11,7 +11,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
 from models import *
-from manager import *
+from exceptions import *
 
 @app.errorhandler(404)
 def not_found(error=None):
@@ -24,8 +24,14 @@ def not_found(error=None):
 
     return resp
 
+@app.errorhandler(CustomException)
+def handleNotFound(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
+
 @app.route('/employee/add', methods=['POST'])
-def hello():
+def addEmployee():
 	if request.method == 'POST':
 		empJson = request.get_json(force=True)
 		employee = Employee( \
@@ -41,6 +47,30 @@ def hello():
 		db.session.add(employee)
 		db.session.commit()
 		return employee.toJSON()
+	else:
+		return not_found()
+
+@app.route('/employee/delete/<id>', methods=['DELETE'])
+def deleteEmployee(id):
+	if request.method == 'DELETE':
+		employee = Employee.query.filter_by(id=id).first()
+		if employee is not None:
+			Employee.query.filter_by(id=id).delete()
+			db.session.commit()
+			return '', 204
+		else:
+			raise CustomException('Employee was not found.', 404)
+	else:
+		return not_found()
+
+@app.route('/employee/<id>', methods=['GET'])
+def getEmployee(id):
+	if request.method == 'GET':
+		employee = Employee.query.filter_by(id=id).first()
+		if employee is not None:
+			return employee.toJSON()
+		else:
+			raise CustomException('Employee was not found.', 404)
 	else:
 		return not_found()
 
