@@ -6,7 +6,7 @@ Fall 2016 database management systems project
 
 A (somewhat) comprehensive list of commands to get started.
 
-### 1. Install Python dependencies & run server
+### 1. Setup for Python and Postgres
 
 Run the following command to install all the necessary requirements to run this project. 
 ```shell
@@ -37,6 +37,26 @@ postgres=# \c [dbname]
 postgres=# \dt
 ```
 This should result in a list of the tables in the database. 
+
+Finally, to get some data loaded into your database, run 
+
+```
+postgres=# COPY employee(first, last, address, phone, email, city, state, zipcode) 
+postgres=# FROM '/path/to/employees.csv' 
+postgres=# DELIMITER ',' CSV HEADER;
+postgres=# COPY dish(name, desc, cost, category, spicy_level, time_to_cook) 
+postgres=# FROM '/path/to/dishes.csv' 
+postgres=# DELIMITER ',' CSV HEADER;
+```
+
+If it isn't clear, the 'path/to/...' is whatever the path to the csv file is. 
+
+To view your sucessfully preloaded data, run
+
+```
+postgres=# select * from employee;
+```
+
 
 ### 2. Install NPM dependencies, ready for development
 
