@@ -30,6 +30,49 @@ def handleNotFound(error):
     response.status_code = error.status_code
     return response
 
+@app.route('/dish/add', methods=['POST'])
+def addDish():
+	if request.method == 'POST':
+		dishJson = request.get_json(force=True)
+		dish = Dish( \
+			dishJson['name'], \
+			dishJson['description'], \
+			float(dishJson['cost']), \
+			dishJson['category'], \
+			int(dishJson['spicy_level']) \
+		)
+		db.session.add(dish)
+		db.session.commit()
+		return dish.toJSON()
+	else:
+		return not_found()
+
+@app.route('/dish/delete', methods=['DELETE'])
+def deleteDish():
+	id = request.args.get('id')
+	if request.method == 'DELETE' and id is not None:
+		dish = Dish.query.filter_by(id=id).first()
+		if dish is not None:
+			Dish.query.filter_by(id=id).delete()
+			db.session.commit()
+			return '', 204
+		else:
+			raise CustomException('Dish was not found.', 404)
+	else:
+		return not_found()
+
+@app.route('/dish', methods=['GET'])
+def getDish():
+	id = request.args.get('id')
+	if request.method == 'GET' and id is not None:
+		dish = Dish.query.filter_by(id=id).first()
+		if dish is not None:
+			return dish.toJSON()
+		else:
+			raise CustomException('Dish was not found.', 404)
+	else:
+		return not_found()
+
 @app.route('/employee/add', methods=['POST'])
 def addEmployee():
 	if request.method == 'POST':
@@ -50,9 +93,10 @@ def addEmployee():
 	else:
 		return not_found()
 
-@app.route('/employee/delete/<id>', methods=['DELETE'])
-def deleteEmployee(id):
-	if request.method == 'DELETE':
+@app.route('/employee/delete', methods=['DELETE'])
+def deleteEmployee():
+	id = request.args.get('id')
+	if request.method == 'DELETE' and id is not None:
 		employee = Employee.query.filter_by(id=id).first()
 		if employee is not None:
 			Employee.query.filter_by(id=id).delete()
@@ -63,9 +107,10 @@ def deleteEmployee(id):
 	else:
 		return not_found()
 
-@app.route('/employee/<id>', methods=['GET'])
-def getEmployee(id):
-	if request.method == 'GET':
+@app.route('/employee', methods=['GET'])
+def getEmployee():
+	id = request.args.get('id')
+	if request.method == 'GET' and id is not None:
 		employee = Employee.query.filter_by(id=id).first()
 		if employee is not None:
 			return employee.toJSON()

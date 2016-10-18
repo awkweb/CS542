@@ -8,23 +8,30 @@ class Dish(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String())
-    desc = db.Column(db.String())
+    description = db.Column(db.String())
     cost = db.Column(db.Float(precision=2))
     category = db.Column(db.String())
     spicy_level = db.Column(db.Integer)
-    time_to_cook = db.Column(db.Integer)
     order_dishes=db.relationship('Order_Dish', backref='dishes', lazy='dynamic')
 
-    def __init__(self, name, desc, cost, category, spicy_level, time_to_cook):
-        self.name = d_name
-        self.desc = d_desc
-        self.cost = d_cost
+    def __init__(self, name, description, cost, category, spicy_level):
+        self.name = name
+        self.description = description
+        self.cost = cost
         self.category = category
         self.spicy_level = spicy_level
-        self.time_to_cook = time_to_cook
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
+
+    def toJSON(self):
+        return jsonify({'id':self.id, \
+            'name': self.name, \
+            'description': self.description, \
+            'cost': self.cost, \
+            'category': self.category, \
+            'spicy_level': self.spicy_level \
+        })
 
 class Customer(db.Model):
     __tablename__ = 'customer'
@@ -71,14 +78,14 @@ class Promotion(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     discount = db.Column(db.Float(precision=2))
-    desc = db.Column(db.String())
+    description = db.Column(db.String())
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)
     bills=db.relationship('Bill', backref='prom', lazy='dynamic')
     
-    def __init__(self, discount, desc, start_date, end_date):
+    def __init__(self, discount, description, start_date, end_date):
         self.discount = discount
-        self.desc = desc
+        self.description = description
         self.start_date = start_date
         self.end_date = end_date
         
@@ -154,7 +161,7 @@ class Bill(db.Model):
     pay_id = db.Column(db.Integer, db.ForeignKey('payment.id'))
     seats = db.relationship('Orders', backref='bill', lazy='dynamic')
                                                
-    def __init__(self, ttl_cost, prom_id, pay_id):
+    def __init__(self, ttl_cost, prom_id=None, pay_id=None):
         self.ttl_cost = ttl_cost
         self.prom_id = prom_id
         self.pay_id = pay_id
