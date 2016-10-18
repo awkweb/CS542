@@ -24,15 +24,6 @@ class Dish(db.Model):
     def __repr__(self):
         return '<id {}>'.format(self.id)
 
-    def toJSON(self):
-        return jsonify({'id':self.id, \
-            'name': self.name, \
-            'description': self.description, \
-            'cost': self.cost, \
-            'category': self.category, \
-            'spicy_level': self.spicy_level \
-        })
-
 class Customer(db.Model):
     __tablename__ = 'customer'
 
@@ -118,17 +109,6 @@ class Employee(db.Model):
                                                
     def __repr__(self):
         return '<id {}>'.format(self.id)
-
-    def toJSON(self):
-        return jsonify({'id':self.id, \
-            'first': self.first, \
-            'last': self.last, \
-            'address': self.address, \
-            'phone': self.phone, \
-            'email': self.email, \
-            'city': self.city, \
-            'state': self.state, \
-            'zipcode': self.zipcode })
      
 class Payment(db.Model):
     __tablename__ = 'payment'
@@ -159,9 +139,9 @@ class Bill(db.Model):
     ttl_cost = db.Column(db.Float(precision=2))
     prom_id = db.Column(db.Integer, db.ForeignKey('promotion.id'))
     pay_id = db.Column(db.Integer, db.ForeignKey('payment.id'))
-    seats = db.relationship('Orders', backref='bill', lazy='dynamic')
+    orders = db.relationship('Orders', backref='bill', lazy='dynamic')
                                                
-    def __init__(self, ttl_cost, prom_id=None, pay_id=None):
+    def __init__(self, ttl_cost=0, prom_id=None, pay_id=None):
         self.ttl_cost = ttl_cost
         self.prom_id = prom_id
         self.pay_id = pay_id
@@ -181,7 +161,7 @@ class Orders(db.Model):
     bill_id=db.Column(db.Integer, db.ForeignKey('bill.id'))
     order_dishes=db.relationship('Order_Dish', backref='order', lazy='dynamic')
                                                 
-    def __init__(self, date, status, note):
+    def __init__(self, date, status, note, employee_id, bill_id):
         self.date = date
         self.status = status
         self.note = note 
@@ -196,14 +176,14 @@ class Order_Dish(db.Model):
     __tablename__ = 'order_dish'
 
     id = db.Column(db.Integer, primary_key=True)
-    od_qty = db.Column(db.Integer)                                             
+    qty = db.Column(db.Integer)                                             
     order_id=db.Column(db.Integer, db.ForeignKey('orders.id'))                                           
-    dishes_id=db.Column(db.Integer, db.ForeignKey('dish.id'))
+    dish_id=db.Column(db.Integer, db.ForeignKey('dish.id'))
                                                    
-    def __init__(self, od_qty, order_id,  dishes_id):
-        self.od_qty = od_qty
+    def __init__(self, qty, order_id,  dish_id):
+        self.qty = qty
         self.order_id = order_id
-        self. dishes_id = dishes_id       
+        self. dish_id = dish_id       
                                                 
     def __repr__(self):
         return '<id {}>'.format(self.id)
