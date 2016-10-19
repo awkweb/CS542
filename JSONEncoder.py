@@ -52,5 +52,15 @@ class MyJSONEncoder(JSONEncoder):
                 'order_id': obj.order_id, \
                 'dish_id': obj.dish_id \
             }
+        elif isinstance(obj, Orders):
+            return { \
+                'id': obj.id, \
+                'date': obj.date, \
+                'status': obj.status, \
+                'note': obj.note, \
+                'seat_id': obj.seat_id, \
+                'employee_id': obj.employee_id, \
+                'bill_id': obj.bill_id \
+            }
 
         return super(MyJSONEncoder, self).default(obj)

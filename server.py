@@ -35,20 +35,66 @@ def handleNotFound(error):
     return response
 
 # ORDER_DISH METHODS
-# @app.route('/orderdish/add', methods=['POST'])
-# def addOrderDish():
-# 	if request.method == 'POST':
-# 		odJson = request.get_json(force=True)
-# 		orderDish = Order_Dish( \
-# 			int(odJson['qty']), \
-# 			int(odJson['order_id']), \
-# 			int(odJson['dish_id']) \
-# 		)
-# 		db.session.add(orderDish)
-# 		db.session.commit()
-# 		return orderDish.toJSON()
-# 	else:
-# 		return not_found()
+@app.route('/orderdish/add', methods=['POST'])
+def addOrderDish():
+	if request.method == 'POST':
+		odJson = request.get_json(force=True)
+		qty = int(odJson['qty'])
+		if qty <= 0:
+			raise CustomException('Quantity cannot be less than 1.', 400)
+		orderDish = Order_Dish( \
+			qty, \
+			int(odJson['order_id']), \
+			int(odJson['dish_id']) \
+		)
+		db.session.add(orderDish)
+		db.session.commit()
+		return orderDish.toJSON()
+	else:
+		return not_found()
+
+@app.route('/orderdish/<id>/increase', methods=['PUT'])
+def increaseOrderDish(id):
+	if request.method == 'PUT':
+		orderDish = Order_Dish.query.get(id)
+		if orderDish is not None:
+			orderDish.qty += 1
+			db.session.commit()
+		else:
+			raise CustomException('Order dish was not found.', 404)
+	else:
+		return not_found()
+
+@app.route('/orderdish/<id>/decrease', methods=['PUT'])
+def decreaseOrderDish(id):
+	if request.method == 'PUT':
+		orderDish = Order_Dish.query.get(id)
+		if orderDish is not None:
+			if orderDish.qty > 2:
+				orderDish.qty -= 1
+				db.session.commit()
+			else:
+				raise CustomException('Quantity cannot be less than 1.', 400)
+		else:
+			raise CustomException('Order dish was not found.', 404)
+	else:
+		return not_found()
+
+# ORDERS METHODS
+@app.route('/orders/add', methods=['POST'])
+def addOrder():
+	if request.method == 'POST':
+		orderJson = request.get_json(force=True)
+		order = Orders(None, \
+			int(orderJson['seat_id']), \
+			int(orderJson['employee_id']), \
+			int(orderJson['bill_id']) \
+		)
+		db.session.add(order)
+		db.session.commit()
+		return jsonify(order)
+	else:
+		return not_found()
 
 # BILL METHODS
 @app.route('/bill/start', methods=['POST'])
@@ -75,7 +121,7 @@ def addPromotionToBill(id, promoId):
 
 		today = datetime.today().date()
 		if (today >= promotion.start_date and \
-			today <= promotion.end_date):
+			today <= promotionstion.end_date):
 			bill.prom_id = promotion.id
 			db.session.commit()
 			return jsonify(bill)
@@ -92,6 +138,9 @@ def addPromotion():
 		promotionJson = request.get_json(force=True)
 		start_date = datetime.strptime(promotionJson['start_date'] , '%Y-%m-%d')
 		end_date = datetime.strptime(promotionJson['end_date'] , '%Y-%m-%d')
+		if end_date < start_date:
+			raise CustomException('End date of promotion cannot be \
+				before start date of promotion.', 400)
 		promotion = Promotion( \
 			float(promotionJson['discount']), \
 			promotionJson['description'], \
@@ -119,6 +168,18 @@ def getPromotion():
 			return jsonify(promotions)
 	else:
 		return not_found()
+
+@app.route('/promotion/delete/expired', methods=['DELETE'])
+def deletePromotion():
+	if request.method == 'DELETE':
+		today = datetime.today().date()
+		promotions = Promotion.query.filter( \
+			Promotion.end_date < today).delete()
+		db.session.commit()
+		return '', 204
+	else:
+		return not_found()
+
 
 # SEATING METHODS
 @app.route('/seating/add', methods=['POST'])

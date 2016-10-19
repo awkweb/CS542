@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import jsonify
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -161,10 +162,10 @@ class Orders(db.Model):
     bill_id=db.Column(db.Integer, db.ForeignKey('bill.id'))
     order_dishes=db.relationship('Order_Dish', backref='order', lazy='dynamic')
                                                 
-    def __init__(self, date, status, note, employee_id, bill_id):
-        self.date = date
-        self.status = status
-        self.note = note 
+    def __init__(self, note, seat_id, employee_id, bill_id):
+        self.date = datetime.today().date()
+        self.status = 'Pending'
+        self.note = note
         self.seat_id = seat_id 
         self. employee_id = employee_id 
         self.bill_id = bill_id
