@@ -8,7 +8,7 @@ var App = React.createClass({
 
   render: function() {
     return (
-      <h1>Order up!</h1>
+      <h1>Hello, World :)</h1>
     );
   }
 });

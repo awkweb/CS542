@@ -10,13 +10,13 @@ A (somewhat) comprehensive list of commands to get started.
 
 Run the following command to install all the necessary requirements to run this project. 
 ```shell
+> virtualenv -p path/to/python3.5 CS542
 > pip install -r requirements.txt
-> virtualenv CS542
 ```
 
 Go up a directory. When you cd back into the project, the shell should show that it is loading the .env file. Type 'y' to accept and that should automatically activate the virtual environment and set the enviornment variables.
 
- We are using Postgres for our database and Alembic to migrate and update the schema. To configure the project to use a local Postgres database , open the .env file and change the DATABASE_URL as so,
+ We are using Postgres for our database and Alembic to migrate and update the schema. To configure the project to use a local Postgres database, open the .env file and change the DATABASE_URL as so,
 ```
 source CS542/Scripts/activate
 export APP_SETTINGS="config.DevelopmentConfig"
@@ -69,6 +69,12 @@ postgres=# select * from employee;
 
 ```shell
 > webpack
+```
+
+## Run
+
+```shell
+> python server/app.py
 ```
 
 ## License

@@ -7,10 +7,10 @@ const extractHTML = new ExtractTextPlugin('index.html');
 
 module.exports = {
   watch: true,
-  context: path.join(__dirname, "src"),
+  context: path.join(__dirname, "client"),
   entry: "./js/app.js",
     output: {
-    path: __dirname + "/dist/",
+    path: __dirname + "/server/static",
     filename: "app.min.js"
   },
   module: {

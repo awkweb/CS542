@@ -5,7 +5,7 @@ from flask import Flask, Response, request, render_template, jsonify, json
 from models import db
 from JSONEncoder import *
 
-app = Flask(__name__, static_url_path='', static_folder='dist')
+app = Flask(__name__, static_url_path='', static_folder='static')
 app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -15,6 +15,7 @@ db.init_app(app)
 from models import *
 from exceptions import *
 from datetime import datetime
+
 
 # ERROR AND EXCEPTION HANDLERS 
 @app.errorhandler(404)
@@ -34,8 +35,9 @@ def handleNotFound(error):
     response.status_code = error.status_code
     return response
 
+
 # ORDER_DISH METHODS
-@app.route('/orderdish/add', methods=['POST'])
+@app.route('/api/orderdish/add', methods=['POST'])
 def addOrderDish():
 	if request.method == 'POST':
 		odJson = request.get_json(force=True)
@@ -53,7 +55,7 @@ def addOrderDish():
 	else:
 		return not_found()
 
-@app.route('/orderdish/<id>/increase', methods=['PUT'])
+@app.route('/api/orderdish/<id>/increase', methods=['PUT'])
 def increaseOrderDish(id):
 	if request.method == 'PUT':
 		orderDish = Order_Dish.query.get(id)
@@ -65,7 +67,7 @@ def increaseOrderDish(id):
 	else:
 		return not_found()
 
-@app.route('/orderdish/<id>/decrease', methods=['PUT'])
+@app.route('/api/orderdish/<id>/decrease', methods=['PUT'])
 def decreaseOrderDish(id):
 	if request.method == 'PUT':
 		orderDish = Order_Dish.query.get(id)
@@ -80,8 +82,9 @@ def decreaseOrderDish(id):
 	else:
 		return not_found()
 
+
 # ORDERS METHODS
-@app.route('/orders/add', methods=['POST'])
+@app.route('/api/orders/add', methods=['POST'])
 def addOrder():
 	if request.method == 'POST':
 		orderJson = request.get_json(force=True)
@@ -96,8 +99,30 @@ def addOrder():
 	else:
 		return not_found()
 
+@app.route('/api/orders', methods=['GET'])
+def getOrder():
+	id = request.args.get('id')
+	status = request.args.get('status')
+	if request.method == 'GET':
+		if id is not None:
+			order = Order.query.get(id)
+			if order is not None:
+				return jsonify(order)
+		elif status is not None:
+			orders = db.session.query(Order).filter_by(status=status).all()
+			if orders is not None:
+				return jsonify(orders)
+			else:
+				raise CustomException('Orders in {} were \
+					not found'.format(status), 404)
+		else:
+			raise CustomException('Order was not found.', 404)
+	else:
+		return not_found()
+
+
 # BILL METHODS
-@app.route('/bill/start', methods=['POST'])
+@app.route('/api/bills/start', methods=['POST'])
 def startBill():
 	if request.method == 'POST':
 		bill = Bill()
@@ -107,7 +132,7 @@ def startBill():
 	else:
 		return not_found()
 
-@app.route('/bill/<id>/promotions/<promoId>', methods=['PUT'])
+@app.route('/api/bills/<id>/promotions/<promoId>', methods=['PUT'])
 def addPromotionToBill(id, promoId):
 	if request.method == 'PUT':
 		bill = Bill.query.get(id)
@@ -131,8 +156,9 @@ def addPromotionToBill(id, promoId):
 	else:
 		return not_found()
 
+
 # PROMOTION METHODS
-@app.route('/promotion/add', methods=['POST'])
+@app.route('/api/promotions/add', methods=['POST'])
 def addPromotion():
 	if request.method == 'POST':
 		promotionJson = request.get_json(force=True)
@@ -153,7 +179,7 @@ def addPromotion():
 	else:
 		return not_found()
 
-@app.route('/promotion', methods=['GET'])
+@app.route('/api/promotions', methods=['GET'])
 def getPromotion():
 	id = request.args.get('id')
 	if request.method == 'GET':
@@ -169,7 +195,7 @@ def getPromotion():
 	else:
 		return not_found()
 
-@app.route('/promotion/delete/expired', methods=['DELETE'])
+@app.route('/api/promotions/delete/expired', methods=['DELETE'])
 def deletePromotion():
 	if request.method == 'DELETE':
 		today = datetime.today().date()
@@ -182,7 +208,7 @@ def deletePromotion():
 
 
 # SEATING METHODS
-@app.route('/seating/add', methods=['POST'])
+@app.route('/api/seating/add', methods=['POST'])
 def addSeating():
 	if request.method == 'POST':
 		seatingJson = request.get_json(force=True)
@@ -196,7 +222,7 @@ def addSeating():
 	else:
 		return not_found()
 
-@app.route('/seating', methods=['GET'])
+@app.route('/api/seating', methods=['GET'])
 def getSeating():
 	id = request.args.get('id')
 	if request.method == 'GET' and id is not None:
@@ -208,8 +234,9 @@ def getSeating():
 	else:
 		return not_found()
 
+
 # DISH METHODS 
-@app.route('/dish/add', methods=['POST'])
+@app.route('/api/dishes/add', methods=['POST'])
 def addDish():
 	if request.method == 'POST':
 		dishJson = request.get_json(force=True)
@@ -226,7 +253,7 @@ def addDish():
 	else:
 		return not_found()
 
-@app.route('/dish/delete', methods=['DELETE'])
+@app.route('/api/dishes/delete', methods=['DELETE'])
 def deleteDish():
 	id = request.args.get('id')
 	if request.method == 'DELETE' and id is not None:
@@ -240,7 +267,7 @@ def deleteDish():
 	else:
 		return not_found()
 
-@app.route('/dish', methods=['GET'])
+@app.route('/api/dishes', methods=['GET'])
 def getDish():
 	id = request.args.get('id')
 	category = request.args.get('category')
@@ -261,7 +288,7 @@ def getDish():
 	else:
 		return not_found()
 
-@app.route('/dish/update', methods=['PUT'])
+@app.route('/api/dishes/update', methods=['PUT'])
 def updateDish():
 	id = request.args.get('id')
 	if request.method == 'PUT' and id is not None:
@@ -281,7 +308,7 @@ def updateDish():
 		return not_found()
 
 # EMPLOYEE METHODS 
-@app.route('/employee/add', methods=['POST'])
+@app.route('/api/employees/add', methods=['POST'])
 def addEmployee():
 	if request.method == 'POST':
 		empJson = request.get_json(force=True)
@@ -301,7 +328,7 @@ def addEmployee():
 	else:
 		return not_found()
 
-@app.route('/employee/delete', methods=['DELETE'])
+@app.route('/api/employees/delete', methods=['DELETE'])
 def deleteEmployee():
 	id = request.args.get('id')
 	if request.method == 'DELETE' and id is not None:
@@ -315,7 +342,7 @@ def deleteEmployee():
 	else:
 		return not_found()
 
-@app.route('/employee', methods=['GET'])
+@app.route('/api/employees', methods=['GET'])
 def getEmployee():
 	id = request.args.get('id')
 	if request.method == 'GET' and id is not None:
