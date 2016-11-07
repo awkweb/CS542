@@ -24,7 +24,6 @@ export default {
         .then(function (response) {
           for (var i in response.data) {
             const dish = response.data[i]
-            console.log(dish)
             dishes.push(dish)            
           }
         })
