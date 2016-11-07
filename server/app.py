@@ -105,11 +105,11 @@ def getOrder():
 	status = request.args.get('status')
 	if request.method == 'GET':
 		if id is not None:
-			order = Order.query.get(id)
+			order = Orders.query.get(id)
 			if order is not None:
 				return jsonify(order)
 		elif status is not None:
-			orders = db.session.query(Order).filter_by(status=status).all()
+			orders = db.session.query(Orders).filter_by(status=status).all()
 			if orders is not None:
 				return jsonify(orders)
 			else:

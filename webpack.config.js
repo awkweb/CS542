@@ -1,44 +1,64 @@
-var webpack = require('webpack');
-var path = require('path');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-
-const extractCSS = new ExtractTextPlugin('styles.css');
-const extractHTML = new ExtractTextPlugin('index.html');
+var path = require('path')
+var webpack = require('webpack')
 
 module.exports = {
-  watch: true,
-  context: path.join(__dirname, "client"),
-  entry: "./js/app.js",
-    output: {
-    path: __dirname + "/server/static",
-    filename: "app.min.js"
+  entry: './server/static/src/main.js',
+  output: {
+    path: path.resolve(__dirname, './server/static/dist'),
+    publicPath: '/dist/',
+    filename: 'build.js'
   },
   module: {
-    loaders: [
+    rules: [
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader',
-        query: {
-          presets: ['react']
+        test: /\.vue$/,
+        loader: 'vue',
+        options: {
+          // vue-loader options go here
         }
       },
       {
-        test: /\.scss$/,
-        loader: extractCSS.extract('css!sass')
+        test: /\.js$/,
+        loader: 'babel',
+        exclude: /node_modules/
       },
       {
-        test: /\.css$/,
-        loader: "style-loader!css-loader"
-      },
-      {
-        test: /\.html$/,
-        loader: extractHTML.extract('html')
+        test: /\.(png|jpg|gif|svg)$/,
+        loader: 'file',
+        options: {
+          name: '[name].[ext]?[hash]'
+        }
       }
     ]
   },
-  plugins: [
-    extractCSS,
-    extractHTML
-  ]
-};
+  resolve: {
+    alias: {
+      'vue$': 'vue/dist/vue'
+    }
+  },
+  devServer: {
+    historyApiFallback: true,
+    noInfo: true
+  },
+  devtool: '#eval-source-map'
+}
+
+if (process.env.NODE_ENV === 'production') {
+  module.exports.devtool = '#source-map'
+  // http://vue-loader.vuejs.org/en/workflow/production.html
+  module.exports.plugins = (module.exports.plugins || []).concat([
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"production"'
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      }
+    }),
+    new webpack.LoaderOptionsPlugin({
+      minimize: true
+    })
+  ])
+}
