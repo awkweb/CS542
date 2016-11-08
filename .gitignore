@@ -9,6 +9,7 @@ __pycache__/
 # Flask stuff
 instance/
 .webassets-cache
+server/migrations
 
 # NPM
 node_modules/

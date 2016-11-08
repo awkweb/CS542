@@ -50,17 +50,14 @@ class Order(db.Model):
     date = db.Column(db.DATE)
     status = db.Column(db.String())
     note = db.Column(db.String())                                             
-    seat_id=db.Column(db.Integer, db.ForeignKey('seating.id'))                                           
-    employee_id=db.Column(db.Integer, db.ForeignKey('employee.id'))
+    master_order_id=db.Column(db.Integer, db.ForeignKey('master_order.id'))
     bill_id=db.Column(db.Integer, db.ForeignKey('bill.id'))
     order_dishes=db.relationship('Order_Dish', backref='order', lazy='dynamic')
                                                 
-    def __init__(self, note, seat_id, employee_id, bill_id):
+    def __init__(self, note, bill_id):
         self.date = datetime.today().date()
         self.status = 'Pending'
         self.note = note
-        self.seat_id = seat_id 
-        self. employee_id = employee_id 
         self.bill_id = bill_id
                                                 
     def __repr__(self):
