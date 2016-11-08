@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <h2>Order Up</h2>
+    <h2>Menu</h2>
     <ul v-for="dish in dishes">
-      <li>{{ dish.name }}: {{ dish.description }} ({{ dish.cost }})</li>
+      <li>{{ dish.name }}: {{ dish.description }} (${{ dish.cost }})</li>
     </ul>
   </div>
 </template>
