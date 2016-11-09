@@ -8,7 +8,7 @@ class MasterOrder(db.Model):
     __tablename__ = 'master_order'
 
     id = db.Column(db.Integer, primary_key=True)
-    orders = db.relationship('Order', backref='bill', lazy='dynamic')
+    orders = db.relationship('Order', backref='master_bill', lazy='dynamic')
                                                             
     def __repr__(self):
         return '<id {}>'.format(self.id)  
@@ -44,7 +44,7 @@ class Bill(db.Model):
         return '<id {}>'.format(self.id)  
                                                
 class Order(db.Model):
-    __tablename__ = 'order'
+    __tablename__ = 'torder'
 
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DATE)
@@ -54,11 +54,12 @@ class Order(db.Model):
     bill_id=db.Column(db.Integer, db.ForeignKey('bill.id'))
     order_dishes=db.relationship('Order_Dish', backref='order', lazy='dynamic')
                                                 
-    def __init__(self, note, bill_id):
+    def __init__(self, note, master_order_id):
         self.date = datetime.today().date()
         self.status = 'Pending'
         self.note = note
-        self.bill_id = bill_id
+        self.master_order_id = master_order_id
+        self.bill_id = None
                                                 
     def __repr__(self):
         return '<id {}>'.format(self.id)   
@@ -68,13 +69,13 @@ class Order_Dish(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     qty = db.Column(db.Integer)                                             
-    order_id=db.Column(db.Integer, db.ForeignKey('order.id'))                                           
+    order_id=db.Column(db.Integer, db.ForeignKey('torder.id'))                                           
     dish_id=db.Column(db.Integer, db.ForeignKey('dish.id'))
                                                    
-    def __init__(self, qty, order_id,  dish_id):
+    def __init__(self, qty, order_id, dish_id):
         self.qty = qty
         self.order_id = order_id
-        self. dish_id = dish_id       
+        self. dish_id = dish_id      
                                                 
     def __repr__(self):
         return '<id {}>'.format(self.id)

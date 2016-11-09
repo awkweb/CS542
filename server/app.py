@@ -9,6 +9,8 @@ app = Flask(__name__, static_url_path='', static_folder='static')
 app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
 app.json_encoder = MyJSONEncoder
 db.init_app(app)
 
@@ -35,6 +37,16 @@ def handleNotFound(error):
     response.status_code = error.status_code
     return response
 
+# MASTERORDER METHODS
+@app.route('/api/masterorder/add', methods=['POST'])
+def addMasterOrder():
+	if request.method == 'POST':
+		masterOrder = MasterOrder()
+		db.session.add(masterOrder)
+		db.session.commit()
+		return jsonify(masterOrder)
+	else:
+		return not_found()
 
 # ORDER_DISH METHODS
 @app.route('/api/orderdish/add', methods=['POST'])
@@ -42,56 +54,58 @@ def addOrderDish():
 	if request.method == 'POST':
 		odJson = request.get_json(force=True)
 		qty = int(odJson['qty'])
+
+		dish_id = int(odJson['dish_id'])
+		dish = Dish.query.get(dish_id)
+
+		order_id = int(odJson['order_id'])
+		order = Order.query.get(order_id)
+
+		if not dish:
+			raise CustomException('Dish does not exist.', 404)
+		if not order:
+			raise CustomException('Order does not exist.', 404)
 		if qty <= 0:
 			raise CustomException('Quantity cannot be less than 1.', 400)
 		orderDish = Order_Dish( \
 			qty, \
-			int(odJson['order_id']), \
-			int(odJson['dish_id']) \
+			order_id, \
+			dish_id \
 		)
 		db.session.add(orderDish)
 		db.session.commit()
-		return orderDish.toJSON()
+		return jsonify(orderDish)
 	else:
 		return not_found()
 
-@app.route('/api/orderdish/<id>/increase', methods=['PUT'])
-def increaseOrderDish(id):
+@app.route('/api/orderdish/<id>/updateQty/<qty>', methods=['PUT'])
+def updateOrderDishQty(id, qty):
 	if request.method == 'PUT':
 		orderDish = Order_Dish.query.get(id)
+
 		if orderDish is not None:
-			orderDish.qty += 1
+			orderDish.qty = qty
 			db.session.commit()
+			return '', 204
 		else:
 			raise CustomException('Order dish was not found.', 404)
 	else:
 		return not_found()
-
-@app.route('/api/orderdish/<id>/decrease', methods=['PUT'])
-def decreaseOrderDish(id):
-	if request.method == 'PUT':
-		orderDish = Order_Dish.query.get(id)
-		if orderDish is not None:
-			if orderDish.qty > 2:
-				orderDish.qty -= 1
-				db.session.commit()
-			else:
-				raise CustomException('Quantity cannot be less than 1.', 400)
-		else:
-			raise CustomException('Order dish was not found.', 404)
-	else:
-		return not_found()
-
 
 # ORDERS METHODS
-@app.route('/api/orders/add', methods=['POST'])
+@app.route('/api/order/add', methods=['POST'])
 def addOrder():
 	if request.method == 'POST':
 		orderJson = request.get_json(force=True)
-		order = Orders(None, \
-			int(orderJson['seat_id']), \
-			int(orderJson['employee_id']), \
-			int(orderJson['bill_id']) \
+
+		master_order_id = int(orderJson['master_order_id'])
+		masterOrder = MasterOrder.query.get(master_order_id)
+
+		if not masterOrder:
+			raise CustomException("Master order does not exist.", 404);
+
+		order = Order(orderJson['note'], \
+			master_order_id \
 		)
 		db.session.add(order)
 		db.session.commit()
@@ -99,7 +113,22 @@ def addOrder():
 	else:
 		return not_found()
 
-@app.route('/api/orders', methods=['GET'])
+@app.route('/api/order/<orderId>/add/bill/<billId>', methods=['POST'])
+def addOrderToBill(orderId, billId):
+	if request.method == 'POST':
+		order = Order.query.get(orderId)
+		bill = Bill.query.get(billId)
+		if not order:
+			raise CustomException("Order does not exist.", 404)
+		if not bill:
+			raise CustomException("Bill does not exist.", 404)
+		order.bill_id = bill.id
+		db.session.commit()
+		return jsonify(order)
+	else:
+		return not_found()
+
+@app.route('/api/order', methods=['GET'])
 def getOrder():
 	id = request.args.get('id')
 	status = request.args.get('status')
@@ -109,7 +138,7 @@ def getOrder():
 			if order is not None:
 				return jsonify(order)
 		elif status is not None:
-			orders = db.session.query(Orders).filter_by(status=status).all()
+			orders = db.session.query(Order).filter_by(status=status).all()
 			if orders is not None:
 				return jsonify(orders)
 			else:
@@ -122,7 +151,7 @@ def getOrder():
 
 
 # BILL METHODS
-@app.route('/api/bills/start', methods=['POST'])
+@app.route('/api/bill/start', methods=['POST'])
 def startBill():
 	if request.method == 'POST':
 		bill = Bill()
@@ -132,33 +161,8 @@ def startBill():
 	else:
 		return not_found()
 
-@app.route('/api/bills/<id>/promotions/<promoId>', methods=['PUT'])
-def addPromotionToBill(id, promoId):
-	if request.method == 'PUT':
-		bill = Bill.query.get(id)
-
-		if bill is None:
-			raise CustomException('Bill was not found.', 404)
-
-		promotion = Promotion.query.get(promoId)
-		if promotion is None:
-			raise CustomException('Promotion was not found.', 404)
-
-		today = datetime.today().date()
-		if (today >= promotion.start_date and \
-			today <= promotionstion.end_date):
-			bill.prom_id = promotion.id
-			db.session.commit()
-			return jsonify(bill)
-		else:
-			raise CustomException("Promotion has expired.", 400)
-
-	else:
-		return not_found()
-
-
 # DISH METHODS 
-@app.route('/api/dishes/add', methods=['POST'])
+@app.route('/api/dish/add', methods=['POST'])
 def addDish():
 	if request.method == 'POST':
 		dishJson = request.get_json(force=True)
@@ -175,7 +179,7 @@ def addDish():
 	else:
 		return not_found()
 
-@app.route('/api/dishes/delete', methods=['DELETE'])
+@app.route('/api/dish/delete', methods=['DELETE'])
 def deleteDish():
 	id = request.args.get('id')
 	if request.method == 'DELETE' and id is not None:
@@ -189,7 +193,17 @@ def deleteDish():
 	else:
 		return not_found()
 
-@app.route('/api/dishes', methods=['GET'])
+@app.route('/api/dish/all', methods=['GET'])
+def getDishes():
+	if request.method == 'GET':
+		dishes = Dish.query.all()
+		if not dishes:
+			raise CustomException('There are no dishes.', 404)
+		return jsonify(dishes);
+	else:
+		return not_found()
+
+@app.route('/api/dish', methods=['GET'])
 def getDish():
 	id = request.args.get('id')
 	category = request.args.get('category')
@@ -210,7 +224,7 @@ def getDish():
 	else:
 		return not_found()
 
-@app.route('/api/dishes/update', methods=['PUT'])
+@app.route('/api/dish/update', methods=['PUT'])
 def updateDish():
 	id = request.args.get('id')
 	if request.method == 'PUT' and id is not None:
@@ -228,3 +242,7 @@ def updateDish():
 			raise CustomException('Dish was not found.', 404)
 	else:
 		return not_found()
+
+
+if __name__ == '__main__':
+    app.run()
