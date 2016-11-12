@@ -37,9 +37,10 @@ def handleNotFound(error):
     response.status_code = error.status_code
     return response
 
-# MASTERORDER METHODS
+
+# MASTER_ORDER METHODS
 @app.route('/api/masterorder/add', methods=['POST'])
-def addMasterOrder():
+def add_master_order():
 	if request.method == 'POST':
 		masterOrder = MasterOrder()
 		db.session.add(masterOrder)
@@ -48,27 +49,38 @@ def addMasterOrder():
 	else:
 		return not_found()
 
+@app.route('/api/masterorder/all', methods=['GET'])
+def get_master_order_all():
+	if request.method == 'GET':
+		master_orders = MasterOrder.query.all()
+		if not master_orders:
+			raise CustomException('There are no master orders.', 404)
+		return jsonify(master_orders);
+	else:
+		return not_found()
+
+
 # ORDER_DISH METHODS
 @app.route('/api/orderdish/add', methods=['POST'])
-def addOrderDish():
+def add_order_dish():
 	if request.method == 'POST':
-		odJson = request.get_json(force=True)
-		qty = int(odJson['qty'])
+		orderJson = request.get_json(force=True)
+		quantity = int(orderJson['quantity'])
 
-		dish_id = int(odJson['dish_id'])
+		dish_id = int(orderJson['dish_id'])
 		dish = Dish.query.get(dish_id)
 
-		order_id = int(odJson['order_id'])
+		order_id = int(orderJson['order_id'])
 		order = Order.query.get(order_id)
 
 		if not dish:
 			raise CustomException('Dish does not exist.', 404)
 		if not order:
 			raise CustomException('Order does not exist.', 404)
-		if qty <= 0:
+		if quantity <= 0:
 			raise CustomException('Quantity cannot be less than 1.', 400)
 		orderDish = Order_Dish( \
-			qty, \
+			quantity, \
 			order_id, \
 			dish_id \
 		)
@@ -78,13 +90,13 @@ def addOrderDish():
 	else:
 		return not_found()
 
-@app.route('/api/orderdish/<id>/updateQty/<qty>', methods=['PUT'])
-def updateOrderDishQty(id, qty):
+@app.route('/api/orderdish/<id>/updatequantity/<quantity>', methods=['PUT'])
+def update_order_dish_quantity(id, quantity):
 	if request.method == 'PUT':
 		orderDish = Order_Dish.query.get(id)
 
 		if orderDish is not None:
-			orderDish.qty = qty
+			orderDish.quantity = quantity
 			db.session.commit()
 			return '', 204
 		else:
@@ -92,9 +104,10 @@ def updateOrderDishQty(id, qty):
 	else:
 		return not_found()
 
+
 # ORDERS METHODS
 @app.route('/api/order/add', methods=['POST'])
-def addOrder():
+def add_order():
 	if request.method == 'POST':
 		orderJson = request.get_json(force=True)
 
@@ -114,7 +127,7 @@ def addOrder():
 		return not_found()
 
 @app.route('/api/order/<orderId>/add/bill/<billId>', methods=['POST'])
-def addOrderToBill(orderId, billId):
+def add_order_to_bill(orderId, billId):
 	if request.method == 'POST':
 		order = Order.query.get(orderId)
 		bill = Bill.query.get(billId)
@@ -129,7 +142,7 @@ def addOrderToBill(orderId, billId):
 		return not_found()
 
 @app.route('/api/order', methods=['GET'])
-def getOrder():
+def get_order():
 	id = request.args.get('id')
 	status = request.args.get('status')
 	if request.method == 'GET':
@@ -152,7 +165,7 @@ def getOrder():
 
 # BILL METHODS
 @app.route('/api/bill/start', methods=['POST'])
-def startBill():
+def start_bill():
 	if request.method == 'POST':
 		bill = Bill()
 		db.session.add(bill)
@@ -161,17 +174,17 @@ def startBill():
 	else:
 		return not_found()
 
+
 # DISH METHODS 
 @app.route('/api/dish/add', methods=['POST'])
-def addDish():
+def add_dish():
 	if request.method == 'POST':
 		dishJson = request.get_json(force=True)
 		dish = Dish( \
 			dishJson['name'], \
 			dishJson['description'], \
-			float(dishJson['cost']), \
-			dishJson['category'], \
-			int(dishJson['spicy_level']) \
+			float(dishJson['price']), \
+			dishJson['category'] \
 		)
 		db.session.add(dish)
 		db.session.commit()
@@ -180,7 +193,7 @@ def addDish():
 		return not_found()
 
 @app.route('/api/dish/delete', methods=['DELETE'])
-def deleteDish():
+def delete_dish():
 	id = request.args.get('id')
 	if request.method == 'DELETE' and id is not None:
 		dish = Dish.query.get(id)
@@ -194,7 +207,7 @@ def deleteDish():
 		return not_found()
 
 @app.route('/api/dish/all', methods=['GET'])
-def getDishes():
+def get_dishes():
 	if request.method == 'GET':
 		dishes = Dish.query.all()
 		if not dishes:
@@ -204,7 +217,7 @@ def getDishes():
 		return not_found()
 
 @app.route('/api/dish', methods=['GET'])
-def getDish():
+def get_dish():
 	id = request.args.get('id')
 	category = request.args.get('category')
 	if request.method == 'GET':
@@ -225,7 +238,7 @@ def getDish():
 		return not_found()
 
 @app.route('/api/dish/update', methods=['PUT'])
-def updateDish():
+def update_dish():
 	id = request.args.get('id')
 	if request.method == 'PUT' and id is not None:
 		dishJson = request.get_json(force=True)
@@ -233,9 +246,8 @@ def updateDish():
 		if dish is not None:
 			dish.name = dishJson['name']
 			dish.description = dishJson['description']
-			dish.cost = dishJson['cost']
+			dish.price = dishJson['price']
 			dish.category = dishJson['category']
-			dish.spicy_level = dishJson['spicy_level']
 			db.session.commit()
 			return jsonify(dish)
 		else:
@@ -246,3 +258,4 @@ def updateDish():
 
 if __name__ == '__main__':
     app.run()
+
