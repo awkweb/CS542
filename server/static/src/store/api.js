@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-function fetch (endpoint) {
+function get (endpoint) {
     return new Promise((resolve, reject) => {
       axios.get(endpoint)
       .then(function (response) {
@@ -13,5 +13,5 @@ function fetch (endpoint) {
 }
 
 export function fetchDishes () {
-  return fetch('/api/dish/all')
+  return get('/api/dish/all')
 }

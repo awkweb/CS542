@@ -1,6 +1,6 @@
 <template>
   <div id="order-view">
-    <h1>Time to place an order</h1>
+    <h2>New Order</h2>
     <div v-for="customer in customers">
         <order-customer v-bind:customer="customer"></order-customer>
         <button v-on:click="removeCustomer(customer.number)">Remove Customer</button>
@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import OrderCustomer from '../components/OrderCustomer.vue'
 
 export default {
@@ -51,7 +52,17 @@ export default {
       // For customer in customers, create order
       // Add dish to order
       // Navigate to home
-    }
+      var vm = this;
+
+      // axios.post('/api/masterorder/add')
+      // .then(function (response) {
+      //   const masterOrderId = response.data.id
+      //   console.log("masterOrderId", masterOrderId);
+      // })
+      // .catch(function (error) {
+      //   console.log(error);
+      // });
+    },
   },
 
   created () {
