@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="order-customer">
     <div class="customer-header">
       <h3>Customer {{ customer.number }}</h3>
       <div>
@@ -62,8 +62,12 @@ export default {
   border-bottom: 1px solid #EAEAEA;
 
   .c-btn {
-    padding: 4px 10px;
+    padding: 5px 10px;
     font-size: 12px;
   }
+}
+
+.order-customer {
+  margin-bottom: 40px;
 }
 </style>

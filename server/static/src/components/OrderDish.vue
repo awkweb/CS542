@@ -1,18 +1,20 @@
 <template>
   <div class="customer-dish">
-    <label class="c-label">
-        Dish
+    <div class="input-wrapper">
+        <label class="c-label">Dish</label>
         <select v-model="dish.id" class="c-input">
           <option v-for="item in this.$store.state.dishes" v-bind:value="item.id">{{ item.name }} (${{ item.price }})</option>
         </select>
-    </label>
+    </div>
 
-    <label class="c-label">
-        Quantity
+    <div class="input-wrapper">
+        <label class="c-label">Quantity</label>
         <input v-model.number="dish.quantity" type="number"  class="c-input">
-    </label>
+    </div>
 
-    <button v-on:click="removeDish" class="c-btn c-btn--secondary">Remove</button>
+    <div class="button-wrapper">
+        <button v-on:click="removeDish" class="c-btn c-btn--secondary">Remove</button>
+    </div>
   </div>
 </template>
 
@@ -30,15 +32,25 @@ export default {
 
 <style lang="sass">
 .customer-dish {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 10px;
+}
+
+.button-wrapper {
     .c-btn {
         padding: 5px 10px;
         font-size: 12px;
     }
 }
 
+.input-wrapper {
+    flex: 1;
+    padding-right: 10px;
+}
+
 .c-label {
-    display: inline-block;
-    margin-bottom: 23px;
+    display: block;
 
     font-size: 12px;
 
@@ -46,6 +58,8 @@ export default {
 }
 
 .c-input {
+    width: 100%;
+
     display: block;
     padding: 5px 7px;
     box-sizing: border-box;
@@ -82,7 +96,6 @@ export default {
         box-shadow: none;
         outline: 0;
     }
-
     &.is-valid,
     .c-form--validated &:valid {
         background-image: url("../assets/icon-form-valid.svg");
@@ -103,6 +116,8 @@ select.c-input {
     background-size: 7px 14px;
     background-position: right 10px center;
     background-repeat: no-repeat;
+    
+    -webkit-appearance: none;
     
     padding-right: 27px;
 }
