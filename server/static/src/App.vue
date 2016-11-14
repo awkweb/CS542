@@ -19,7 +19,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  max-width: 47rem;
+  max-width: 45rem;
   margin: auto;
 }
 

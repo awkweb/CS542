@@ -1,12 +1,19 @@
 <template>
   <div id="order-view">
     <h2>New Order</h2>
-    <div v-for="customer in customers">
-        <order-customer v-bind:customer="customer"></order-customer>
-        <button v-on:click="removeCustomer(customer.number)">Remove Customer</button>
+    <div class="customer-container">
+      <div v-for="customer in customers">
+        <order-customer v-bind:customer="customer" v-on:removeCustomer="removeCustomer"></order-customer>
+      </div>
     </div>
-    <button v-on:click="addCustomer">Add Customer</button>
-    <button v-on:click="createOrder">Create Order</button>
+
+    <div class="sticky-footer">
+      <button v-on:click="addCustomer" class="c-btn c-btn--secondary">Add Customer</button>
+      <div>
+        <button class="c-btn c-btn--secondary">Cancel</button>
+        <button v-on:click="createOrder" class="c-btn c-btn--primary" disabled>Submit</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -19,7 +26,8 @@ export default {
 
   data () {
     return {
-      customers: []
+      customers: [],
+      total: 0
     }
   },
 
@@ -73,5 +81,21 @@ export default {
 </script>
 
 <style lang="sass">
+.customer-container {
+  margin-bottom: 10rem;
+}
 
+.sticky-footer {
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  max-width: 45rem;
+  margin: auto;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  padding: .5rem .5rem;
+  border-top: 1px solid #EAEAEA;
+  background: #fff;
+}
 </style>

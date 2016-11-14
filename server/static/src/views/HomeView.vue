@@ -66,7 +66,7 @@ export default {
 
 .c-btn {
     display: inline-block;
-    padding: 7px 20px;
+    padding: 7px 15px;
 
     font-size: 13px;
     font-weight: 600;

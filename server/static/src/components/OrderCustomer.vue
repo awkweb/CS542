@@ -1,11 +1,15 @@
 <template>
   <div>
-    <h3>Customer {{ customer.number }}</h3>
-    <div v-for="dish in customer.dishes">
-        <order-dish v-bind:dish="dish"></order-dish>
-        <button v-on:click="removeDish(dish.number)">Remove Dish</button>
+    <div class="customer-header">
+      <h3>Customer {{ customer.number }}</h3>
+      <div>
+        <button v-on:click="addDish" class="c-btn c-btn--secondary">Add Dish</button>
+        <button v-on:click="removeCustomer" class="c-btn c-btn--secondary">Remove</button>
+      </div>
     </div>
-    <button v-on:click="addDish">Add Dish</button>
+    <div v-for="dish in customer.dishes">
+        <order-dish v-bind:dish="dish" v-on:removeDish="removeDish"></order-dish>
+    </div>
   </div>
 </template>
 
@@ -22,6 +26,10 @@ export default {
   },
 
   methods: {
+    removeCustomer: function () {
+      this.$emit('removeCustomer', this.customer.number)
+    },
+
     addDish: function () {
       var number = 0
       if (this.customer.dishes.length > 0) {
@@ -43,3 +51,19 @@ export default {
   }
 }
 </script>
+
+<style lang="sass">
+.customer-header {
+  display: flex;
+  justify-content: space-between;
+  height: 45px;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #EAEAEA;
+
+  .c-btn {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+}
+</style>
