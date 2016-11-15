@@ -51,9 +51,8 @@ export default {
 
 .c-label {
     display: block;
-
+    padding-left: 2px;
     font-size: 12px;
-
     color: #7b8994;
 }
 
@@ -120,5 +119,11 @@ select.c-input {
     -webkit-appearance: none;
     
     padding-right: 27px;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
 }
 </style>

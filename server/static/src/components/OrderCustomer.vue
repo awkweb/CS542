@@ -8,7 +8,7 @@
       </div>
     </div>
     <div v-for="dish in customer.dishes">
-        <order-dish v-bind:dish="dish" v-on:removeDish="removeDish"></order-dish>
+      <order-dish v-bind:dish="dish" v-on:removeDish="removeDish"></order-dish>
     </div>
   </div>
 </template>

@@ -10115,10 +10115,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_OrderCustomer_vue__ = __webpack_require__(47);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_OrderCustomer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_OrderCustomer_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__router__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_OrderCustomer_vue__ = __webpack_require__(47);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_OrderCustomer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_OrderCustomer_vue__);
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 //
@@ -10144,6 +10145,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 
 
+
 /* harmony default export */ exports["default"] = {
   name: 'order',
 
@@ -10156,10 +10158,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 
   components: {
-    'order-customer': __WEBPACK_IMPORTED_MODULE_1__components_OrderCustomer_vue___default.a
+    'order-customer': __WEBPACK_IMPORTED_MODULE_2__components_OrderCustomer_vue___default.a
   },
 
   methods: {
+    cancel: function cancel() {
+      __WEBPACK_IMPORTED_MODULE_0__router__["a" /* default */].push({ name: 'home' });
+    },
+
     addCustomer: function addCustomer() {
       var number = 0;
       if (this.customers.length > 0) {
@@ -10239,7 +10245,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, "\n.customer-dish {\n  display: flex;\n  align-items: flex-end;\n  margin-bottom: 10px;\n}\n.button-wrapper .c-btn {\n  padding: 5px 10px;\n  font-size: 12px;\n}\n.input-wrapper {\n  flex: 1;\n  padding-right: 10px;\n}\n.c-label {\n  display: block;\n  font-size: 12px;\n  color: #7b8994;\n}\n.c-input {\n  width: 100%;\n  display: block;\n  padding: 5px 7px;\n  box-sizing: border-box;\n  font-size: 13px;\n  text-align: left;\n  color: #47525d;\n  border: 1px solid rgba(37, 40, 43, 0.1);\n  border-radius: 3px;\n  background-color: white;\n  background-clip: padding-box;\n}\n.c-input:focus {\n    border-color: #72b6ec;\n    outline: 0;\n}\n.c-input:disabled, .c-input.is-disabled {\n    background-color: #f7f9fa;\n}\n.c-input.is-invalid,\n  .c-form--validated .c-input:invalid {\n    background-image: url(" + __webpack_require__(45) + ");\n    background-size: 14px;\n    background-position: right 10px center;\n    background-repeat: no-repeat;\n    padding-right: 34px;\n    border-color: #ED1A1E;\n    box-shadow: none;\n    outline: 0;\n}\n.c-input.is-valid,\n  .c-form--validated .c-input:valid {\n    background-image: url(" + __webpack_require__(46) + ");\n    background-size: 14px;\n    background-position: right 10px center;\n    background-repeat: no-repeat;\n    padding-right: 34px;\n}\ntextarea.c-input {\n  resize: vertical;\n}\nselect.c-input {\n  background-image: url(" + __webpack_require__(44) + ");\n  background-size: 7px 14px;\n  background-position: right 10px center;\n  background-repeat: no-repeat;\n  -webkit-appearance: none;\n  padding-right: 27px;\n}\n", ""]);
+exports.push([module.i, "\n.customer-dish {\n  display: flex;\n  align-items: flex-end;\n  margin-bottom: 10px;\n}\n.button-wrapper .c-btn {\n  padding: 5px 10px;\n  font-size: 12px;\n}\n.input-wrapper {\n  flex: 1;\n  padding-right: 10px;\n}\n.c-label {\n  display: block;\n  padding-left: 2px;\n  font-size: 12px;\n  color: #7b8994;\n}\n.c-input {\n  width: 100%;\n  display: block;\n  padding: 5px 7px;\n  box-sizing: border-box;\n  font-size: 13px;\n  text-align: left;\n  color: #47525d;\n  border: 1px solid rgba(37, 40, 43, 0.1);\n  border-radius: 3px;\n  background-color: white;\n  background-clip: padding-box;\n}\n.c-input:focus {\n    border-color: #72b6ec;\n    outline: 0;\n}\n.c-input:disabled, .c-input.is-disabled {\n    background-color: #f7f9fa;\n}\n.c-input.is-invalid,\n  .c-form--validated .c-input:invalid {\n    background-image: url(" + __webpack_require__(45) + ");\n    background-size: 14px;\n    background-position: right 10px center;\n    background-repeat: no-repeat;\n    padding-right: 34px;\n    border-color: #ED1A1E;\n    box-shadow: none;\n    outline: 0;\n}\n.c-input.is-valid,\n  .c-form--validated .c-input:valid {\n    background-image: url(" + __webpack_require__(46) + ");\n    background-size: 14px;\n    background-position: right 10px center;\n    background-repeat: no-repeat;\n    padding-right: 34px;\n}\ntextarea.c-input {\n  resize: vertical;\n}\nselect.c-input {\n  background-image: url(" + __webpack_require__(44) + ");\n  background-size: 7px 14px;\n  background-position: right 10px center;\n  background-repeat: no-repeat;\n  -webkit-appearance: none;\n  padding-right: 27px;\n}\ninput[type=number]::-webkit-inner-spin-button,\ninput[type=number]::-webkit-outer-spin-button {\n  -webkit-appearance: none;\n  margin: 0;\n}\n", ""]);
 
 // exports
 
@@ -10267,7 +10273,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, "\n.customer-container {\n  margin-bottom: 10rem;\n}\n.sticky-footer {\n  display: flex;\n  justify-content: space-between;\n  position: fixed;\n  max-width: 45rem;\n  margin: auto;\n  bottom: 0;\n  right: 0;\n  left: 0;\n  padding: .5rem .5rem;\n  border-top: 1px solid #EAEAEA;\n  background: #fff;\n}\n", ""]);
+exports.push([module.i, "\n.customer-container {\n  margin-bottom: 10rem;\n}\n.sticky-footer {\n  display: flex;\n  justify-content: space-between;\n  position: fixed;\n  max-width: 45rem;\n  margin: auto;\n  bottom: 0;\n  right: 0;\n  left: 0;\n  padding: .5rem 0;\n  border-top: 1px solid #EAEAEA;\n  background: #fff;\n}\n", ""]);
 
 // exports
 
@@ -10696,7 +10702,12 @@ module.exports={render:function (){with(this) {
     on: {
       "click": addCustomer
     }
-  }, ["Add Customer"]), " ", _h('div', [_m(1), " ", _h('button', {
+  }, ["Add Customer"]), " ", _h('div', [_h('button', {
+    staticClass: "c-btn c-btn--secondary",
+    on: {
+      "click": cancel
+    }
+  }, ["Cancel"]), " ", _h('button', {
     staticClass: "c-btn c-btn--primary",
     attrs: {
       "disabled": ""
@@ -10707,10 +10718,6 @@ module.exports={render:function (){with(this) {
   }, ["Submit"])])])])
 }},staticRenderFns: [function (){with(this) {
   return _h('h2', ["New Order"])
-}},function (){with(this) {
-  return _h('button', {
-    staticClass: "c-btn c-btn--secondary"
-  }, ["Cancel"])
 }}]}
 if (false) {
   module.hot.accept()

@@ -10,7 +10,7 @@
     <div class="sticky-footer">
       <button v-on:click="addCustomer" class="c-btn c-btn--secondary">Add Customer</button>
       <div>
-        <button class="c-btn c-btn--secondary">Cancel</button>
+        <button v-on:click="cancel" class="c-btn c-btn--secondary">Cancel</button>
         <button v-on:click="createOrder" class="c-btn c-btn--primary" disabled>Submit</button>
       </div>
     </div>
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import router from '../router'
 import axios from 'axios'
 import OrderCustomer from '../components/OrderCustomer.vue'
 
@@ -36,6 +37,10 @@ export default {
   },
 
   methods: {
+    cancel: function () {
+      router.push({ name: 'home' })
+    },
+
     addCustomer: function () {
       var number = 0
       if (this.customers.length > 0) {
@@ -94,7 +99,7 @@ export default {
   bottom: 0;
   right: 0;
   left: 0;
-  padding: .5rem .5rem;
+  padding: .5rem 0;
   border-top: 1px solid #EAEAEA;
   background: #fff;
 }
