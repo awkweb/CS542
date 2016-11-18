@@ -9,6 +9,7 @@ import OrderView from '../views/OrderView.vue'
 export default new Router({
   routes: [
     { path: '/', name: 'home', component: HomeView },
-    { path: '/order', name: 'order', component: OrderView }
+    { path: '/order/new', name: 'order-new', component: OrderView },
+    { path: '/order/:id', name: 'order-update', component: OrderView }
   ]
 })

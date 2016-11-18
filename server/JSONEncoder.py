@@ -7,7 +7,7 @@ class MyJSONEncoder(JSONEncoder):
         	return { \
                 'id':obj.id, \
                 'date': obj.date, \
-                'status': obj.status, \
+                'status': obj.status \
             }
         elif isinstance(obj, Bill):
             return { \

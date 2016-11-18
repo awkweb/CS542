@@ -3,12 +3,12 @@
     <h2>{{ orderFilter }} Orders</h2>
     <div class="toolbar">
         <div class="c-btn-group">
-          <button v-on:click="orderFilter = 'All'" class="c-btn c-btn--secondary">All</button>
-          <button v-on:click="orderFilter = 'Open'" class="c-btn c-btn--secondary">Open</button>
-          <button v-on:click="orderFilter = 'Closed'" class="c-btn c-btn--secondary">Closed</button>
+          <button v-on:click="orderFilter = 'All'" v-bind:class="[orderFilter == 'All' ? 'c-btn-active' : '', 'c-btn', 'c-btn--secondary']">All</button>
+          <button v-on:click="orderFilter = 'Open'" v-bind:class="[orderFilter == 'Open' ? 'c-btn-active' : '', 'c-btn', 'c-btn--secondary']">Open</button>
+          <button v-on:click="orderFilter = 'Closed'" v-bind:class="[orderFilter == 'Closed' ? 'c-btn-active' : '', 'c-btn', 'c-btn--secondary']">Closed</button>
         </div>
         <div class="c-btn-group right">
-            <router-link :to="{ name: 'order' }" class="c-btn c-btn--primary">New Order</router-link>
+            <router-link :to="{ name: 'order-new' }" class="c-btn c-btn--primary">New Order</router-link>
         </div>
     </div>
     <order-table v-bind:orders="orders" v-bind:orderFilter="orderFilter"></order-table>
@@ -24,7 +24,8 @@ export default {
   data () {
     return {
       orders: [],
-      orderFilter: 'All'
+      orderFilter: 'All',
+      active: true
     }
   },
   components: {
@@ -62,6 +63,10 @@ export default {
         display: flex;
         justify-content: flex-end;
     }
+}
+
+.c-btn-active {
+    background: #F7F9FA !important;  
 }
 
 .c-btn {

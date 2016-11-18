@@ -1,6 +1,8 @@
 <template>
   <div id="order-view">
-    <h2>New Order</h2>
+    <h2 v-if="this.$route.params.id">Update Order #{{ this.$route.params.id }}</h2>
+    <h2 v-else>New Order</h2>
+
     <div class="customer-container">
       <div v-for="customer in customers">
         <order-customer v-bind:customer="customer" v-on:removeCustomer="removeCustomer"></order-customer>
@@ -11,7 +13,8 @@
       <button v-on:click="addCustomer" class="c-btn c-btn--secondary">Add Customer</button>
       <div>
         <button v-on:click="cancel" class="c-btn c-btn--secondary">Cancel</button>
-        <button v-on:click="createOrder" class="c-btn c-btn--primary" disabled>Submit</button>
+        <button v-on:click="createOrder" class="c-btn c-btn--primary" v-if="this.$route.params.id">Update</button>
+        <button v-on:click="createOrder" class="c-btn c-btn--primary" v-else>Submit</button>
       </div>
     </div>
   </div>
@@ -27,8 +30,7 @@ export default {
 
   data () {
     return {
-      customers: [],
-      total: 0
+      customers: []
     }
   },
 
@@ -60,6 +62,20 @@ export default {
       )
     },
 
+    getOrder: function (orderId) {
+      axios.get('/api/masterorder', {
+        params: {
+          id: orderId
+        }
+      })
+      .then(function (response) {
+        console.log(response.data)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    },
+
     createOrder: function () {
       // Create master order
       // For customer in customers, create order
@@ -67,20 +83,30 @@ export default {
       // Navigate to home
       var vm = this;
 
-      // axios.post('/api/masterorder/add')
-      // .then(function (response) {
-      //   const masterOrderId = response.data.id
-      //   console.log("masterOrderId", masterOrderId);
-      // })
-      // .catch(function (error) {
-      //   console.log(error);
-      // });
+      axios.post('/api/masterorder/add')
+      .then(function (response) {
+        const masterOrderId = response.data.id
+        console.log("masterOrderId", masterOrderId);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     },
   },
 
+  watch: {
+    '$route' (to, from) {
+      alert('meep')
+      console.log(this.$route.params);
+    }
+  },
+
   created () {
+    if (this.$route.params.id)
+      this.getOrder(this.$route.params.id)
+    else
+      this.addCustomer()
     this.$store.dispatch('FETCH_DISHES');
-    this.addCustomer()
   }
 }
 </script>

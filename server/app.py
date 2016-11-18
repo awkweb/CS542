@@ -49,6 +49,19 @@ def add_master_order():
 	else:
 		return not_found()
 
+@app.route('/api/masterorder', methods=['GET'])
+def get_master_order():
+	id = request.args.get('id')
+	if request.method == 'GET':
+		if id is not None:
+			master_order = MasterOrder.query.get(id)
+			if master_order is not None:
+				return jsonify(master_order)
+		else:
+			raise CustomException('Master order was not found.', 404)
+	else:
+		return not_found()
+
 @app.route('/api/masterorder/all', methods=['GET'])
 def get_master_order_all():
 	if request.method == 'GET':
@@ -147,7 +160,7 @@ def get_order():
 	status = request.args.get('status')
 	if request.method == 'GET':
 		if id is not None:
-			order = Orders.query.get(id)
+			order = Order.query.get(id)
 			if order is not None:
 				return jsonify(order)
 		elif status is not None:
