@@ -68,8 +68,9 @@ export default {
       )
     },
 
-    getOrder: function (orderId) {
+    getOrder: function () {
       var vm = this
+      const orderId = this.$route.params.id
 
       axios.get('/api/masterorder', {
         params: {
@@ -116,15 +117,12 @@ export default {
   },
 
   watch: {
-    '$route' (to, from) {
-      alert('meep')
-      console.log(this.$route.params);
-    }
+    '$route': 'getOrder'
   },
 
   created () {
     if (this.$route.params.id)
-      this.getOrder(this.$route.params.id)
+      this.getOrder()
     else
       this.addCustomer()
   }
