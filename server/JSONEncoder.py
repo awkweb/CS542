@@ -7,7 +7,8 @@ class MyJSONEncoder(JSONEncoder):
         	return { \
                 'id':obj.id, \
                 'date': obj.date, \
-                'status': obj.status \
+                'status': obj.status, \
+                'orders': obj.orders \
             }
         elif isinstance(obj, Bill):
             return { \
@@ -34,7 +35,8 @@ class MyJSONEncoder(JSONEncoder):
                 'id': obj.id, \
                 'note': obj.note, \
                 'master_order_id': obj.master_order_id, \
-                'bill_id': obj.bill_id \
+                'bill_id': obj.bill_id, \
+                'order_dishes': obj.order_dishes \
             }
 
         return super(MyJSONEncoder, self).default(obj)

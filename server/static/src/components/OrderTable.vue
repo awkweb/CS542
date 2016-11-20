@@ -8,11 +8,11 @@
       <th>Status</th>
     </thead>
     <tbody v-for="order in orders">
-      <tr v-if="order.status == orderFilter || orderFilter == 'All'" v-on:click="handleClick(order.id, order.status)">
+      <tr v-if="order.status == orderFilter || orderFilter == 'All'" v-on:click="handleClick(order)">
         <td>{{ order.id }}</td>
         <td>{{ order.date | prettyDate }}</td>
-        <td>3</td>
-        <td>$27.50</td>
+        <td>{{ order.orders.length }}</td>
+        <td>${{ order.orders | total }}</td>
         <td>{{ order.status }}</td>
       </tr>
     </tbody>  
@@ -21,6 +21,7 @@
 
 <script>
 import router from '../router'
+import store from '../store'
 import moment from 'moment'
 
 export default {
@@ -29,16 +30,48 @@ export default {
   props: ['orders', 'orderFilter'],
 
   methods: {
-    handleClick: function (orderId, orderStatus) {
-      // if (orderStatus === 'Open')
-      //   router.push({ name: 'order-update', params: { id: orderId }})
-      router.push({ name: 'order-update', params: { id: orderId }})
+    handleClick: function (order) {
+      console.log(order)
+      const orderId = order.id
+      const orderStatus = order.status
+      if (orderStatus === 'Open')
+        router.push({ name: 'order-update', params: { id: orderId }})
+      else
+        router.push({ name: 'bill', params: { id: orderId }})
     }
   },
   
   filters: {
+    total: function (orders) {
+      var orderDict = {}
+      for (var i in orders) {
+        const order = orders[i]
+        const dishes = order.order_dishes
+        for (var n in dishes) {
+          const dish = dishes[n]
+          const dishId = parseInt(dish.dish_id)
+
+          if (orderDict[dishId]) {
+            orderDict[dishId] += dish.quantity
+          } else {
+            orderDict[dishId] = dish.quantity
+          }
+        }
+      }
+
+      const dishes = store.state.dishes
+      var sum = 0
+      for (var dishId in orderDict) {
+        const quantity = orderDict[dishId]
+        const dish = dishes.filter(d => d.id == dishId)[0]
+        sum += dish.price * quantity
+      }
+
+      return sum.toFixed(2)
+    },
+
     prettyDate: function (dateString) {
-      return moment(dateString).fromNow();
+      return moment(dateString).format('MMMM D, YYYY')
     }
   }
 }

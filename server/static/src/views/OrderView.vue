@@ -13,7 +13,8 @@
       <button v-on:click="addCustomer" class="c-btn c-btn--secondary">Add Customer</button>
       <div>
         <button v-on:click="cancel" class="c-btn c-btn--secondary">Cancel</button>
-        <button v-on:click="createOrder" class="c-btn c-btn--primary" v-if="this.$route.params.id">Update</button>
+        <button v-on:click="split" class="c-btn c-btn--secondary" v-if="this.$route.params.id">Split</button>
+        <button v-on:click="updateOrder" class="c-btn c-btn--primary" v-if="this.$route.params.id">Update</button>
         <button v-on:click="createOrder" class="c-btn c-btn--primary" v-else>Submit</button>
       </div>
     </div>
@@ -43,6 +44,11 @@ export default {
       router.push({ name: 'home' })
     },
 
+    split: function () {
+      const orderId = this.$route.params.id
+      router.push({ name: 'split', params: { id: orderId } })
+    },
+
     addCustomer: function () {
       var number = 0
       if (this.customers.length > 0) {
@@ -53,8 +59,8 @@ export default {
       const customer = {
         'number': number + 1,
         'dishes': []
-      };
-      this.customers.push(customer);
+      }
+      this.customers.push(customer)
     },
 
     removeCustomer: function (customerNumber) {
@@ -63,13 +69,24 @@ export default {
     },
 
     getOrder: function (orderId) {
+      var vm = this
+
       axios.get('/api/masterorder', {
         params: {
           id: orderId
         }
       })
       .then(function (response) {
-        console.log(response.data)
+        vm.customers = response.data.orders.map(function (order) {
+          return {
+            'number': order.id,
+            'id': order.id,
+            'master_order_id': order.master_order_id,
+            'bill_id': order.bill_id,
+            'dishes': order.order_dishes,
+            'note': order.note
+          }
+        })
       })
       .catch(function (error) {
         console.log(error);
@@ -81,17 +98,21 @@ export default {
       // For customer in customers, create order
       // Add dish to order
       // Navigate to home
-      var vm = this;
+      var vm = this
 
-      axios.post('/api/masterorder/add')
-      .then(function (response) {
-        const masterOrderId = response.data.id
-        console.log("masterOrderId", masterOrderId);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      // axios.post('/api/masterorder/add')
+      // .then(function (response) {
+      //   const masterOrderId = response.data.id
+      //   console.log("masterOrderId", masterOrderId)
+      // })
+      // .catch(function (error) {
+      //   console.log(error)
+      // });
     },
+
+    updateOrder: function () {
+
+    }
   },
 
   watch: {
@@ -106,7 +127,6 @@ export default {
       this.getOrder(this.$route.params.id)
     else
       this.addCustomer()
-    this.$store.dispatch('FETCH_DISHES');
   }
 }
 </script>

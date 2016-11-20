@@ -2,7 +2,7 @@
   <div class="customer-dish">
     <div class="input-wrapper">
         <label class="c-label">Dish</label>
-        <select v-model="dish.id" class="c-input">
+        <select v-model="dish.dish_id" class="c-input">
           <option v-for="item in this.$store.state.dishes" v-bind:value="item.id">{{ item.name }} (${{ item.price }})</option>
         </select>
     </div>
@@ -21,11 +21,13 @@
 <script>
 export default {
   name: 'customerDish',
+
   props: ['dish'],
+
   methods: {
     removeDish: function () {
       this.$emit('removeDish', this.dish.number)
-    },
+    }
   }
 }
 </script>

@@ -10,7 +10,7 @@ class MasterOrder(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DATE)
     status = db.Column(db.String())
-    orders = db.relationship('Order', backref='master_bill', lazy='dynamic')
+    orders = db.relationship('Order', backref='master_order', lazy='select')
 
     def __init__(self):
         self.date = datetime.today().date()
@@ -27,7 +27,7 @@ class Dish(db.Model):
     description = db.Column(db.String())
     price = db.Column(db.Float(precision=2))
     category = db.Column(db.String())
-    order_dishes=db.relationship('Order_Dish', backref='dishes', lazy='dynamic')
+    order_dishes=db.relationship('Order_Dish', backref='dish', lazy='select')
 
     def __init__(self, name, description, price, category):
         self.name = name
@@ -43,7 +43,7 @@ class Bill(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DATE)
-    orders = db.relationship('Order', backref='bill', lazy='dynamic')
+    orders = db.relationship('Order', backref='bill', lazy='select')
                                                                                                     
     def __repr__(self):
         return '<id {}>'.format(self.id)  
@@ -55,7 +55,7 @@ class Order(db.Model):
     note = db.Column(db.String())                                             
     master_order_id=db.Column(db.Integer, db.ForeignKey('master_order.id'))
     bill_id=db.Column(db.Integer, db.ForeignKey('bill.id'))
-    order_dishes=db.relationship('Order_Dish', backref='order', lazy='dynamic')
+    order_dishes=db.relationship('Order_Dish', backref='order', lazy='select')
                                                 
     def __init__(self, note, master_order_id):
         self.note = note

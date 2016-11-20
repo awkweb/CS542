@@ -33,13 +33,13 @@ export default {
     addDish: function () {
       var number = 0
       if (this.customer.dishes.length > 0) {
-        var dishNumbers = this.customer.dishes.map(c => c.number)
-        number = Math.max(...dishNumbers)
+        var dishNumbers = this.customer.dishes.map(d => d.number)
+        number = Math.max(...dishNumbers);
       }
 
       const dish = {
         'number': number + 1,
-        'id': -1,
+        'dish_id': -1,
         'quantity': 0
       };
       this.customer.dishes.push(dish)

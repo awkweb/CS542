@@ -21,6 +21,7 @@ import axios from 'axios'
 
 export default {
   name: 'home',
+  
   data () {
     return {
       orders: [],
@@ -28,21 +29,24 @@ export default {
       active: true
     }
   },
+
   components: {
     'order-table': OrderTable
   },
+
   methods: {
     fetchData: function () {
       var vm = this;
       axios.get('/api/masterorder/all')
         .then(function (response) {
-          vm.orders = response.data;
+          vm.orders = response.data.reverse();
         })
         .catch(function (error) {
           console.log('Error! Could not reach the API. ' + error)
         })
     }
   },
+
   created: function () {
     this.fetchData();
   }

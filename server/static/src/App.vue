@@ -9,6 +9,16 @@
   </div>
 </template>
 
+<script>
+export default {
+  name: 'app',
+
+  created () {
+    this.$store.dispatch('FETCH_DISHES')
+  }
+}
+</script>
+
 <style lang="sass">
 body {
   font-size: 15px;
