@@ -61,7 +61,7 @@
 /******/ 	__webpack_require__.p = "/dist/";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 188);
+/******/ 	return __webpack_require__(__webpack_require__.s = 191);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1879,7 +1879,7 @@ function loadLocale(name) {
             module && module.exports) {
         try {
             oldLocale = globalLocale._abbr;
-            __webpack_require__(161)("./" + name);
+            __webpack_require__(162)("./" + name);
             // because defineLocale currently also sets the global locale, we
             // want to undo that for lazy loaded locales
             getSetGlobalLocale(oldLocale);
@@ -4367,7 +4367,7 @@ return hooks;
 
 })));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(187)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(190)(module)))
 
 /***/ },
 /* 1 */
@@ -4376,7 +4376,7 @@ return hooks;
 "use strict";
 'use strict';
 
-var bind = __webpack_require__(13);
+var bind = __webpack_require__(15);
 
 /*global toString:true*/
 
@@ -4960,15 +4960,15 @@ function applyToTag(styleElement, obj) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(177);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(179);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_router__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__views_HomeView_vue__ = __webpack_require__(166);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__views_HomeView_vue__ = __webpack_require__(168);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__views_HomeView_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__views_HomeView_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__views_OrderView_vue__ = __webpack_require__(167);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__views_OrderView_vue__ = __webpack_require__(169);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__views_OrderView_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__views_OrderView_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__views_SplitView_vue__ = __webpack_require__(168);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__views_SplitView_vue__ = __webpack_require__(170);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__views_SplitView_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__views_SplitView_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__views_BillView_vue__ = __webpack_require__(165);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__views_BillView_vue__ = __webpack_require__(167);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__views_BillView_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__views_BillView_vue__);
 
 
@@ -12763,18 +12763,286 @@ return Vue$2;
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(124);
+module.exports = __webpack_require__(125);
 
 /***/ },
 /* 7 */
+/***/ function(module, exports) {
+
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(7).nextTick;
+var apply = Function.prototype.apply;
+var slice = Array.prototype.slice;
+var immediateIds = {};
+var nextImmediateId = 0;
+
+// DOM APIs, for completeness
+
+exports.setTimeout = function() {
+  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
+};
+exports.setInterval = function() {
+  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
+};
+exports.clearTimeout =
+exports.clearInterval = function(timeout) { timeout.close(); };
+
+function Timeout(id, clearFn) {
+  this._id = id;
+  this._clearFn = clearFn;
+}
+Timeout.prototype.unref = Timeout.prototype.ref = function() {};
+Timeout.prototype.close = function() {
+  this._clearFn.call(window, this._id);
+};
+
+// Does not start the time, just sets up the members needed.
+exports.enroll = function(item, msecs) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = msecs;
+};
+
+exports.unenroll = function(item) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = -1;
+};
+
+exports._unrefActive = exports.active = function(item) {
+  clearTimeout(item._idleTimeoutId);
+
+  var msecs = item._idleTimeout;
+  if (msecs >= 0) {
+    item._idleTimeoutId = setTimeout(function onTimeout() {
+      if (item._onTimeout)
+        item._onTimeout();
+    }, msecs);
+  }
+};
+
+// That's not how node.js implements it but the exposed api is the same.
+exports.setImmediate = typeof setImmediate === "function" ? setImmediate : function(fn) {
+  var id = nextImmediateId++;
+  var args = arguments.length < 2 ? false : slice.call(arguments, 1);
+
+  immediateIds[id] = true;
+
+  nextTick(function onNextTick() {
+    if (immediateIds[id]) {
+      // fn.call() is faster so we optimize for the common use-case
+      // @see http://jsperf.com/call-apply-segu
+      if (args) {
+        fn.apply(null, args);
+      } else {
+        fn.call(null);
+      }
+      // Prevent ids from leaking
+      exports.clearImmediate(id);
+    }
+  });
+
+  return id;
+};
+
+exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function(id) {
+  delete immediateIds[id];
+};
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8).setImmediate, __webpack_require__(8).clearImmediate))
+
+/***/ },
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(186);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(188);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vuex__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__api__ = __webpack_require__(149);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__api__ = __webpack_require__(150);
 
 
 
@@ -12812,19 +13080,19 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex___default.a.Store({
 /* harmony default export */ exports["a"] = store;
 
 /***/ },
-/* 8 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
 var utils = __webpack_require__(1);
-var settle = __webpack_require__(130);
-var buildURL = __webpack_require__(133);
-var parseHeaders = __webpack_require__(139);
-var isURLSameOrigin = __webpack_require__(137);
-var createError = __webpack_require__(11);
-var btoa = (typeof window !== 'undefined' && window.btoa) || __webpack_require__(132);
+var settle = __webpack_require__(131);
+var buildURL = __webpack_require__(134);
+var parseHeaders = __webpack_require__(140);
+var isURLSameOrigin = __webpack_require__(138);
+var createError = __webpack_require__(13);
+var btoa = (typeof window !== 'undefined' && window.btoa) || __webpack_require__(133);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -12920,7 +13188,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(135);
+      var cookies = __webpack_require__(136);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -12994,10 +13262,10 @@ module.exports = function xhrAdapter(config) {
   });
 };
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(122)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
-/* 9 */
+/* 11 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -13023,7 +13291,7 @@ module.exports = Cancel;
 
 
 /***/ },
-/* 10 */
+/* 12 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -13035,13 +13303,13 @@ module.exports = function isCancel(value) {
 
 
 /***/ },
-/* 11 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 'use strict';
 
-var enhanceError = __webpack_require__(129);
+var enhanceError = __webpack_require__(130);
 
 /**
  * Create an Error with the specified message, config, error code, and response.
@@ -13059,14 +13327,14 @@ module.exports = function createError(message, config, code, response) {
 
 
 /***/ },
-/* 12 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
 var utils = __webpack_require__(1);
-var normalizeHeaderName = __webpack_require__(138);
+var normalizeHeaderName = __webpack_require__(139);
 
 var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 var DEFAULT_CONTENT_TYPE = {
@@ -13083,10 +13351,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(8);
+    adapter = __webpack_require__(10);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(8);
+    adapter = __webpack_require__(10);
   }
   return adapter;
 }
@@ -13150,10 +13418,10 @@ module.exports = {
   }
 };
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(122)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
-/* 13 */
+/* 15 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -13171,7 +13439,7 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ },
-/* 14 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13249,7 +13517,7 @@ return af;
 
 
 /***/ },
-/* 15 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13313,7 +13581,7 @@ return arDz;
 
 
 /***/ },
-/* 16 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13444,7 +13712,7 @@ return arLy;
 
 
 /***/ },
-/* 17 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13509,7 +13777,7 @@ return arMa;
 
 
 /***/ },
-/* 18 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13619,7 +13887,7 @@ return arSa;
 
 
 /***/ },
-/* 19 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13683,7 +13951,7 @@ return arTn;
 
 
 /***/ },
-/* 20 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13830,7 +14098,7 @@ return ar;
 
 
 /***/ },
-/* 21 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13940,7 +14208,7 @@ return az;
 
 
 /***/ },
-/* 22 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14079,7 +14347,7 @@ return be;
 
 
 /***/ },
-/* 23 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 
@@ -14099,7 +14367,7 @@ return bgX;
 
 
 /***/ },
-/* 24 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14194,7 +14462,7 @@ return bg;
 
 
 /***/ },
-/* 25 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14318,7 +14586,7 @@ return bn;
 
 
 /***/ },
-/* 26 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14442,7 +14710,7 @@ return bo;
 
 
 /***/ },
-/* 27 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14555,7 +14823,7 @@ return br;
 
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14703,7 +14971,7 @@ return bs;
 
 
 /***/ },
-/* 29 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14789,7 +15057,7 @@ return ca;
 
 
 /***/ },
-/* 30 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14966,7 +15234,7 @@ return cs;
 
 
 /***/ },
-/* 31 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15034,7 +15302,7 @@ return cv;
 
 
 /***/ },
-/* 32 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15120,7 +15388,7 @@ return cy;
 
 
 /***/ },
-/* 33 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15185,7 +15453,7 @@ return da;
 
 
 /***/ },
-/* 34 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15269,7 +15537,7 @@ return deAt;
 
 
 /***/ },
-/* 35 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15352,7 +15620,7 @@ return de;
 
 
 /***/ },
-/* 36 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15457,7 +15725,7 @@ return dv;
 
 
 /***/ },
-/* 37 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15560,7 +15828,7 @@ return el;
 
 
 /***/ },
-/* 38 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15632,7 +15900,7 @@ return enAu;
 
 
 /***/ },
-/* 39 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15700,7 +15968,7 @@ return enCa;
 
 
 /***/ },
-/* 40 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15772,7 +16040,7 @@ return enGb;
 
 
 /***/ },
-/* 41 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15844,7 +16112,7 @@ return enIe;
 
 
 /***/ },
-/* 42 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15916,7 +16184,7 @@ return enNz;
 
 
 /***/ },
-/* 43 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15994,7 +16262,7 @@ return eo;
 
 
 /***/ },
-/* 44 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16079,7 +16347,7 @@ return esDo;
 
 
 /***/ },
-/* 45 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16165,7 +16433,7 @@ return es;
 
 
 /***/ },
-/* 46 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16250,7 +16518,7 @@ return et;
 
 
 /***/ },
-/* 47 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16321,7 +16589,7 @@ return eu;
 
 
 /***/ },
-/* 48 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16433,7 +16701,7 @@ return fa;
 
 
 /***/ },
-/* 49 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16545,7 +16813,7 @@ return fi;
 
 
 /***/ },
-/* 50 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16610,7 +16878,7 @@ return fo;
 
 
 /***/ },
-/* 51 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16675,7 +16943,7 @@ return frCa;
 
 
 /***/ },
-/* 52 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16744,7 +17012,7 @@ return frCh;
 
 
 /***/ },
-/* 53 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16813,7 +17081,7 @@ return fr;
 
 
 /***/ },
-/* 54 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16891,7 +17159,7 @@ return fy;
 
 
 /***/ },
-/* 55 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16972,7 +17240,7 @@ return gd;
 
 
 /***/ },
-/* 56 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17054,7 +17322,7 @@ return gl;
 
 
 /***/ },
-/* 57 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17158,7 +17426,7 @@ return he;
 
 
 /***/ },
-/* 58 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17287,7 +17555,7 @@ return hi;
 
 
 /***/ },
-/* 59 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17437,7 +17705,7 @@ return hr;
 
 
 /***/ },
-/* 60 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17551,7 +17819,7 @@ return hu;
 
 
 /***/ },
-/* 61 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17651,7 +17919,7 @@ return hyAm;
 
 
 /***/ },
-/* 62 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17739,7 +18007,7 @@ return id;
 
 
 /***/ },
-/* 63 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17871,7 +18139,7 @@ return is;
 
 
 /***/ },
-/* 64 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17946,7 +18214,7 @@ return it;
 
 
 /***/ },
-/* 65 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18027,7 +18295,7 @@ return ja;
 
 
 /***/ },
-/* 66 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18115,7 +18383,7 @@ return jv;
 
 
 /***/ },
-/* 67 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18209,7 +18477,7 @@ return ka;
 
 
 /***/ },
-/* 68 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18301,7 +18569,7 @@ return kk;
 
 
 /***/ },
-/* 69 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18364,7 +18632,7 @@ return km;
 
 
 /***/ },
-/* 70 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18434,7 +18702,7 @@ return ko;
 
 
 /***/ },
-/* 71 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18527,7 +18795,7 @@ return ky;
 
 
 /***/ },
-/* 72 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18669,7 +18937,7 @@ return lb;
 
 
 /***/ },
-/* 73 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18744,7 +19012,7 @@ return lo;
 
 
 /***/ },
-/* 74 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18866,7 +19134,7 @@ return lt;
 
 
 /***/ },
-/* 75 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18968,7 +19236,7 @@ return lv;
 
 
 /***/ },
-/* 76 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19084,7 +19352,7 @@ return me;
 
 
 /***/ },
-/* 77 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19153,7 +19421,7 @@ return mi;
 
 
 /***/ },
-/* 78 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19248,7 +19516,7 @@ return mk;
 
 
 /***/ },
-/* 79 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19334,7 +19602,7 @@ return ml;
 
 
 /***/ },
-/* 80 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19498,7 +19766,7 @@ return mr;
 
 
 /***/ },
-/* 81 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19586,7 +19854,7 @@ return msMy;
 
 
 /***/ },
-/* 82 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19673,7 +19941,7 @@ return ms;
 
 
 /***/ },
-/* 83 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19774,7 +20042,7 @@ return my;
 
 
 /***/ },
-/* 84 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19842,7 +20110,7 @@ return nb;
 
 
 /***/ },
-/* 85 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19970,7 +20238,7 @@ return ne;
 
 
 /***/ },
-/* 86 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20061,7 +20329,7 @@ return nlBe;
 
 
 /***/ },
-/* 87 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20152,7 +20420,7 @@ return nl;
 
 
 /***/ },
-/* 88 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20217,7 +20485,7 @@ return nn;
 
 
 /***/ },
-/* 89 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20346,7 +20614,7 @@ return paIn;
 
 
 /***/ },
-/* 90 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20456,7 +20724,7 @@ return pl;
 
 
 /***/ },
-/* 91 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20522,7 +20790,7 @@ return ptBr;
 
 
 /***/ },
-/* 92 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20592,7 +20860,7 @@ return pt;
 
 
 /***/ },
-/* 93 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20672,7 +20940,7 @@ return ro;
 
 
 /***/ },
-/* 94 */
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20860,7 +21128,7 @@ return ru;
 
 
 /***/ },
-/* 95 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20926,7 +21194,7 @@ return se;
 
 
 /***/ },
-/* 96 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21002,7 +21270,7 @@ return si;
 
 
 /***/ },
-/* 97 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21157,7 +21425,7 @@ return sk;
 
 
 /***/ },
-/* 98 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21324,7 +21592,7 @@ return sl;
 
 
 /***/ },
-/* 99 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21399,7 +21667,7 @@ return sq;
 
 
 /***/ },
-/* 100 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21514,7 +21782,7 @@ return srCyrl;
 
 
 /***/ },
-/* 101 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21629,7 +21897,7 @@ return sr;
 
 
 /***/ },
-/* 102 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21723,7 +21991,7 @@ return ss;
 
 
 /***/ },
-/* 103 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21797,7 +22065,7 @@ return sv;
 
 
 /***/ },
-/* 104 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21861,7 +22129,7 @@ return sw;
 
 
 /***/ },
-/* 105 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21996,7 +22264,7 @@ return ta;
 
 
 /***/ },
-/* 106 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22090,7 +22358,7 @@ return te;
 
 
 /***/ },
-/* 107 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22163,7 +22431,7 @@ return tet;
 
 
 /***/ },
-/* 108 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22235,7 +22503,7 @@ return th;
 
 
 /***/ },
-/* 109 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22302,7 +22570,7 @@ return tlPh;
 
 
 /***/ },
-/* 110 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22427,7 +22695,7 @@ return tlh;
 
 
 /***/ },
-/* 111 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22522,7 +22790,7 @@ return tr;
 
 
 /***/ },
-/* 112 */
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22618,7 +22886,7 @@ return tzl;
 
 
 /***/ },
-/* 113 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22681,7 +22949,7 @@ return tzmLatn;
 
 
 /***/ },
-/* 114 */
+/* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22744,7 +23012,7 @@ return tzm;
 
 
 /***/ },
-/* 115 */
+/* 117 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22895,7 +23163,7 @@ return uk;
 
 
 /***/ },
-/* 116 */
+/* 118 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22958,7 +23226,7 @@ return uz;
 
 
 /***/ },
-/* 117 */
+/* 119 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23042,7 +23310,7 @@ return vi;
 
 
 /***/ },
-/* 118 */
+/* 120 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23115,7 +23383,7 @@ return xPseudo;
 
 
 /***/ },
-/* 119 */
+/* 121 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23247,7 +23515,7 @@ return zhCn;
 
 
 /***/ },
-/* 120 */
+/* 122 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23357,7 +23625,7 @@ return zhHk;
 
 
 /***/ },
-/* 121 */
+/* 123 */
 /***/ function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23466,206 +23734,20 @@ return zhTw;
 
 
 /***/ },
-/* 122 */
-/***/ function(module, exports) {
-
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-
-/***/ },
-/* 123 */
+/* 124 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* styles */
-__webpack_require__(181)
+__webpack_require__(183)
 
 /* script */
-__vue_exports__ = __webpack_require__(141)
+__vue_exports__ = __webpack_require__(142)
 
 /* template */
-var __vue_template__ = __webpack_require__(172)
+var __vue_template__ = __webpack_require__(174)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -23699,15 +23781,15 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 124 */
+/* 125 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 'use strict';
 
 var utils = __webpack_require__(1);
-var bind = __webpack_require__(13);
-var Axios = __webpack_require__(126);
+var bind = __webpack_require__(15);
+var Axios = __webpack_require__(127);
 
 /**
  * Create an instance of Axios
@@ -23740,15 +23822,15 @@ axios.create = function create(defaultConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(9);
-axios.CancelToken = __webpack_require__(125);
-axios.isCancel = __webpack_require__(10);
+axios.Cancel = __webpack_require__(11);
+axios.CancelToken = __webpack_require__(126);
+axios.isCancel = __webpack_require__(12);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(140);
+axios.spread = __webpack_require__(141);
 
 module.exports = axios;
 
@@ -23757,13 +23839,13 @@ module.exports.default = axios;
 
 
 /***/ },
-/* 125 */
+/* 126 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 'use strict';
 
-var Cancel = __webpack_require__(9);
+var Cancel = __webpack_require__(11);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -23821,18 +23903,18 @@ module.exports = CancelToken;
 
 
 /***/ },
-/* 126 */
+/* 127 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 'use strict';
 
-var defaults = __webpack_require__(12);
+var defaults = __webpack_require__(14);
 var utils = __webpack_require__(1);
-var InterceptorManager = __webpack_require__(127);
-var dispatchRequest = __webpack_require__(128);
-var isAbsoluteURL = __webpack_require__(136);
-var combineURLs = __webpack_require__(134);
+var InterceptorManager = __webpack_require__(128);
+var dispatchRequest = __webpack_require__(129);
+var isAbsoluteURL = __webpack_require__(137);
+var combineURLs = __webpack_require__(135);
 
 /**
  * Create a new instance of Axios
@@ -23913,7 +23995,7 @@ module.exports = Axios;
 
 
 /***/ },
-/* 127 */
+/* 128 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23972,16 +24054,16 @@ module.exports = InterceptorManager;
 
 
 /***/ },
-/* 128 */
+/* 129 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 'use strict';
 
 var utils = __webpack_require__(1);
-var transformData = __webpack_require__(131);
-var isCancel = __webpack_require__(10);
-var defaults = __webpack_require__(12);
+var transformData = __webpack_require__(132);
+var isCancel = __webpack_require__(12);
+var defaults = __webpack_require__(14);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -24058,7 +24140,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ },
-/* 129 */
+/* 130 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -24084,13 +24166,13 @@ module.exports = function enhanceError(error, config, code, response) {
 
 
 /***/ },
-/* 130 */
+/* 131 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 'use strict';
 
-var createError = __webpack_require__(11);
+var createError = __webpack_require__(13);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -24116,7 +24198,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ },
-/* 131 */
+/* 132 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24143,7 +24225,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ },
-/* 132 */
+/* 133 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -24186,7 +24268,7 @@ module.exports = btoa;
 
 
 /***/ },
-/* 133 */
+/* 134 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24261,7 +24343,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ },
-/* 134 */
+/* 135 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -24280,7 +24362,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ },
-/* 135 */
+/* 136 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24340,7 +24422,7 @@ module.exports = (
 
 
 /***/ },
-/* 136 */
+/* 137 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -24361,7 +24443,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ },
-/* 137 */
+/* 138 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24436,7 +24518,7 @@ module.exports = (
 
 
 /***/ },
-/* 138 */
+/* 139 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24455,7 +24537,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ },
-/* 139 */
+/* 140 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24499,7 +24581,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ },
-/* 140 */
+/* 141 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -24533,7 +24615,7 @@ module.exports = function spread(callback) {
 
 
 /***/ },
-/* 141 */
+/* 142 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24558,11 +24640,11 @@ module.exports = function spread(callback) {
 };
 
 /***/ },
-/* 142 */
+/* 143 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_OrderDish_vue__ = __webpack_require__(163);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_OrderDish_vue__ = __webpack_require__(165);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_OrderDish_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_OrderDish_vue__);
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -24624,7 +24706,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 };
 
 /***/ },
-/* 143 */
+/* 144 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24662,12 +24744,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 };
 
 /***/ },
-/* 144 */
+/* 145 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__router__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_moment__);
 //
@@ -24748,7 +24830,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 };
 
 /***/ },
-/* 145 */
+/* 146 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24764,11 +24846,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 };
 
 /***/ },
-/* 146 */
+/* 147 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_OrderTable_vue__ = __webpack_require__(164);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_OrderTable_vue__ = __webpack_require__(166);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_OrderTable_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_OrderTable_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_axios__);
@@ -24826,14 +24908,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 };
 
 /***/ },
-/* 147 */
+/* 148 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__router__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_axios__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_OrderCustomer_vue__ = __webpack_require__(162);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_OrderCustomer_vue__ = __webpack_require__(164);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_OrderCustomer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_OrderCustomer_vue__);
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -24965,17 +25047,24 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 };
 
 /***/ },
-/* 148 */
+/* 149 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__router__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_dragula__ = __webpack_require__(190);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_dragula__ = __webpack_require__(163);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_dragula___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vue_dragula__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_axios__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_axios__);
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+//
+//
+//
+//
+//
 //
 //
 //
@@ -25024,9 +25113,7 @@ __WEBPACK_IMPORTED_MODULE_1_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_vue_
   data: function data() {
     return {
       customers: [],
-      col1: ['The quick brown fox.', 'The sly snake.', 'The hungry hippo.'],
-      col2: ['The lovely flamingo.', 'The shrewd llama.', 'The inquisitive toucan.'],
-      col3: ['The boisterous lion.', 'The jaded panda.']
+      bills: [{ 'number': 1, 'customers': [] }, { 'number': 2, 'customers': [] }]
     };
   },
 
@@ -25037,7 +25124,33 @@ __WEBPACK_IMPORTED_MODULE_1_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_vue_
       __WEBPACK_IMPORTED_MODULE_0__router__["a" /* default */].push({ name: 'order-update', params: { id: orderId } });
     },
 
-    addBill: function addBill() {},
+    removeBill: function removeBill(billNumber) {
+      var rBill = this.bills.filter(function (b) {
+        return b.number == billNumber;
+      })[0];
+      var billCustomers = rBill.customers;
+      this.customers = this.customers.concat(billCustomers);
+
+      this.bills = this.bills.filter(function (bill) {
+        return bill.number != billNumber;
+      });
+    },
+
+    addBill: function addBill() {
+      var number = 0;
+      if (this.bills.length > 0) {
+        var billNumbers = this.bills.map(function (b) {
+          return b.number;
+        });
+        number = Math.max.apply(Math, _toConsumableArray(billNumbers));
+      }
+
+      var bill = {
+        'number': number + 1,
+        'customers': []
+      };
+      this.bills.push(bill);
+    },
 
     splitOrders: function splitOrders() {},
 
@@ -25050,7 +25163,16 @@ __WEBPACK_IMPORTED_MODULE_1_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_vue_
           id: orderId
         }
       }).then(function (response) {
-        vm.customers = response.data.orders;
+        vm.customers = response.data.orders.map(function (order) {
+          return {
+            'number': order.id,
+            'id': order.id,
+            'master_order_id': order.master_order_id,
+            'bill_id': order.bill_id,
+            'dishes': order.order_dishes,
+            'note': order.note
+          };
+        });
       }).catch(function (error) {
         console.log(error);
       });
@@ -25067,7 +25189,7 @@ __WEBPACK_IMPORTED_MODULE_1_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_vue_
 };
 
 /***/ },
-/* 149 */
+/* 150 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25091,20 +25213,6 @@ function fetchDishes() {
 }
 
 /***/ },
-/* 150 */
-/***/ function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(2)();
-// imports
-
-
-// module
-exports.push([module.i, "\n.customer-dish {\n  display: flex;\n  align-items: flex-end;\n  margin-bottom: 10px;\n}\n.button-wrapper .c-btn {\n  padding: 5px 10px;\n  font-size: 12px;\n}\n.input-wrapper {\n  flex: 1;\n  padding-right: 10px;\n}\n.c-label {\n  display: block;\n  padding-left: 2px;\n  font-size: 12px;\n  color: #7b8994;\n}\n.c-input {\n  width: 100%;\n  display: block;\n  padding: 5px 7px;\n  box-sizing: border-box;\n  font-size: 13px;\n  text-align: left;\n  color: #47525d;\n  border: 1px solid rgba(37, 40, 43, 0.1);\n  border-radius: 3px;\n  background-color: white;\n  background-clip: padding-box;\n}\n.c-input:focus {\n    border-color: #72b6ec;\n    outline: 0;\n}\n.c-input:disabled, .c-input.is-disabled {\n    background-color: #f7f9fa;\n}\n.c-input.is-invalid,\n  .c-form--validated .c-input:invalid {\n    background-image: url(" + __webpack_require__(159) + ");\n    background-size: 14px;\n    background-position: right 10px center;\n    background-repeat: no-repeat;\n    padding-right: 34px;\n    border-color: #ED1A1E;\n    box-shadow: none;\n    outline: 0;\n}\n.c-input.is-valid,\n  .c-form--validated .c-input:valid {\n    background-image: url(" + __webpack_require__(160) + ");\n    background-size: 14px;\n    background-position: right 10px center;\n    background-repeat: no-repeat;\n    padding-right: 34px;\n}\ntextarea.c-input {\n  resize: vertical;\n}\nselect.c-input {\n  background-image: url(" + __webpack_require__(158) + ");\n  background-size: 7px 14px;\n  background-position: right 10px center;\n  background-repeat: no-repeat;\n  -webkit-appearance: none;\n  padding-right: 27px;\n}\ninput[type=number]::-webkit-inner-spin-button,\ninput[type=number]::-webkit-outer-spin-button {\n  -webkit-appearance: none;\n  margin: 0;\n}\n", ""]);
-
-// exports
-
-
-/***/ },
 /* 151 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -25113,7 +25221,7 @@ exports = module.exports = __webpack_require__(2)();
 
 
 // module
-exports.push([module.i, "\ntable {\n  margin-bottom: 23px;\n}\ntable {\n  border-collapse: collapse;\n}\n.c-table {\n  display: table;\n  width: 100%;\n  text-align: left;\n}\n.c-table tr:hover {\n    background: #f7f9fa;\n    cursor: pointer;\n}\n.c-table__th, .c-table th, .c-table__td, .c-table td {\n  padding-top: 11.5px;\n  padding-bottom: 11.5px;\n  padding-left: 5.75px;\n  padding-right: 5.75px;\n}\n.c-table__th, .c-table th {\n  font-weight: 600;\n  color: #737373;\n  border-bottom: 2px solid #d0d4d9;\n}\n.c-table__row, .c-table tr {\n  border-bottom: 1px solid #d0d4d9;\n}\n", ""]);
+exports.push([module.i, "\n.customer-dish {\n  display: flex;\n  align-items: flex-end;\n  margin-bottom: 10px;\n}\n.button-wrapper .c-btn {\n  padding: 5px 10px;\n  font-size: 12px;\n}\n.input-wrapper {\n  flex: 1;\n  padding-right: 10px;\n}\n.c-label {\n  display: block;\n  padding-left: 2px;\n  font-size: 12px;\n  color: #7b8994;\n}\n.c-input {\n  width: 100%;\n  display: block;\n  padding: 5px 7px;\n  box-sizing: border-box;\n  font-size: 13px;\n  text-align: left;\n  color: #47525d;\n  border: 1px solid rgba(37, 40, 43, 0.1);\n  border-radius: 3px;\n  background-color: white;\n  background-clip: padding-box;\n}\n.c-input:focus {\n    border-color: #72b6ec;\n    outline: 0;\n}\n.c-input:disabled, .c-input.is-disabled {\n    background-color: #f7f9fa;\n}\n.c-input.is-invalid,\n  .c-form--validated .c-input:invalid {\n    background-image: url(" + __webpack_require__(160) + ");\n    background-size: 14px;\n    background-position: right 10px center;\n    background-repeat: no-repeat;\n    padding-right: 34px;\n    border-color: #ED1A1E;\n    box-shadow: none;\n    outline: 0;\n}\n.c-input.is-valid,\n  .c-form--validated .c-input:valid {\n    background-image: url(" + __webpack_require__(161) + ");\n    background-size: 14px;\n    background-position: right 10px center;\n    background-repeat: no-repeat;\n    padding-right: 34px;\n}\ntextarea.c-input {\n  resize: vertical;\n}\nselect.c-input {\n  background-image: url(" + __webpack_require__(159) + ");\n  background-size: 7px 14px;\n  background-position: right 10px center;\n  background-repeat: no-repeat;\n  -webkit-appearance: none;\n  padding-right: 27px;\n}\ninput[type=number]::-webkit-inner-spin-button,\ninput[type=number]::-webkit-outer-spin-button {\n  -webkit-appearance: none;\n  margin: 0;\n}\n", ""]);
 
 // exports
 
@@ -25127,7 +25235,7 @@ exports = module.exports = __webpack_require__(2)();
 
 
 // module
-exports.push([module.i, "\n.customer-container {\n  margin-bottom: 10rem;\n}\n.sticky-footer {\n  display: flex;\n  justify-content: space-between;\n  position: fixed;\n  max-width: 45rem;\n  margin: auto;\n  bottom: 0;\n  right: 0;\n  left: 0;\n  padding: .5rem 0;\n  border-top: 1px solid #EAEAEA;\n  background: #fff;\n}\n", ""]);
+exports.push([module.i, "\ntable {\n  margin-bottom: 23px;\n}\ntable {\n  border-collapse: collapse;\n}\n.c-table {\n  display: table;\n  width: 100%;\n  text-align: left;\n}\n.c-table tr:hover {\n    background: #f7f9fa;\n    cursor: pointer;\n}\n.c-table__th, .c-table th, .c-table__td, .c-table td {\n  padding-top: 11.5px;\n  padding-bottom: 11.5px;\n  padding-left: 5.75px;\n  padding-right: 5.75px;\n}\n.c-table__th, .c-table th {\n  font-weight: 600;\n  color: #737373;\n  border-bottom: 2px solid #d0d4d9;\n}\n.c-table__row, .c-table tr {\n  border-bottom: 1px solid #d0d4d9;\n}\n", ""]);
 
 // exports
 
@@ -25141,7 +25249,7 @@ exports = module.exports = __webpack_require__(2)();
 
 
 // module
-exports.push([module.i, "\nbody {\n  font-size: 15px;\n}\n#app {\n  font-family: 'Avenir', Helvetica, Arial, sans-serif;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  color: #2c3e50;\n  max-width: 45rem;\n  margin: auto;\n}\nheader {\n  display: flex;\n  align-items: center;\n  height: 50px;\n  margin-bottom: 20px;\n  border-bottom: 1px solid #EAEAEA;\n}\nheader a {\n    color: #0073C7;\n    font-size: 20px;\n    font-weight: 700;\n    text-decoration: none;\n}\n", ""]);
+exports.push([module.i, "\n.customer-container {\n  margin-bottom: 10rem;\n}\n.sticky-footer {\n  display: flex;\n  justify-content: space-between;\n  position: fixed;\n  max-width: 45rem;\n  margin: auto;\n  bottom: 0;\n  right: 0;\n  left: 0;\n  padding: .5rem 0;\n  border-top: 1px solid #EAEAEA;\n  background: #fff;\n}\n", ""]);
 
 // exports
 
@@ -25155,7 +25263,7 @@ exports = module.exports = __webpack_require__(2)();
 
 
 // module
-exports.push([module.i, "\n.toolbar {\n  display: flex;\n  margin-bottom: 30px;\n}\n.toolbar .c-btn-group {\n    display: inline-flex;\n    flex: 1;\n}\n.toolbar .right {\n    display: flex;\n    justify-content: flex-end;\n}\n.c-btn-active {\n  background: #F7F9FA !important;\n}\n.c-btn {\n  display: inline-block;\n  padding: 7px 15px;\n  font-size: 13px;\n  font-weight: 600;\n  line-height: 1.4;\n  text-align: center;\n  border: 1px solid currentColor;\n  border-radius: 3px;\n  text-decoration: none;\n  cursor: pointer;\n}\n.c-btn[disabled], .c-btn.c-btn--disabled {\n    opacity: 0.5;\n    cursor: default;\n}\n.c-btn:focus {\n    box-shadow: 0 0 0 2px color(blue, 0.3);\n    outline: none;\n}\n.c-btn.c-btn--primary {\n    color: #fff;\n    border-color: #0071ce;\n    background: #007ee5;\n}\n.c-btn.c-btn--primary:hover:not(:disabled) {\n      background: linear-gradient(#007ee5, #0071ce);\n}\n.c-btn.c-btn--primary:active:not(:disabled) {\n      background: #0071ce;\n}\n.c-btn.c-btn--secondary {\n    color: #47525d;\n    border-color: #D0D4D9;\n    background: #fff;\n}\n.c-btn.c-btn--secondary:hover:not(:disabled) {\n      background: linear-gradient(white, #f7f9fa);\n}\n.c-btn.c-btn--secondary:active:not(:disabled) {\n      background: #F7F9FA;\n}\n.c-btn-group {\n  display: flex;\n}\n.c-btn-group .c-btn {\n    margin: 0;\n    border-radius: 0;\n}\n.c-btn-group .c-btn + .c-btn {\n      border-left: 0;\n}\n.c-btn-group .c-btn:first-child {\n      border-top-left-radius: 3px;\n      border-bottom-left-radius: 3px;\n}\n.c-btn-group .c-btn:last-child {\n      border-top-right-radius: 3px;\n      border-bottom-right-radius: 3px;\n}\n.c-btn-group--justify {\n    width: 100%;\n}\n.c-btn-group--justify .c-btn {\n      flex: 1 0 auto;\n}\n", ""]);
+exports.push([module.i, "\nbody {\n  font-size: 15px;\n}\n#app {\n  font-family: 'Avenir', Helvetica, Arial, sans-serif;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  color: #2c3e50;\n  max-width: 45rem;\n  margin: auto;\n}\nheader {\n  display: flex;\n  align-items: center;\n  height: 50px;\n  margin-bottom: 20px;\n  border-bottom: 1px solid #EAEAEA;\n}\nheader a {\n    color: #0073C7;\n    font-size: 20px;\n    font-weight: 700;\n    text-decoration: none;\n}\n", ""]);
 
 // exports
 
@@ -25169,7 +25277,7 @@ exports = module.exports = __webpack_require__(2)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n.toolbar {\n  display: flex;\n  margin-bottom: 30px;\n}\n.toolbar .c-btn-group {\n    display: inline-flex;\n    flex: 1;\n}\n.toolbar .right {\n    display: flex;\n    justify-content: flex-end;\n}\n.c-btn-active {\n  background: #F7F9FA !important;\n}\n.c-btn {\n  display: inline-block;\n  padding: 7px 15px;\n  font-size: 13px;\n  font-weight: 600;\n  line-height: 1.4;\n  text-align: center;\n  border: 1px solid currentColor;\n  border-radius: 3px;\n  text-decoration: none;\n  cursor: pointer;\n}\n.c-btn[disabled], .c-btn.c-btn--disabled {\n    opacity: 0.5;\n    cursor: default;\n}\n.c-btn:focus {\n    box-shadow: 0 0 0 2px color(blue, 0.3);\n    outline: none;\n}\n.c-btn.c-btn--primary {\n    color: #fff;\n    border-color: #0071ce;\n    background: #007ee5;\n}\n.c-btn.c-btn--primary:hover:not(:disabled) {\n      background: linear-gradient(#007ee5, #0071ce);\n}\n.c-btn.c-btn--primary:active:not(:disabled) {\n      background: #0071ce;\n}\n.c-btn.c-btn--secondary {\n    color: #47525d;\n    border-color: #D0D4D9;\n    background: #fff;\n}\n.c-btn.c-btn--secondary:hover:not(:disabled) {\n      background: linear-gradient(white, #f7f9fa);\n}\n.c-btn.c-btn--secondary:active:not(:disabled) {\n      background: #F7F9FA;\n}\n.c-btn-group {\n  display: flex;\n}\n.c-btn-group .c-btn {\n    margin: 0;\n    border-radius: 0;\n}\n.c-btn-group .c-btn + .c-btn {\n      border-left: 0;\n}\n.c-btn-group .c-btn:first-child {\n      border-top-left-radius: 3px;\n      border-bottom-left-radius: 3px;\n}\n.c-btn-group .c-btn:last-child {\n      border-top-right-radius: 3px;\n      border-bottom-right-radius: 3px;\n}\n.c-btn-group--justify {\n    width: 100%;\n}\n.c-btn-group--justify .c-btn {\n      flex: 1 0 auto;\n}\n", ""]);
 
 // exports
 
@@ -25183,7 +25291,7 @@ exports = module.exports = __webpack_require__(2)();
 
 
 // module
-exports.push([module.i, "\n.customer-header {\n  display: flex;\n  justify-content: space-between;\n  height: 45px;\n  align-items: center;\n  margin-bottom: 20px;\n  border-bottom: 1px solid #EAEAEA;\n}\n.customer-header .c-btn {\n    padding: 5px 10px;\n    font-size: 12px;\n}\n.order-customer {\n  margin-bottom: 40px;\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -25197,7 +25305,7 @@ exports = module.exports = __webpack_require__(2)();
 
 
 // module
-exports.push([module.i, "\n.wrapper {\n  display: flex;\n  margin-bottom: 8rem;\n}\n#source, #target {\n  flex: 1;\n}\n#source {\n  padding-right: .5rem;\n}\n#target {\n  padding-left: .5rem;\n}\n.container {\n  margin-bottom: 1rem;\n  padding: 1rem;\n  background: #F7F9FA;\n  border-radius: 4px;\n}\n.container div {\n    background: #fff;\n    border: 1px solid #D0D4D9;\n    border-radius: 4px;\n    padding: 1rem;\n    cursor: move;\n    cursor: grab;\n    cursor: -moz-grab;\n    cursor: -webkit-grab;\n    margin-bottom: 10px;\n}\n.container div:hover {\n      background: linear-gradient(white, #f7f9fa);\n}\n.container div:last-child {\n      margin-bottom: 0;\n}\n.container .scale-transition {\n  overflow: hidden;\n  transition: height .2s;\n}\n.container .scale-enter {\n  height: 0px;\n}\n.container .scale-leave {\n  height: 0px;\n}\n.gu-mirror {\n  font-family: 'Avenir', Helvetica, Arial, sans-serif;\n  color: #2c3e50;\n  background: #fff;\n  transition: opacity 0.4s ease-in-out;\n  border: 1px solid #D0D4D9;\n  border-radius: 4px;\n  cursor: move;\n  cursor: grab;\n  cursor: -moz-grab;\n  cursor: -webkit-grab;\n}\n.gu-mirror {\n  position: fixed !important;\n  margin: 0 !important;\n  z-index: 9999 !important;\n  opacity: 0.8;\n  -ms-filter: \"progid:DXImageTransform.Microsoft.Alpha(Opacity=80)\";\n  filter: alpha(opacity=80);\n}\n.gu-hide {\n  display: none !important;\n}\n.gu-unselectable {\n  -webkit-user-select: none !important;\n  -moz-user-select: none !important;\n  -ms-user-select: none !important;\n  user-select: none !important;\n}\n.gu-transit {\n  opacity: 0.2;\n  -ms-filter: \"progid:DXImageTransform.Microsoft.Alpha(Opacity=20)\";\n  filter: alpha(opacity=20);\n}\n", ""]);
+exports.push([module.i, "\n.customer-header {\n  display: flex;\n  justify-content: space-between;\n  height: 45px;\n  align-items: center;\n  margin-bottom: 20px;\n  border-bottom: 1px solid #EAEAEA;\n}\n.customer-header .c-btn {\n    padding: 5px 10px;\n    font-size: 12px;\n}\n.order-customer {\n  margin-bottom: 40px;\n}\n", ""]);
 
 // exports
 
@@ -25206,241 +25314,255 @@ exports.push([module.i, "\n.wrapper {\n  display: flex;\n  margin-bottom: 8rem;\
 /* 158 */
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "icon-form-dropdown.svg?eb0bc7362f10592dac676a5632941dfa";
+exports = module.exports = __webpack_require__(2)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.split-header {\n  display: flex;\n  justify-content: space-between;\n  height: 45px;\n  align-items: center;\n  margin-bottom: 20px;\n  border-bottom: 1px solid #EAEAEA;\n}\n.split-header .c-btn {\n    padding: 5px 10px;\n    font-size: 12px;\n}\n.wrapper {\n  display: flex;\n  margin-bottom: 8rem;\n}\n#source, #target {\n  flex: 1;\n}\n#source {\n  padding-right: .5rem;\n}\n#target {\n  padding-left: .5rem;\n}\n.container {\n  min-height: 4rem;\n  margin-bottom: 1rem;\n  padding: 1rem;\n  background: #F7F9FA;\n  border-radius: 4px;\n}\n.container div {\n    background: #fff;\n    border: 1px solid #D0D4D9;\n    border-radius: 4px;\n    padding: 1rem;\n    cursor: move;\n    cursor: grab;\n    cursor: -moz-grab;\n    cursor: -webkit-grab;\n    margin-bottom: 10px;\n}\n.container div:hover {\n      background: linear-gradient(white, #f7f9fa);\n}\n.container div:last-child {\n      margin-bottom: 0;\n}\n.container .scale-transition {\n  overflow: hidden;\n  transition: height .2s;\n}\n.container .scale-enter {\n  height: 0px;\n}\n.container .scale-leave {\n  height: 0px;\n}\n.gu-mirror {\n  font-family: 'Avenir', Helvetica, Arial, sans-serif;\n  color: #2c3e50;\n  background: #fff;\n  transition: opacity 0.4s ease-in-out;\n  border: 1px solid #D0D4D9;\n  border-radius: 4px;\n  cursor: move;\n  cursor: grab;\n  cursor: -moz-grab;\n  cursor: -webkit-grab;\n}\n.gu-mirror {\n  position: fixed !important;\n  margin: 0 !important;\n  z-index: 9999 !important;\n  opacity: 0.8;\n  -ms-filter: \"progid:DXImageTransform.Microsoft.Alpha(Opacity=80)\";\n  filter: alpha(opacity=80);\n}\n.gu-hide {\n  display: none !important;\n}\n.gu-unselectable {\n  -webkit-user-select: none !important;\n  -moz-user-select: none !important;\n  -ms-user-select: none !important;\n  user-select: none !important;\n}\n.gu-transit {\n  opacity: 0.2;\n  -ms-filter: \"progid:DXImageTransform.Microsoft.Alpha(Opacity=20)\";\n  filter: alpha(opacity=20);\n}\n", ""]);
+
+// exports
+
 
 /***/ },
 /* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "icon-form-invalid.svg?8f700bccff956f5205e132b8a7274946";
+module.exports = __webpack_require__.p + "icon-form-dropdown.svg?eb0bc7362f10592dac676a5632941dfa";
 
 /***/ },
 /* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "icon-form-valid.svg?eb1565b7d487059036ed96a1599c5e04";
+module.exports = __webpack_require__.p + "icon-form-invalid.svg?8f700bccff956f5205e132b8a7274946";
 
 /***/ },
 /* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
+module.exports = __webpack_require__.p + "icon-form-valid.svg?eb1565b7d487059036ed96a1599c5e04";
+
+/***/ },
+/* 162 */
+/***/ function(module, exports, __webpack_require__) {
+
 var map = {
-	"./af": 14,
-	"./af.js": 14,
-	"./ar": 20,
-	"./ar-dz": 15,
-	"./ar-dz.js": 15,
-	"./ar-ly": 16,
-	"./ar-ly.js": 16,
-	"./ar-ma": 17,
-	"./ar-ma.js": 17,
-	"./ar-sa": 18,
-	"./ar-sa.js": 18,
-	"./ar-tn": 19,
-	"./ar-tn.js": 19,
-	"./ar.js": 20,
-	"./az": 21,
-	"./az.js": 21,
-	"./be": 22,
-	"./be.js": 22,
-	"./bg": 24,
-	"./bg-x": 23,
-	"./bg-x.js": 23,
-	"./bg.js": 24,
-	"./bn": 25,
-	"./bn.js": 25,
-	"./bo": 26,
-	"./bo.js": 26,
-	"./br": 27,
-	"./br.js": 27,
-	"./bs": 28,
-	"./bs.js": 28,
-	"./ca": 29,
-	"./ca.js": 29,
-	"./cs": 30,
-	"./cs.js": 30,
-	"./cv": 31,
-	"./cv.js": 31,
-	"./cy": 32,
-	"./cy.js": 32,
-	"./da": 33,
-	"./da.js": 33,
-	"./de": 35,
-	"./de-at": 34,
-	"./de-at.js": 34,
-	"./de.js": 35,
-	"./dv": 36,
-	"./dv.js": 36,
-	"./el": 37,
-	"./el.js": 37,
-	"./en-au": 38,
-	"./en-au.js": 38,
-	"./en-ca": 39,
-	"./en-ca.js": 39,
-	"./en-gb": 40,
-	"./en-gb.js": 40,
-	"./en-ie": 41,
-	"./en-ie.js": 41,
-	"./en-nz": 42,
-	"./en-nz.js": 42,
-	"./eo": 43,
-	"./eo.js": 43,
-	"./es": 45,
-	"./es-do": 44,
-	"./es-do.js": 44,
-	"./es.js": 45,
-	"./et": 46,
-	"./et.js": 46,
-	"./eu": 47,
-	"./eu.js": 47,
-	"./fa": 48,
-	"./fa.js": 48,
-	"./fi": 49,
-	"./fi.js": 49,
-	"./fo": 50,
-	"./fo.js": 50,
-	"./fr": 53,
-	"./fr-ca": 51,
-	"./fr-ca.js": 51,
-	"./fr-ch": 52,
-	"./fr-ch.js": 52,
-	"./fr.js": 53,
-	"./fy": 54,
-	"./fy.js": 54,
-	"./gd": 55,
-	"./gd.js": 55,
-	"./gl": 56,
-	"./gl.js": 56,
-	"./he": 57,
-	"./he.js": 57,
-	"./hi": 58,
-	"./hi.js": 58,
-	"./hr": 59,
-	"./hr.js": 59,
-	"./hu": 60,
-	"./hu.js": 60,
-	"./hy-am": 61,
-	"./hy-am.js": 61,
-	"./id": 62,
-	"./id.js": 62,
-	"./is": 63,
-	"./is.js": 63,
-	"./it": 64,
-	"./it.js": 64,
-	"./ja": 65,
-	"./ja.js": 65,
-	"./jv": 66,
-	"./jv.js": 66,
-	"./ka": 67,
-	"./ka.js": 67,
-	"./kk": 68,
-	"./kk.js": 68,
-	"./km": 69,
-	"./km.js": 69,
-	"./ko": 70,
-	"./ko.js": 70,
-	"./ky": 71,
-	"./ky.js": 71,
-	"./lb": 72,
-	"./lb.js": 72,
-	"./lo": 73,
-	"./lo.js": 73,
-	"./lt": 74,
-	"./lt.js": 74,
-	"./lv": 75,
-	"./lv.js": 75,
-	"./me": 76,
-	"./me.js": 76,
-	"./mi": 77,
-	"./mi.js": 77,
-	"./mk": 78,
-	"./mk.js": 78,
-	"./ml": 79,
-	"./ml.js": 79,
-	"./mr": 80,
-	"./mr.js": 80,
-	"./ms": 82,
-	"./ms-my": 81,
-	"./ms-my.js": 81,
-	"./ms.js": 82,
-	"./my": 83,
-	"./my.js": 83,
-	"./nb": 84,
-	"./nb.js": 84,
-	"./ne": 85,
-	"./ne.js": 85,
-	"./nl": 87,
-	"./nl-be": 86,
-	"./nl-be.js": 86,
-	"./nl.js": 87,
-	"./nn": 88,
-	"./nn.js": 88,
-	"./pa-in": 89,
-	"./pa-in.js": 89,
-	"./pl": 90,
-	"./pl.js": 90,
-	"./pt": 92,
-	"./pt-br": 91,
-	"./pt-br.js": 91,
-	"./pt.js": 92,
-	"./ro": 93,
-	"./ro.js": 93,
-	"./ru": 94,
-	"./ru.js": 94,
-	"./se": 95,
-	"./se.js": 95,
-	"./si": 96,
-	"./si.js": 96,
-	"./sk": 97,
-	"./sk.js": 97,
-	"./sl": 98,
-	"./sl.js": 98,
-	"./sq": 99,
-	"./sq.js": 99,
-	"./sr": 101,
-	"./sr-cyrl": 100,
-	"./sr-cyrl.js": 100,
-	"./sr.js": 101,
-	"./ss": 102,
-	"./ss.js": 102,
-	"./sv": 103,
-	"./sv.js": 103,
-	"./sw": 104,
-	"./sw.js": 104,
-	"./ta": 105,
-	"./ta.js": 105,
-	"./te": 106,
-	"./te.js": 106,
-	"./tet": 107,
-	"./tet.js": 107,
-	"./th": 108,
-	"./th.js": 108,
-	"./tl-ph": 109,
-	"./tl-ph.js": 109,
-	"./tlh": 110,
-	"./tlh.js": 110,
-	"./tr": 111,
-	"./tr.js": 111,
-	"./tzl": 112,
-	"./tzl.js": 112,
-	"./tzm": 114,
-	"./tzm-latn": 113,
-	"./tzm-latn.js": 113,
-	"./tzm.js": 114,
-	"./uk": 115,
-	"./uk.js": 115,
-	"./uz": 116,
-	"./uz.js": 116,
-	"./vi": 117,
-	"./vi.js": 117,
-	"./x-pseudo": 118,
-	"./x-pseudo.js": 118,
-	"./zh-cn": 119,
-	"./zh-cn.js": 119,
-	"./zh-hk": 120,
-	"./zh-hk.js": 120,
-	"./zh-tw": 121,
-	"./zh-tw.js": 121
+	"./af": 16,
+	"./af.js": 16,
+	"./ar": 22,
+	"./ar-dz": 17,
+	"./ar-dz.js": 17,
+	"./ar-ly": 18,
+	"./ar-ly.js": 18,
+	"./ar-ma": 19,
+	"./ar-ma.js": 19,
+	"./ar-sa": 20,
+	"./ar-sa.js": 20,
+	"./ar-tn": 21,
+	"./ar-tn.js": 21,
+	"./ar.js": 22,
+	"./az": 23,
+	"./az.js": 23,
+	"./be": 24,
+	"./be.js": 24,
+	"./bg": 26,
+	"./bg-x": 25,
+	"./bg-x.js": 25,
+	"./bg.js": 26,
+	"./bn": 27,
+	"./bn.js": 27,
+	"./bo": 28,
+	"./bo.js": 28,
+	"./br": 29,
+	"./br.js": 29,
+	"./bs": 30,
+	"./bs.js": 30,
+	"./ca": 31,
+	"./ca.js": 31,
+	"./cs": 32,
+	"./cs.js": 32,
+	"./cv": 33,
+	"./cv.js": 33,
+	"./cy": 34,
+	"./cy.js": 34,
+	"./da": 35,
+	"./da.js": 35,
+	"./de": 37,
+	"./de-at": 36,
+	"./de-at.js": 36,
+	"./de.js": 37,
+	"./dv": 38,
+	"./dv.js": 38,
+	"./el": 39,
+	"./el.js": 39,
+	"./en-au": 40,
+	"./en-au.js": 40,
+	"./en-ca": 41,
+	"./en-ca.js": 41,
+	"./en-gb": 42,
+	"./en-gb.js": 42,
+	"./en-ie": 43,
+	"./en-ie.js": 43,
+	"./en-nz": 44,
+	"./en-nz.js": 44,
+	"./eo": 45,
+	"./eo.js": 45,
+	"./es": 47,
+	"./es-do": 46,
+	"./es-do.js": 46,
+	"./es.js": 47,
+	"./et": 48,
+	"./et.js": 48,
+	"./eu": 49,
+	"./eu.js": 49,
+	"./fa": 50,
+	"./fa.js": 50,
+	"./fi": 51,
+	"./fi.js": 51,
+	"./fo": 52,
+	"./fo.js": 52,
+	"./fr": 55,
+	"./fr-ca": 53,
+	"./fr-ca.js": 53,
+	"./fr-ch": 54,
+	"./fr-ch.js": 54,
+	"./fr.js": 55,
+	"./fy": 56,
+	"./fy.js": 56,
+	"./gd": 57,
+	"./gd.js": 57,
+	"./gl": 58,
+	"./gl.js": 58,
+	"./he": 59,
+	"./he.js": 59,
+	"./hi": 60,
+	"./hi.js": 60,
+	"./hr": 61,
+	"./hr.js": 61,
+	"./hu": 62,
+	"./hu.js": 62,
+	"./hy-am": 63,
+	"./hy-am.js": 63,
+	"./id": 64,
+	"./id.js": 64,
+	"./is": 65,
+	"./is.js": 65,
+	"./it": 66,
+	"./it.js": 66,
+	"./ja": 67,
+	"./ja.js": 67,
+	"./jv": 68,
+	"./jv.js": 68,
+	"./ka": 69,
+	"./ka.js": 69,
+	"./kk": 70,
+	"./kk.js": 70,
+	"./km": 71,
+	"./km.js": 71,
+	"./ko": 72,
+	"./ko.js": 72,
+	"./ky": 73,
+	"./ky.js": 73,
+	"./lb": 74,
+	"./lb.js": 74,
+	"./lo": 75,
+	"./lo.js": 75,
+	"./lt": 76,
+	"./lt.js": 76,
+	"./lv": 77,
+	"./lv.js": 77,
+	"./me": 78,
+	"./me.js": 78,
+	"./mi": 79,
+	"./mi.js": 79,
+	"./mk": 80,
+	"./mk.js": 80,
+	"./ml": 81,
+	"./ml.js": 81,
+	"./mr": 82,
+	"./mr.js": 82,
+	"./ms": 84,
+	"./ms-my": 83,
+	"./ms-my.js": 83,
+	"./ms.js": 84,
+	"./my": 85,
+	"./my.js": 85,
+	"./nb": 86,
+	"./nb.js": 86,
+	"./ne": 87,
+	"./ne.js": 87,
+	"./nl": 89,
+	"./nl-be": 88,
+	"./nl-be.js": 88,
+	"./nl.js": 89,
+	"./nn": 90,
+	"./nn.js": 90,
+	"./pa-in": 91,
+	"./pa-in.js": 91,
+	"./pl": 92,
+	"./pl.js": 92,
+	"./pt": 94,
+	"./pt-br": 93,
+	"./pt-br.js": 93,
+	"./pt.js": 94,
+	"./ro": 95,
+	"./ro.js": 95,
+	"./ru": 96,
+	"./ru.js": 96,
+	"./se": 97,
+	"./se.js": 97,
+	"./si": 98,
+	"./si.js": 98,
+	"./sk": 99,
+	"./sk.js": 99,
+	"./sl": 100,
+	"./sl.js": 100,
+	"./sq": 101,
+	"./sq.js": 101,
+	"./sr": 103,
+	"./sr-cyrl": 102,
+	"./sr-cyrl.js": 102,
+	"./sr.js": 103,
+	"./ss": 104,
+	"./ss.js": 104,
+	"./sv": 105,
+	"./sv.js": 105,
+	"./sw": 106,
+	"./sw.js": 106,
+	"./ta": 107,
+	"./ta.js": 107,
+	"./te": 108,
+	"./te.js": 108,
+	"./tet": 109,
+	"./tet.js": 109,
+	"./th": 110,
+	"./th.js": 110,
+	"./tl-ph": 111,
+	"./tl-ph.js": 111,
+	"./tlh": 112,
+	"./tlh.js": 112,
+	"./tr": 113,
+	"./tr.js": 113,
+	"./tzl": 114,
+	"./tzl.js": 114,
+	"./tzm": 116,
+	"./tzm-latn": 115,
+	"./tzm-latn.js": 115,
+	"./tzm.js": 116,
+	"./uk": 117,
+	"./uk.js": 117,
+	"./uz": 118,
+	"./uz.js": 118,
+	"./vi": 119,
+	"./vi.js": 119,
+	"./x-pseudo": 120,
+	"./x-pseudo.js": 120,
+	"./zh-cn": 121,
+	"./zh-cn.js": 121,
+	"./zh-hk": 122,
+	"./zh-hk.js": 122,
+	"./zh-tw": 123,
+	"./zh-tw.js": 123
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -25456,24 +25578,1414 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 161;
+webpackContext.id = 162;
 
 
 /***/ },
-/* 162 */
+/* 163 */
+/***/ function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global, setImmediate, process) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+ * vue-dragula v1.3.0
+ * (c) 2016 Yichang Liu
+ * Released under the MIT License.
+ */
+(function (global, factory) {
+	 true ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global.vueDragula = factory());
+}(this, function () { 'use strict';
+
+	var babelHelpers = {};
+	babelHelpers.typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+	  return typeof obj;
+	} : function (obj) {
+	  return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
+	};
+
+	babelHelpers.classCallCheck = function (instance, Constructor) {
+	  if (!(instance instanceof Constructor)) {
+	    throw new TypeError("Cannot call a class as a function");
+	  }
+	};
+
+	babelHelpers.createClass = function () {
+	  function defineProperties(target, props) {
+	    for (var i = 0; i < props.length; i++) {
+	      var descriptor = props[i];
+	      descriptor.enumerable = descriptor.enumerable || false;
+	      descriptor.configurable = true;
+	      if ("value" in descriptor) descriptor.writable = true;
+	      Object.defineProperty(target, descriptor.key, descriptor);
+	    }
+	  }
+
+	  return function (Constructor, protoProps, staticProps) {
+	    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+	    if (staticProps) defineProperties(Constructor, staticProps);
+	    return Constructor;
+	  };
+	}();
+
+	babelHelpers;
+
+	var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+	function interopDefault(ex) {
+		return ex && (typeof ex === 'undefined' ? 'undefined' : babelHelpers.typeof(ex)) === 'object' && 'default' in ex ? ex['default'] : ex;
+	}
+
+	function createCommonjsModule(fn, module) {
+		return module = { exports: {} }, fn(module, module.exports), module.exports;
+	}
+
+	var atoa = createCommonjsModule(function (module) {
+	  module.exports = function atoa(a, n) {
+	    return Array.prototype.slice.call(a, n);
+	  };
+	});
+
+	var atoa$1 = interopDefault(atoa);
+
+var require$$1 = Object.freeze({
+	  default: atoa$1
+	});
+
+	var ticky = createCommonjsModule(function (module) {
+	  var si = typeof setImmediate === 'function',
+	      tick;
+	  if (si) {
+	    tick = function tick(fn) {
+	      setImmediate(fn);
+	    };
+	  } else if (typeof process !== 'undefined' && process.nextTick) {
+	    tick = process.nextTick;
+	  } else {
+	    tick = function tick(fn) {
+	      setTimeout(fn, 0);
+	    };
+	  }
+
+	  module.exports = tick;
+	});
+
+	var ticky$1 = interopDefault(ticky);
+
+var require$$0$1 = Object.freeze({
+	  default: ticky$1
+	});
+
+	var debounce = createCommonjsModule(function (module) {
+	  'use strict';
+
+	  var ticky = interopDefault(require$$0$1);
+
+	  module.exports = function debounce(fn, args, ctx) {
+	    if (!fn) {
+	      return;
+	    }
+	    ticky(function run() {
+	      fn.apply(ctx || null, args || []);
+	    });
+	  };
+	});
+
+	var debounce$1 = interopDefault(debounce);
+
+var require$$0 = Object.freeze({
+	  default: debounce$1
+	});
+
+	var emitter = createCommonjsModule(function (module) {
+	  'use strict';
+
+	  var atoa = interopDefault(require$$1);
+	  var debounce = interopDefault(require$$0);
+
+	  module.exports = function emitter(thing, options) {
+	    var opts = options || {};
+	    var evt = {};
+	    if (thing === undefined) {
+	      thing = {};
+	    }
+	    thing.on = function (type, fn) {
+	      if (!evt[type]) {
+	        evt[type] = [fn];
+	      } else {
+	        evt[type].push(fn);
+	      }
+	      return thing;
+	    };
+	    thing.once = function (type, fn) {
+	      fn._once = true; // thing.off(fn) still works!
+	      thing.on(type, fn);
+	      return thing;
+	    };
+	    thing.off = function (type, fn) {
+	      var c = arguments.length;
+	      if (c === 1) {
+	        delete evt[type];
+	      } else if (c === 0) {
+	        evt = {};
+	      } else {
+	        var et = evt[type];
+	        if (!et) {
+	          return thing;
+	        }
+	        et.splice(et.indexOf(fn), 1);
+	      }
+	      return thing;
+	    };
+	    thing.emit = function () {
+	      var args = atoa(arguments);
+	      return thing.emitterSnapshot(args.shift()).apply(this, args);
+	    };
+	    thing.emitterSnapshot = function (type) {
+	      var et = (evt[type] || []).slice(0);
+	      return function () {
+	        var args = atoa(arguments);
+	        var ctx = this || thing;
+	        if (type === 'error' && opts.throws !== false && !et.length) {
+	          throw args.length === 1 ? args[0] : args;
+	        }
+	        et.forEach(function emitter(listen) {
+	          if (opts.async) {
+	            debounce(listen, args, ctx);
+	          } else {
+	            listen.apply(ctx, args);
+	          }
+	          if (listen._once) {
+	            thing.off(type, listen);
+	          }
+	        });
+	        return thing;
+	      };
+	    };
+	    return thing;
+	  };
+	});
+
+	var emitter$1 = interopDefault(emitter);
+
+var require$$2 = Object.freeze({
+	  default: emitter$1
+	});
+
+	var index = createCommonjsModule(function (module) {
+	  var NativeCustomEvent = commonjsGlobal.CustomEvent;
+
+	  function useNative() {
+	    try {
+	      var p = new NativeCustomEvent('cat', { detail: { foo: 'bar' } });
+	      return 'cat' === p.type && 'bar' === p.detail.foo;
+	    } catch (e) {}
+	    return false;
+	  }
+
+	  /**
+	   * Cross-browser `CustomEvent` constructor.
+	   *
+	   * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent.CustomEvent
+	   *
+	   * @public
+	   */
+
+	  module.exports = useNative() ? NativeCustomEvent :
+
+	  // IE >= 9
+	  'function' === typeof document.createEvent ? function CustomEvent(type, params) {
+	    var e = document.createEvent('CustomEvent');
+	    if (params) {
+	      e.initCustomEvent(type, params.bubbles, params.cancelable, params.detail);
+	    } else {
+	      e.initCustomEvent(type, false, false, void 0);
+	    }
+	    return e;
+	  } :
+
+	  // IE <= 8
+	  function CustomEvent(type, params) {
+	    var e = document.createEventObject();
+	    e.type = type;
+	    if (params) {
+	      e.bubbles = Boolean(params.bubbles);
+	      e.cancelable = Boolean(params.cancelable);
+	      e.detail = params.detail;
+	    } else {
+	      e.bubbles = false;
+	      e.cancelable = false;
+	      e.detail = void 0;
+	    }
+	    return e;
+	  };
+	});
+
+	var index$1 = interopDefault(index);
+
+var require$$1$2 = Object.freeze({
+	  default: index$1
+	});
+
+	var eventmap = createCommonjsModule(function (module) {
+	  'use strict';
+
+	  var eventmap = [];
+	  var eventname = '';
+	  var ron = /^on/;
+
+	  for (eventname in commonjsGlobal) {
+	    if (ron.test(eventname)) {
+	      eventmap.push(eventname.slice(2));
+	    }
+	  }
+
+	  module.exports = eventmap;
+	});
+
+	var eventmap$1 = interopDefault(eventmap);
+
+var require$$0$2 = Object.freeze({
+	  default: eventmap$1
+	});
+
+	var crossvent = createCommonjsModule(function (module) {
+	  'use strict';
+
+	  var customEvent = interopDefault(require$$1$2);
+	  var eventmap = interopDefault(require$$0$2);
+	  var doc = commonjsGlobal.document;
+	  var addEvent = addEventEasy;
+	  var removeEvent = removeEventEasy;
+	  var hardCache = [];
+
+	  if (!commonjsGlobal.addEventListener) {
+	    addEvent = addEventHard;
+	    removeEvent = removeEventHard;
+	  }
+
+	  module.exports = {
+	    add: addEvent,
+	    remove: removeEvent,
+	    fabricate: fabricateEvent
+	  };
+
+	  function addEventEasy(el, type, fn, capturing) {
+	    return el.addEventListener(type, fn, capturing);
+	  }
+
+	  function addEventHard(el, type, fn) {
+	    return el.attachEvent('on' + type, wrap(el, type, fn));
+	  }
+
+	  function removeEventEasy(el, type, fn, capturing) {
+	    return el.removeEventListener(type, fn, capturing);
+	  }
+
+	  function removeEventHard(el, type, fn) {
+	    var listener = unwrap(el, type, fn);
+	    if (listener) {
+	      return el.detachEvent('on' + type, listener);
+	    }
+	  }
+
+	  function fabricateEvent(el, type, model) {
+	    var e = eventmap.indexOf(type) === -1 ? makeCustomEvent() : makeClassicEvent();
+	    if (el.dispatchEvent) {
+	      el.dispatchEvent(e);
+	    } else {
+	      el.fireEvent('on' + type, e);
+	    }
+	    function makeClassicEvent() {
+	      var e;
+	      if (doc.createEvent) {
+	        e = doc.createEvent('Event');
+	        e.initEvent(type, true, true);
+	      } else if (doc.createEventObject) {
+	        e = doc.createEventObject();
+	      }
+	      return e;
+	    }
+	    function makeCustomEvent() {
+	      return new customEvent(type, { detail: model });
+	    }
+	  }
+
+	  function wrapperFactory(el, type, fn) {
+	    return function wrapper(originalEvent) {
+	      var e = originalEvent || commonjsGlobal.event;
+	      e.target = e.target || e.srcElement;
+	      e.preventDefault = e.preventDefault || function preventDefault() {
+	        e.returnValue = false;
+	      };
+	      e.stopPropagation = e.stopPropagation || function stopPropagation() {
+	        e.cancelBubble = true;
+	      };
+	      e.which = e.which || e.keyCode;
+	      fn.call(el, e);
+	    };
+	  }
+
+	  function wrap(el, type, fn) {
+	    var wrapper = unwrap(el, type, fn) || wrapperFactory(el, type, fn);
+	    hardCache.push({
+	      wrapper: wrapper,
+	      element: el,
+	      type: type,
+	      fn: fn
+	    });
+	    return wrapper;
+	  }
+
+	  function unwrap(el, type, fn) {
+	    var i = find(el, type, fn);
+	    if (i) {
+	      var wrapper = hardCache[i].wrapper;
+	      hardCache.splice(i, 1); // free up a tad of memory
+	      return wrapper;
+	    }
+	  }
+
+	  function find(el, type, fn) {
+	    var i, item;
+	    for (i = 0; i < hardCache.length; i++) {
+	      item = hardCache[i];
+	      if (item.element === el && item.type === type && item.fn === fn) {
+	        return i;
+	      }
+	    }
+	  }
+	});
+
+	var crossvent$1 = interopDefault(crossvent);
+	var add = crossvent.add;
+	var remove = crossvent.remove;
+	var fabricate = crossvent.fabricate;
+
+var require$$1$1 = Object.freeze({
+	  default: crossvent$1,
+	  add: add,
+	  remove: remove,
+	  fabricate: fabricate
+	});
+
+	var classes = createCommonjsModule(function (module) {
+	  'use strict';
+
+	  var cache = {};
+	  var start = '(?:^|\\s)';
+	  var end = '(?:\\s|$)';
+
+	  function lookupClass(className) {
+	    var cached = cache[className];
+	    if (cached) {
+	      cached.lastIndex = 0;
+	    } else {
+	      cache[className] = cached = new RegExp(start + className + end, 'g');
+	    }
+	    return cached;
+	  }
+
+	  function addClass(el, className) {
+	    var current = el.className;
+	    if (!current.length) {
+	      el.className = className;
+	    } else if (!lookupClass(className).test(current)) {
+	      el.className += ' ' + className;
+	    }
+	  }
+
+	  function rmClass(el, className) {
+	    el.className = el.className.replace(lookupClass(className), ' ').trim();
+	  }
+
+	  module.exports = {
+	    add: addClass,
+	    rm: rmClass
+	  };
+	});
+
+	var classes$1 = interopDefault(classes);
+	var add$1 = classes.add;
+	var rm = classes.rm;
+
+var require$$0$3 = Object.freeze({
+	  default: classes$1,
+	  add: add$1,
+	  rm: rm
+	});
+
+	var dragula = createCommonjsModule(function (module) {
+	  'use strict';
+
+	  var emitter = interopDefault(require$$2);
+	  var crossvent = interopDefault(require$$1$1);
+	  var classes = interopDefault(require$$0$3);
+	  var doc = document;
+	  var documentElement = doc.documentElement;
+
+	  function dragula(initialContainers, options) {
+	    var len = arguments.length;
+	    if (len === 1 && Array.isArray(initialContainers) === false) {
+	      options = initialContainers;
+	      initialContainers = [];
+	    }
+	    var _mirror; // mirror image
+	    var _source; // source container
+	    var _item; // item being dragged
+	    var _offsetX; // reference x
+	    var _offsetY; // reference y
+	    var _moveX; // reference move x
+	    var _moveY; // reference move y
+	    var _initialSibling; // reference sibling when grabbed
+	    var _currentSibling; // reference sibling now
+	    var _copy; // item used for copying
+	    var _renderTimer; // timer for setTimeout renderMirrorImage
+	    var _lastDropTarget = null; // last container item was over
+	    var _grabbed; // holds mousedown context until first mousemove
+
+	    var o = options || {};
+	    if (o.moves === void 0) {
+	      o.moves = always;
+	    }
+	    if (o.accepts === void 0) {
+	      o.accepts = always;
+	    }
+	    if (o.invalid === void 0) {
+	      o.invalid = invalidTarget;
+	    }
+	    if (o.containers === void 0) {
+	      o.containers = initialContainers || [];
+	    }
+	    if (o.isContainer === void 0) {
+	      o.isContainer = never;
+	    }
+	    if (o.copy === void 0) {
+	      o.copy = false;
+	    }
+	    if (o.copySortSource === void 0) {
+	      o.copySortSource = false;
+	    }
+	    if (o.revertOnSpill === void 0) {
+	      o.revertOnSpill = false;
+	    }
+	    if (o.removeOnSpill === void 0) {
+	      o.removeOnSpill = false;
+	    }
+	    if (o.direction === void 0) {
+	      o.direction = 'vertical';
+	    }
+	    if (o.ignoreInputTextSelection === void 0) {
+	      o.ignoreInputTextSelection = true;
+	    }
+	    if (o.mirrorContainer === void 0) {
+	      o.mirrorContainer = doc.body;
+	    }
+
+	    var drake = emitter({
+	      containers: o.containers,
+	      start: manualStart,
+	      end: end,
+	      cancel: cancel,
+	      remove: remove,
+	      destroy: destroy,
+	      canMove: canMove,
+	      dragging: false
+	    });
+
+	    if (o.removeOnSpill === true) {
+	      drake.on('over', spillOver).on('out', spillOut);
+	    }
+
+	    events();
+
+	    return drake;
+
+	    function isContainer(el) {
+	      return drake.containers.indexOf(el) !== -1 || o.isContainer(el);
+	    }
+
+	    function events(remove) {
+	      var op = remove ? 'remove' : 'add';
+	      touchy(documentElement, op, 'mousedown', grab);
+	      touchy(documentElement, op, 'mouseup', release);
+	    }
+
+	    function eventualMovements(remove) {
+	      var op = remove ? 'remove' : 'add';
+	      touchy(documentElement, op, 'mousemove', startBecauseMouseMoved);
+	    }
+
+	    function movements(remove) {
+	      var op = remove ? 'remove' : 'add';
+	      crossvent[op](documentElement, 'selectstart', preventGrabbed); // IE8
+	      crossvent[op](documentElement, 'click', preventGrabbed);
+	    }
+
+	    function destroy() {
+	      events(true);
+	      release({});
+	    }
+
+	    function preventGrabbed(e) {
+	      if (_grabbed) {
+	        e.preventDefault();
+	      }
+	    }
+
+	    function grab(e) {
+	      _moveX = e.clientX;
+	      _moveY = e.clientY;
+
+	      var ignore = whichMouseButton(e) !== 1 || e.metaKey || e.ctrlKey;
+	      if (ignore) {
+	        return; // we only care about honest-to-god left clicks and touch events
+	      }
+	      var item = e.target;
+	      var context = canStart(item);
+	      if (!context) {
+	        return;
+	      }
+	      _grabbed = context;
+	      eventualMovements();
+	      if (e.type === 'mousedown') {
+	        if (isInput(item)) {
+	          // see also: https://github.com/bevacqua/dragula/issues/208
+	          item.focus(); // fixes https://github.com/bevacqua/dragula/issues/176
+	        } else {
+	            e.preventDefault(); // fixes https://github.com/bevacqua/dragula/issues/155
+	          }
+	      }
+	    }
+
+	    function startBecauseMouseMoved(e) {
+	      if (!_grabbed) {
+	        return;
+	      }
+	      if (whichMouseButton(e) === 0) {
+	        release({});
+	        return; // when text is selected on an input and then dragged, mouseup doesn't fire. this is our only hope
+	      }
+	      // truthy check fixes #239, equality fixes #207
+	      if (e.clientX !== void 0 && e.clientX === _moveX && e.clientY !== void 0 && e.clientY === _moveY) {
+	        return;
+	      }
+	      if (o.ignoreInputTextSelection) {
+	        var clientX = getCoord('clientX', e);
+	        var clientY = getCoord('clientY', e);
+	        var elementBehindCursor = doc.elementFromPoint(clientX, clientY);
+	        if (isInput(elementBehindCursor)) {
+	          return;
+	        }
+	      }
+
+	      var grabbed = _grabbed; // call to end() unsets _grabbed
+	      eventualMovements(true);
+	      movements();
+	      end();
+	      start(grabbed);
+
+	      var offset = getOffset(_item);
+	      _offsetX = getCoord('pageX', e) - offset.left;
+	      _offsetY = getCoord('pageY', e) - offset.top;
+
+	      classes.add(_copy || _item, 'gu-transit');
+	      renderMirrorImage();
+	      drag(e);
+	    }
+
+	    function canStart(item) {
+	      if (drake.dragging && _mirror) {
+	        return;
+	      }
+	      if (isContainer(item)) {
+	        return; // don't drag container itself
+	      }
+	      var handle = item;
+	      while (getParent(item) && isContainer(getParent(item)) === false) {
+	        if (o.invalid(item, handle)) {
+	          return;
+	        }
+	        item = getParent(item); // drag target should be a top element
+	        if (!item) {
+	          return;
+	        }
+	      }
+	      var source = getParent(item);
+	      if (!source) {
+	        return;
+	      }
+	      if (o.invalid(item, handle)) {
+	        return;
+	      }
+
+	      var movable = o.moves(item, source, handle, nextEl(item));
+	      if (!movable) {
+	        return;
+	      }
+
+	      return {
+	        item: item,
+	        source: source
+	      };
+	    }
+
+	    function canMove(item) {
+	      return !!canStart(item);
+	    }
+
+	    function manualStart(item) {
+	      var context = canStart(item);
+	      if (context) {
+	        start(context);
+	      }
+	    }
+
+	    function start(context) {
+	      if (isCopy(context.item, context.source)) {
+	        _copy = context.item.cloneNode(true);
+	        drake.emit('cloned', _copy, context.item, 'copy');
+	      }
+
+	      _source = context.source;
+	      _item = context.item;
+	      _initialSibling = _currentSibling = nextEl(context.item);
+
+	      drake.dragging = true;
+	      drake.emit('drag', _item, _source);
+	    }
+
+	    function invalidTarget() {
+	      return false;
+	    }
+
+	    function end() {
+	      if (!drake.dragging) {
+	        return;
+	      }
+	      var item = _copy || _item;
+	      drop(item, getParent(item));
+	    }
+
+	    function ungrab() {
+	      _grabbed = false;
+	      eventualMovements(true);
+	      movements(true);
+	    }
+
+	    function release(e) {
+	      ungrab();
+
+	      if (!drake.dragging) {
+	        return;
+	      }
+	      var item = _copy || _item;
+	      var clientX = getCoord('clientX', e);
+	      var clientY = getCoord('clientY', e);
+	      var elementBehindCursor = getElementBehindPoint(_mirror, clientX, clientY);
+	      var dropTarget = findDropTarget(elementBehindCursor, clientX, clientY);
+	      if (dropTarget && (_copy && o.copySortSource || !_copy || dropTarget !== _source)) {
+	        drop(item, dropTarget);
+	      } else if (o.removeOnSpill) {
+	        remove();
+	      } else {
+	        cancel();
+	      }
+	    }
+
+	    function drop(item, target) {
+	      var parent = getParent(item);
+	      if (_copy && o.copySortSource && target === _source) {
+	        parent.removeChild(_item);
+	      }
+	      if (isInitialPlacement(target)) {
+	        drake.emit('cancel', item, _source, _source);
+	      } else {
+	        drake.emit('drop', item, target, _source, _currentSibling);
+	      }
+	      cleanup();
+	    }
+
+	    function remove() {
+	      if (!drake.dragging) {
+	        return;
+	      }
+	      var item = _copy || _item;
+	      var parent = getParent(item);
+	      if (parent) {
+	        parent.removeChild(item);
+	      }
+	      drake.emit(_copy ? 'cancel' : 'remove', item, parent, _source);
+	      cleanup();
+	    }
+
+	    function cancel(revert) {
+	      if (!drake.dragging) {
+	        return;
+	      }
+	      var reverts = arguments.length > 0 ? revert : o.revertOnSpill;
+	      var item = _copy || _item;
+	      var parent = getParent(item);
+	      var initial = isInitialPlacement(parent);
+	      if (initial === false && reverts) {
+	        if (_copy) {
+	          if (parent) {
+	            parent.removeChild(_copy);
+	          }
+	        } else {
+	          _source.insertBefore(item, _initialSibling);
+	        }
+	      }
+	      if (initial || reverts) {
+	        drake.emit('cancel', item, _source, _source);
+	      } else {
+	        drake.emit('drop', item, parent, _source, _currentSibling);
+	      }
+	      cleanup();
+	    }
+
+	    function cleanup() {
+	      var item = _copy || _item;
+	      ungrab();
+	      removeMirrorImage();
+	      if (item) {
+	        classes.rm(item, 'gu-transit');
+	      }
+	      if (_renderTimer) {
+	        clearTimeout(_renderTimer);
+	      }
+	      drake.dragging = false;
+	      if (_lastDropTarget) {
+	        drake.emit('out', item, _lastDropTarget, _source);
+	      }
+	      drake.emit('dragend', item);
+	      _source = _item = _copy = _initialSibling = _currentSibling = _renderTimer = _lastDropTarget = null;
+	    }
+
+	    function isInitialPlacement(target, s) {
+	      var sibling;
+	      if (s !== void 0) {
+	        sibling = s;
+	      } else if (_mirror) {
+	        sibling = _currentSibling;
+	      } else {
+	        sibling = nextEl(_copy || _item);
+	      }
+	      return target === _source && sibling === _initialSibling;
+	    }
+
+	    function findDropTarget(elementBehindCursor, clientX, clientY) {
+	      var target = elementBehindCursor;
+	      while (target && !accepted()) {
+	        target = getParent(target);
+	      }
+	      return target;
+
+	      function accepted() {
+	        var droppable = isContainer(target);
+	        if (droppable === false) {
+	          return false;
+	        }
+
+	        var immediate = getImmediateChild(target, elementBehindCursor);
+	        var reference = getReference(target, immediate, clientX, clientY);
+	        var initial = isInitialPlacement(target, reference);
+	        if (initial) {
+	          return true; // should always be able to drop it right back where it was
+	        }
+	        return o.accepts(_item, target, _source, reference);
+	      }
+	    }
+
+	    function drag(e) {
+	      if (!_mirror) {
+	        return;
+	      }
+	      e.preventDefault();
+
+	      var clientX = getCoord('clientX', e);
+	      var clientY = getCoord('clientY', e);
+	      var x = clientX - _offsetX;
+	      var y = clientY - _offsetY;
+
+	      _mirror.style.left = x + 'px';
+	      _mirror.style.top = y + 'px';
+
+	      var item = _copy || _item;
+	      var elementBehindCursor = getElementBehindPoint(_mirror, clientX, clientY);
+	      var dropTarget = findDropTarget(elementBehindCursor, clientX, clientY);
+	      var changed = dropTarget !== null && dropTarget !== _lastDropTarget;
+	      if (changed || dropTarget === null) {
+	        out();
+	        _lastDropTarget = dropTarget;
+	        over();
+	      }
+	      var parent = getParent(item);
+	      if (dropTarget === _source && _copy && !o.copySortSource) {
+	        if (parent) {
+	          parent.removeChild(item);
+	        }
+	        return;
+	      }
+	      var reference;
+	      var immediate = getImmediateChild(dropTarget, elementBehindCursor);
+	      if (immediate !== null) {
+	        reference = getReference(dropTarget, immediate, clientX, clientY);
+	      } else if (o.revertOnSpill === true && !_copy) {
+	        reference = _initialSibling;
+	        dropTarget = _source;
+	      } else {
+	        if (_copy && parent) {
+	          parent.removeChild(item);
+	        }
+	        return;
+	      }
+	      if (reference === null && changed || reference !== item && reference !== nextEl(item)) {
+	        _currentSibling = reference;
+	        dropTarget.insertBefore(item, reference);
+	        drake.emit('shadow', item, dropTarget, _source);
+	      }
+	      function moved(type) {
+	        drake.emit(type, item, _lastDropTarget, _source);
+	      }
+	      function over() {
+	        if (changed) {
+	          moved('over');
+	        }
+	      }
+	      function out() {
+	        if (_lastDropTarget) {
+	          moved('out');
+	        }
+	      }
+	    }
+
+	    function spillOver(el) {
+	      classes.rm(el, 'gu-hide');
+	    }
+
+	    function spillOut(el) {
+	      if (drake.dragging) {
+	        classes.add(el, 'gu-hide');
+	      }
+	    }
+
+	    function renderMirrorImage() {
+	      if (_mirror) {
+	        return;
+	      }
+	      var rect = _item.getBoundingClientRect();
+	      _mirror = _item.cloneNode(true);
+	      _mirror.style.width = getRectWidth(rect) + 'px';
+	      _mirror.style.height = getRectHeight(rect) + 'px';
+	      classes.rm(_mirror, 'gu-transit');
+	      classes.add(_mirror, 'gu-mirror');
+	      o.mirrorContainer.appendChild(_mirror);
+	      touchy(documentElement, 'add', 'mousemove', drag);
+	      classes.add(o.mirrorContainer, 'gu-unselectable');
+	      drake.emit('cloned', _mirror, _item, 'mirror');
+	    }
+
+	    function removeMirrorImage() {
+	      if (_mirror) {
+	        classes.rm(o.mirrorContainer, 'gu-unselectable');
+	        touchy(documentElement, 'remove', 'mousemove', drag);
+	        getParent(_mirror).removeChild(_mirror);
+	        _mirror = null;
+	      }
+	    }
+
+	    function getImmediateChild(dropTarget, target) {
+	      var immediate = target;
+	      while (immediate !== dropTarget && getParent(immediate) !== dropTarget) {
+	        immediate = getParent(immediate);
+	      }
+	      if (immediate === documentElement) {
+	        return null;
+	      }
+	      return immediate;
+	    }
+
+	    function getReference(dropTarget, target, x, y) {
+	      var horizontal = o.direction === 'horizontal';
+	      var reference = target !== dropTarget ? inside() : outside();
+	      return reference;
+
+	      function outside() {
+	        // slower, but able to figure out any position
+	        var len = dropTarget.children.length;
+	        var i;
+	        var el;
+	        var rect;
+	        for (i = 0; i < len; i++) {
+	          el = dropTarget.children[i];
+	          rect = el.getBoundingClientRect();
+	          if (horizontal && rect.left + rect.width / 2 > x) {
+	            return el;
+	          }
+	          if (!horizontal && rect.top + rect.height / 2 > y) {
+	            return el;
+	          }
+	        }
+	        return null;
+	      }
+
+	      function inside() {
+	        // faster, but only available if dropped inside a child element
+	        var rect = target.getBoundingClientRect();
+	        if (horizontal) {
+	          return resolve(x > rect.left + getRectWidth(rect) / 2);
+	        }
+	        return resolve(y > rect.top + getRectHeight(rect) / 2);
+	      }
+
+	      function resolve(after) {
+	        return after ? nextEl(target) : target;
+	      }
+	    }
+
+	    function isCopy(item, container) {
+	      return typeof o.copy === 'boolean' ? o.copy : o.copy(item, container);
+	    }
+	  }
+
+	  function touchy(el, op, type, fn) {
+	    var touch = {
+	      mouseup: 'touchend',
+	      mousedown: 'touchstart',
+	      mousemove: 'touchmove'
+	    };
+	    var pointers = {
+	      mouseup: 'pointerup',
+	      mousedown: 'pointerdown',
+	      mousemove: 'pointermove'
+	    };
+	    var microsoft = {
+	      mouseup: 'MSPointerUp',
+	      mousedown: 'MSPointerDown',
+	      mousemove: 'MSPointerMove'
+	    };
+	    if (commonjsGlobal.navigator.pointerEnabled) {
+	      crossvent[op](el, pointers[type], fn);
+	    } else if (commonjsGlobal.navigator.msPointerEnabled) {
+	      crossvent[op](el, microsoft[type], fn);
+	    } else {
+	      crossvent[op](el, touch[type], fn);
+	      crossvent[op](el, type, fn);
+	    }
+	  }
+
+	  function whichMouseButton(e) {
+	    if (e.touches !== void 0) {
+	      return e.touches.length;
+	    }
+	    if (e.which !== void 0 && e.which !== 0) {
+	      return e.which;
+	    } // see https://github.com/bevacqua/dragula/issues/261
+	    if (e.buttons !== void 0) {
+	      return e.buttons;
+	    }
+	    var button = e.button;
+	    if (button !== void 0) {
+	      // see https://github.com/jquery/jquery/blob/99e8ff1baa7ae341e94bb89c3e84570c7c3ad9ea/src/event.js#L573-L575
+	      return button & 1 ? 1 : button & 2 ? 3 : button & 4 ? 2 : 0;
+	    }
+	  }
+
+	  function getOffset(el) {
+	    var rect = el.getBoundingClientRect();
+	    return {
+	      left: rect.left + getScroll('scrollLeft', 'pageXOffset'),
+	      top: rect.top + getScroll('scrollTop', 'pageYOffset')
+	    };
+	  }
+
+	  function getScroll(scrollProp, offsetProp) {
+	    if (typeof commonjsGlobal[offsetProp] !== 'undefined') {
+	      return commonjsGlobal[offsetProp];
+	    }
+	    if (documentElement.clientHeight) {
+	      return documentElement[scrollProp];
+	    }
+	    return doc.body[scrollProp];
+	  }
+
+	  function getElementBehindPoint(point, x, y) {
+	    var p = point || {};
+	    var state = p.className;
+	    var el;
+	    p.className += ' gu-hide';
+	    el = doc.elementFromPoint(x, y);
+	    p.className = state;
+	    return el;
+	  }
+
+	  function never() {
+	    return false;
+	  }
+	  function always() {
+	    return true;
+	  }
+	  function getRectWidth(rect) {
+	    return rect.width || rect.right - rect.left;
+	  }
+	  function getRectHeight(rect) {
+	    return rect.height || rect.bottom - rect.top;
+	  }
+	  function getParent(el) {
+	    return el.parentNode === doc ? null : el.parentNode;
+	  }
+	  function isInput(el) {
+	    return el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || isEditable(el);
+	  }
+	  function isEditable(el) {
+	    if (!el) {
+	      return false;
+	    } // no parents were editable
+	    if (el.contentEditable === 'false') {
+	      return false;
+	    } // stop the lookup
+	    if (el.contentEditable === 'true') {
+	      return true;
+	    } // found a contentEditable element in the chain
+	    return isEditable(getParent(el)); // contentEditable is set to 'inherit'
+	  }
+
+	  function nextEl(el) {
+	    return el.nextElementSibling || manually();
+	    function manually() {
+	      var sibling = el;
+	      do {
+	        sibling = sibling.nextSibling;
+	      } while (sibling && sibling.nodeType !== 1);
+	      return sibling;
+	    }
+	  }
+
+	  function getEventHost(e) {
+	    // on touchend event, we have to use `e.changedTouches`
+	    // see http://stackoverflow.com/questions/7192563/touchend-event-properties
+	    // see https://github.com/bevacqua/dragula/issues/34
+	    if (e.targetTouches && e.targetTouches.length) {
+	      return e.targetTouches[0];
+	    }
+	    if (e.changedTouches && e.changedTouches.length) {
+	      return e.changedTouches[0];
+	    }
+	    return e;
+	  }
+
+	  function getCoord(coord, e) {
+	    var host = getEventHost(e);
+	    var missMap = {
+	      pageX: 'clientX', // IE8
+	      pageY: 'clientY' // IE8
+	    };
+	    if (coord in missMap && !(coord in host) && missMap[coord] in host) {
+	      coord = missMap[coord];
+	    }
+	    return host[coord];
+	  }
+
+	  module.exports = dragula;
+	});
+
+	var dragula$1 = interopDefault(dragula);
+
+	if (!dragula$1) {
+	  throw new Error('[vue-dragula] cannot locate dragula.');
+	}
+
+	var raf = window.requestAnimationFrame;
+	var waitForTransition = raf ? function (fn) {
+	  raf(function () {
+	    raf(fn);
+	  });
+	} : function (fn) {
+	  window.setTimeout(fn, 50);
+	};
+
+	var DragulaService = function () {
+	  function DragulaService(Vue) {
+	    babelHelpers.classCallCheck(this, DragulaService);
+
+	    this.bags = []; // bag store
+	    this.eventBus = new Vue();
+	    this.events = ['cancel', 'cloned', 'drag', 'dragend', 'drop', 'out', 'over', 'remove', 'shadow', 'dropModel', 'removeModel'];
+	  }
+
+	  babelHelpers.createClass(DragulaService, [{
+	    key: 'add',
+	    value: function add(name, drake) {
+	      var bag = this.find(name);
+	      if (bag) {
+	        throw new Error('Bag named: "' + name + '" already exists.');
+	      }
+	      bag = {
+	        name: name,
+	        drake: drake
+	      };
+	      this.bags.push(bag);
+	      if (drake.models) {
+	        this.handleModels(name, drake);
+	      }
+	      if (!bag.initEvents) {
+	        this.setupEvents(bag);
+	      }
+	      return bag;
+	    }
+	  }, {
+	    key: 'find',
+	    value: function find(name) {
+	      var bags = this.bags;
+	      for (var i = 0; i < bags.length; i++) {
+	        if (bags[i].name === name) {
+	          return bags[i];
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'handleModels',
+	    value: function handleModels(name, drake) {
+	      var _this2 = this;
+
+	      if (drake.registered) {
+	        // do not register events twice
+	        return;
+	      }
+	      var dragElm = void 0;
+	      var dragIndex = void 0;
+	      var dropIndex = void 0;
+	      var sourceModel = void 0;
+	      drake.on('remove', function (el, container, source) {
+	        if (!drake.models) {
+	          return;
+	        }
+	        sourceModel = _this2.findModelForContainer(source, drake);
+	        sourceModel.splice(dragIndex, 1);
+	        drake.cancel(true);
+	        _this2.eventBus.$emit('removeModel', [name, el, source, dragIndex]);
+	      });
+	      drake.on('drag', function (el, source) {
+	        dragElm = el;
+	        dragIndex = _this2.domIndexOf(el, source);
+	      });
+	      drake.on('drop', function (dropElm, target, source) {
+	        if (!drake.models || !target) {
+	          return;
+	        }
+	        dropIndex = _this2.domIndexOf(dropElm, target);
+	        sourceModel = _this2.findModelForContainer(source, drake);
+
+	        if (target === source) {
+	          sourceModel.splice(dropIndex, 0, sourceModel.splice(dragIndex, 1)[0]);
+	        } else {
+	          var notCopy = dragElm === dropElm;
+	          var targetModel = _this2.findModelForContainer(target, drake);
+	          var dropElmModel = notCopy ? sourceModel[dragIndex] : JSON.parse(JSON.stringify(sourceModel[dragIndex]));
+
+	          if (notCopy) {
+	            waitForTransition(function () {
+	              sourceModel.splice(dragIndex, 1);
+	            });
+	          }
+	          targetModel.splice(dropIndex, 0, dropElmModel);
+	          drake.cancel(true);
+	        }
+	        _this2.eventBus.$emit('dropModel', [name, dropElm, target, source, dropIndex]);
+	      });
+	      drake.registered = true;
+	    }
+	  }, {
+	    key: 'destroy',
+	    value: function destroy(name) {
+	      var bag = this.find(name);
+	      if (!bag) {
+	        return;
+	      }
+	      var bagIndex = this.bags.indexOf(bag);
+	      this.bags.splice(bagIndex, 1);
+	      bag.drake.destroy();
+	    }
+	  }, {
+	    key: 'setOptions',
+	    value: function setOptions(name, options) {
+	      var bag = this.add(name, dragula$1(options));
+	      this.handleModels(name, bag.drake);
+	    }
+	  }, {
+	    key: 'setupEvents',
+	    value: function setupEvents(bag) {
+	      bag.initEvents = true;
+	      var _this = this;
+	      var emitter = function emitter(type) {
+	        function replicate() {
+	          var args = Array.prototype.slice.call(arguments);
+	          _this.eventBus.$emit(type, [bag.name].concat(args));
+	        }
+	        bag.drake.on(type, replicate);
+	      };
+	      this.events.forEach(emitter);
+	    }
+	  }, {
+	    key: 'domIndexOf',
+	    value: function domIndexOf(child, parent) {
+	      return Array.prototype.indexOf.call(parent.children, child);
+	    }
+	  }, {
+	    key: 'findModelForContainer',
+	    value: function findModelForContainer(container, drake) {
+	      return (this.findModelContainerByContainer(container, drake) || {}).model;
+	    }
+	  }, {
+	    key: 'findModelContainerByContainer',
+	    value: function findModelContainerByContainer(container, drake) {
+	      if (!drake.models) {
+	        return;
+	      }
+	      return drake.models.find(function (model) {
+	        return model.container === container;
+	      });
+	    }
+	  }]);
+	  return DragulaService;
+	}();
+
+	if (!dragula$1) {
+	  throw new Error('[vue-dragula] cannot locate dragula.');
+	}
+
+	function VueDragula (Vue) {
+	  var service = new DragulaService(Vue);
+
+	  var name = 'globalBag';
+	  var drake = void 0;
+
+	  Vue.vueDragula = {
+	    options: service.setOptions.bind(service),
+	    find: service.find.bind(service),
+	    eventBus: service.eventBus
+	  };
+
+	  Vue.directive('dragula', {
+	    params: ['bag'],
+
+	    bind: function bind(container, binding, vnode) {
+	      var bagName = vnode ? vnode.data.attrs.bag // Vue 2
+	      : this.params.bag; // Vue 1
+	      if (!vnode) {
+	        container = this.el; // Vue 1
+	      }
+	      if (bagName !== undefined && bagName.length !== 0) {
+	        name = bagName;
+	      }
+	      var bag = service.find(name);
+	      if (bag) {
+	        drake = bag.drake;
+	        drake.containers.push(container);
+	        return;
+	      }
+	      drake = dragula$1({
+	        containers: [container]
+	      });
+	      service.add(name, drake);
+
+	      service.handleModels(name, drake);
+	    },
+	    update: function update(container, binding, vnode, oldVnode) {
+	      var newValue = vnode ? binding.value // Vue 2
+	      : container; // Vue 1
+	      if (!newValue) {
+	        return;
+	      }
+
+	      var bagName = vnode ? vnode.data.attrs.bag // Vue 2
+	      : this.params.bag; // Vue 1
+	      if (bagName !== undefined && bagName.length !== 0) {
+	        name = bagName;
+	      }
+	      var bag = service.find(name);
+	      drake = bag.drake;
+	      if (!drake.models) {
+	        drake.models = [];
+	      }
+
+	      if (!vnode) {
+	        container = this.el; // Vue 1
+	      }
+	      var modelContainer = service.findModelContainerByContainer(container, drake);
+
+	      if (modelContainer) {
+	        modelContainer.model = newValue;
+	      } else {
+	        drake.models.push({
+	          model: newValue,
+	          container: container
+	        });
+	      }
+	    },
+	    unbind: function unbind(container, binding, vnode) {
+	      var unbindBagName = 'globalBag';
+	      var bagName = vnode ? vnode.data.attrs.bag // Vue 2
+	      : this.params.bag; // Vue 1
+	      if (bagName !== undefined && bagName.length !== 0) {
+	        unbindBagName = bagName;
+	      }
+	      var drake = service.find(unbindBagName).drake;
+	      if (!drake) {
+	        return;
+	      }
+	      var containerIndex = drake.containers.indexOf(container);
+	      if (containerIndex > -1) {
+	        drake.containers.splice(containerIndex, 1);
+	      }
+	      if (drake.containers.length === 0) {
+	        service.destroy(unbindBagName);
+	      }
+	    }
+	  });
+	}
+
+	function plugin(Vue) {
+	  var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+	  if (plugin.installed) {
+	    console.warn('[vue-dragula] already installed.');
+	  }
+
+	  VueDragula(Vue);
+	}
+
+	plugin.version = '1.0.0';
+
+	if (true) {
+	  // eslint-disable-line
+	  !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+	    plugin;
+	  }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)); // eslint-disable-line
+	} else if (window.Vue) {
+	    window.Vue.use(plugin);
+	  }
+
+	return plugin;
+
+}));
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(189), __webpack_require__(8).setImmediate, __webpack_require__(7)))
+
+/***/ },
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* styles */
-__webpack_require__(184)
+__webpack_require__(186)
 
 /* script */
-__vue_exports__ = __webpack_require__(142)
+__vue_exports__ = __webpack_require__(143)
 
 /* template */
-var __vue_template__ = __webpack_require__(175)
+var __vue_template__ = __webpack_require__(177)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -25507,20 +27019,20 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 163 */
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* styles */
-__webpack_require__(178)
+__webpack_require__(180)
 
 /* script */
-__vue_exports__ = __webpack_require__(143)
+__vue_exports__ = __webpack_require__(144)
 
 /* template */
-var __vue_template__ = __webpack_require__(169)
+var __vue_template__ = __webpack_require__(171)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -25554,20 +27066,20 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 164 */
+/* 166 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* styles */
-__webpack_require__(179)
+__webpack_require__(181)
 
 /* script */
-__vue_exports__ = __webpack_require__(144)
+__vue_exports__ = __webpack_require__(145)
 
 /* template */
-var __vue_template__ = __webpack_require__(170)
+var __vue_template__ = __webpack_require__(172)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -25601,20 +27113,20 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 165 */
+/* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* styles */
-__webpack_require__(183)
+__webpack_require__(185)
 
 /* script */
-__vue_exports__ = __webpack_require__(145)
+__vue_exports__ = __webpack_require__(146)
 
 /* template */
-var __vue_template__ = __webpack_require__(174)
+var __vue_template__ = __webpack_require__(176)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -25648,20 +27160,20 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 166 */
+/* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* styles */
-__webpack_require__(182)
+__webpack_require__(184)
 
 /* script */
-__vue_exports__ = __webpack_require__(146)
+__vue_exports__ = __webpack_require__(147)
 
 /* template */
-var __vue_template__ = __webpack_require__(173)
+var __vue_template__ = __webpack_require__(175)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -25695,20 +27207,20 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 167 */
+/* 169 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* styles */
-__webpack_require__(180)
+__webpack_require__(182)
 
 /* script */
-__vue_exports__ = __webpack_require__(147)
+__vue_exports__ = __webpack_require__(148)
 
 /* template */
-var __vue_template__ = __webpack_require__(171)
+var __vue_template__ = __webpack_require__(173)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -25742,20 +27254,20 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 168 */
+/* 170 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* styles */
-__webpack_require__(185)
+__webpack_require__(187)
 
 /* script */
-__vue_exports__ = __webpack_require__(148)
+__vue_exports__ = __webpack_require__(149)
 
 /* template */
-var __vue_template__ = __webpack_require__(176)
+var __vue_template__ = __webpack_require__(178)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -25789,7 +27301,7 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 169 */
+/* 171 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){with(this) {
@@ -25871,7 +27383,7 @@ if (false) {
 }
 
 /***/ },
-/* 170 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){with(this) {
@@ -25897,7 +27409,7 @@ if (false) {
 }
 
 /***/ },
-/* 171 */
+/* 173 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){with(this) {
@@ -25953,7 +27465,7 @@ if (false) {
 }
 
 /***/ },
-/* 172 */
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){with(this) {
@@ -25977,7 +27489,7 @@ if (false) {
 }
 
 /***/ },
-/* 173 */
+/* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){with(this) {
@@ -26034,7 +27546,7 @@ if (false) {
 }
 
 /***/ },
-/* 174 */
+/* 176 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){with(this) {
@@ -26044,7 +27556,7 @@ module.exports={render:function (){with(this) {
     attrs: {
       "id": "bill-view"
     }
-  }, [_h('h2', ["Bill"])])
+  }, [_h('h2', ["View Bill"])])
 }}]}
 if (false) {
   module.hot.accept()
@@ -26054,7 +27566,7 @@ if (false) {
 }
 
 /***/ },
-/* 175 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){with(this) {
@@ -26091,7 +27603,7 @@ if (false) {
 }
 
 /***/ },
-/* 176 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){with(this) {
@@ -26099,56 +27611,60 @@ module.exports={render:function (){with(this) {
     attrs: {
       "id": "split-view"
     }
-  }, [(customers.length > 1) ? _h('h2', ["Split " + _s(customers.length) + " Orders"]) : _h('h2', ["Split " + _s(customers.length) + " Order"]), " ", " ", _h('div', {
+  }, [_m(0), " ", _h('div', {
     staticClass: "wrapper"
   }, [_h('div', {
     attrs: {
       "id": "source"
     }
-  }, [_m(0), " ", _h('div', {
+  }, [_h('div', {
+    staticClass: "split-header"
+  }, [_h('h3', [_s(customers.length) + " Customers"])]), " ", _h('div', {
     directives: [{
       name: "dragula",
       rawName: "v-dragula",
-      value: (col1),
-      expression: "col1"
+      value: (customers),
+      expression: "customers"
     }],
     staticClass: "container",
     attrs: {
       "bag": "first-bag"
     }
-  }, [_l((col1), function(text) {
-    return _h('div', [_s(text)])
+  }, [_l((customers), function(customer) {
+    return _h('div', {
+      key: customer.id
+    }, ["Customer " + _s(customer.number)])
   })])]), " ", _h('div', {
     attrs: {
       "id": "target"
     }
-  }, [_m(1), " ", _h('div', {
-    directives: [{
-      name: "dragula",
-      rawName: "v-dragula",
-      value: (col2),
-      expression: "col2"
-    }],
-    staticClass: "container",
-    attrs: {
-      "bag": "first-bag"
-    }
-  }, [_l((col2), function(text) {
-    return _h('div', [_s(text)])
-  })]), " ", _m(2), " ", _h('div', {
-    directives: [{
-      name: "dragula",
-      rawName: "v-dragula",
-      value: (col3),
-      expression: "col3"
-    }],
-    staticClass: "container",
-    attrs: {
-      "bag": "first-bag"
-    }
-  }, [_l((col3), function(text) {
-    return _h('div', [_s(text)])
-  })])])]), " ", _h('div', {
+  }, [_l((bills), function(bill) {
+    return _h('div', [_h('div', {
+      staticClass: "split-header"
+    }, [_h('h3', ["Bill " + _s(bill.number)]), " ", _h('div', [_h('button', {
+      staticClass: "c-btn c-btn--secondary",
+      on: {
+        "click": function($event) {
+          removeBill(bill.number)
+        }
+      }
+    }, ["Remove"])])]), " ", _h('div', {
+      directives: [{
+        name: "dragula",
+        rawName: "v-dragula",
+        value: (bill.customers),
+        expression: "bill.customers"
+      }],
+      staticClass: "container",
+      attrs: {
+        "bag": "first-bag"
+      }
+    }, [_l((bill.customers), function(customer) {
+      return _h('div', {
+        key: customer.id
+      }, ["Customer " + _s(customer.number)])
+    })])])
+  })])]), " ", _h('div', {
     staticClass: "sticky-footer"
   }, [_h('button', {
     staticClass: "c-btn c-btn--secondary",
@@ -26160,18 +27676,22 @@ module.exports={render:function (){with(this) {
     on: {
       "click": back
     }
-  }, ["Back"]), " ", _h('button', {
+  }, ["Back"]), " ", (customers.length > 0) ? _h('button', {
+    staticClass: "c-btn c-btn--primary",
+    attrs: {
+      "disabled": ""
+    },
+    on: {
+      "click": splitOrders
+    }
+  }, ["Finish"]) : _h('button', {
     staticClass: "c-btn c-btn--primary",
     on: {
       "click": splitOrders
     }
-  }, ["Finish"])])])])
+  }, ["Finish"]), " "])])])
 }},staticRenderFns: [function (){with(this) {
-  return _h('h3', ["Customers"])
-}},function (){with(this) {
-  return _h('h3', ["Bill 1"])
-}},function (){with(this) {
-  return _h('h3', ["Bill 2"])
+  return _h('h2', ["Split"])
 }}]}
 if (false) {
   module.hot.accept()
@@ -26181,7 +27701,7 @@ if (false) {
 }
 
 /***/ },
-/* 177 */
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
 /**
@@ -28064,13 +29584,13 @@ return VueRouter;
 })));
 
 /***/ },
-/* 178 */
+/* 180 */
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(150);
+var content = __webpack_require__(151);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(3)(content, {});
@@ -28090,13 +29610,13 @@ if(false) {
 }
 
 /***/ },
-/* 179 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(151);
+var content = __webpack_require__(152);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(3)(content, {});
@@ -28116,13 +29636,13 @@ if(false) {
 }
 
 /***/ },
-/* 180 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(152);
+var content = __webpack_require__(153);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(3)(content, {});
@@ -28142,13 +29662,13 @@ if(false) {
 }
 
 /***/ },
-/* 181 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(153);
+var content = __webpack_require__(154);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(3)(content, {});
@@ -28168,13 +29688,13 @@ if(false) {
 }
 
 /***/ },
-/* 182 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(154);
+var content = __webpack_require__(155);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(3)(content, {});
@@ -28194,13 +29714,13 @@ if(false) {
 }
 
 /***/ },
-/* 183 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(155);
+var content = __webpack_require__(156);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(3)(content, {});
@@ -28220,13 +29740,13 @@ if(false) {
 }
 
 /***/ },
-/* 184 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(156);
+var content = __webpack_require__(157);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(3)(content, {});
@@ -28246,13 +29766,13 @@ if(false) {
 }
 
 /***/ },
-/* 185 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(157);
+var content = __webpack_require__(158);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(3)(content, {});
@@ -28272,7 +29792,7 @@ if(false) {
 }
 
 /***/ },
-/* 186 */
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
 /**
@@ -28805,7 +30325,32 @@ return index;
 })));
 
 /***/ },
-/* 187 */
+/* 189 */
+/***/ function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() { return this; })();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ },
+/* 190 */
 /***/ function(module, exports) {
 
 module.exports = function(module) {
@@ -28831,16 +30376,16 @@ module.exports = function(module) {
 
 
 /***/ },
-/* 188 */
+/* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__App_vue__ = __webpack_require__(123);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__App_vue__ = __webpack_require__(124);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__App_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__App_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store__ = __webpack_require__(9);
 
 
 
@@ -28853,1503 +30398,6 @@ var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
   store: __WEBPACK_IMPORTED_MODULE_3__store__["a" /* default */],
   components: { App: __WEBPACK_IMPORTED_MODULE_1__App_vue___default.a }
 });
-
-/***/ },
-/* 189 */
-/***/ function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(122).nextTick;
-var apply = Function.prototype.apply;
-var slice = Array.prototype.slice;
-var immediateIds = {};
-var nextImmediateId = 0;
-
-// DOM APIs, for completeness
-
-exports.setTimeout = function() {
-  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
-};
-exports.setInterval = function() {
-  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
-};
-exports.clearTimeout =
-exports.clearInterval = function(timeout) { timeout.close(); };
-
-function Timeout(id, clearFn) {
-  this._id = id;
-  this._clearFn = clearFn;
-}
-Timeout.prototype.unref = Timeout.prototype.ref = function() {};
-Timeout.prototype.close = function() {
-  this._clearFn.call(window, this._id);
-};
-
-// Does not start the time, just sets up the members needed.
-exports.enroll = function(item, msecs) {
-  clearTimeout(item._idleTimeoutId);
-  item._idleTimeout = msecs;
-};
-
-exports.unenroll = function(item) {
-  clearTimeout(item._idleTimeoutId);
-  item._idleTimeout = -1;
-};
-
-exports._unrefActive = exports.active = function(item) {
-  clearTimeout(item._idleTimeoutId);
-
-  var msecs = item._idleTimeout;
-  if (msecs >= 0) {
-    item._idleTimeoutId = setTimeout(function onTimeout() {
-      if (item._onTimeout)
-        item._onTimeout();
-    }, msecs);
-  }
-};
-
-// That's not how node.js implements it but the exposed api is the same.
-exports.setImmediate = typeof setImmediate === "function" ? setImmediate : function(fn) {
-  var id = nextImmediateId++;
-  var args = arguments.length < 2 ? false : slice.call(arguments, 1);
-
-  immediateIds[id] = true;
-
-  nextTick(function onNextTick() {
-    if (immediateIds[id]) {
-      // fn.call() is faster so we optimize for the common use-case
-      // @see http://jsperf.com/call-apply-segu
-      if (args) {
-        fn.apply(null, args);
-      } else {
-        fn.call(null);
-      }
-      // Prevent ids from leaking
-      exports.clearImmediate(id);
-    }
-  });
-
-  return id;
-};
-
-exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function(id) {
-  delete immediateIds[id];
-};
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(189).setImmediate, __webpack_require__(189).clearImmediate))
-
-/***/ },
-/* 190 */
-/***/ function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(global, setImmediate, process) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * vue-dragula v1.3.0
- * (c) 2016 Yichang Liu
- * Released under the MIT License.
- */
-(function (global, factory) {
-	 true ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.vueDragula = factory());
-}(this, function () { 'use strict';
-
-	var babelHelpers = {};
-	babelHelpers.typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-	  return typeof obj;
-	} : function (obj) {
-	  return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
-	};
-
-	babelHelpers.classCallCheck = function (instance, Constructor) {
-	  if (!(instance instanceof Constructor)) {
-	    throw new TypeError("Cannot call a class as a function");
-	  }
-	};
-
-	babelHelpers.createClass = function () {
-	  function defineProperties(target, props) {
-	    for (var i = 0; i < props.length; i++) {
-	      var descriptor = props[i];
-	      descriptor.enumerable = descriptor.enumerable || false;
-	      descriptor.configurable = true;
-	      if ("value" in descriptor) descriptor.writable = true;
-	      Object.defineProperty(target, descriptor.key, descriptor);
-	    }
-	  }
-
-	  return function (Constructor, protoProps, staticProps) {
-	    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-	    if (staticProps) defineProperties(Constructor, staticProps);
-	    return Constructor;
-	  };
-	}();
-
-	babelHelpers;
-
-	var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
-	function interopDefault(ex) {
-		return ex && (typeof ex === 'undefined' ? 'undefined' : babelHelpers.typeof(ex)) === 'object' && 'default' in ex ? ex['default'] : ex;
-	}
-
-	function createCommonjsModule(fn, module) {
-		return module = { exports: {} }, fn(module, module.exports), module.exports;
-	}
-
-	var atoa = createCommonjsModule(function (module) {
-	  module.exports = function atoa(a, n) {
-	    return Array.prototype.slice.call(a, n);
-	  };
-	});
-
-	var atoa$1 = interopDefault(atoa);
-
-var require$$1 = Object.freeze({
-	  default: atoa$1
-	});
-
-	var ticky = createCommonjsModule(function (module) {
-	  var si = typeof setImmediate === 'function',
-	      tick;
-	  if (si) {
-	    tick = function tick(fn) {
-	      setImmediate(fn);
-	    };
-	  } else if (typeof process !== 'undefined' && process.nextTick) {
-	    tick = process.nextTick;
-	  } else {
-	    tick = function tick(fn) {
-	      setTimeout(fn, 0);
-	    };
-	  }
-
-	  module.exports = tick;
-	});
-
-	var ticky$1 = interopDefault(ticky);
-
-var require$$0$1 = Object.freeze({
-	  default: ticky$1
-	});
-
-	var debounce = createCommonjsModule(function (module) {
-	  'use strict';
-
-	  var ticky = interopDefault(require$$0$1);
-
-	  module.exports = function debounce(fn, args, ctx) {
-	    if (!fn) {
-	      return;
-	    }
-	    ticky(function run() {
-	      fn.apply(ctx || null, args || []);
-	    });
-	  };
-	});
-
-	var debounce$1 = interopDefault(debounce);
-
-var require$$0 = Object.freeze({
-	  default: debounce$1
-	});
-
-	var emitter = createCommonjsModule(function (module) {
-	  'use strict';
-
-	  var atoa = interopDefault(require$$1);
-	  var debounce = interopDefault(require$$0);
-
-	  module.exports = function emitter(thing, options) {
-	    var opts = options || {};
-	    var evt = {};
-	    if (thing === undefined) {
-	      thing = {};
-	    }
-	    thing.on = function (type, fn) {
-	      if (!evt[type]) {
-	        evt[type] = [fn];
-	      } else {
-	        evt[type].push(fn);
-	      }
-	      return thing;
-	    };
-	    thing.once = function (type, fn) {
-	      fn._once = true; // thing.off(fn) still works!
-	      thing.on(type, fn);
-	      return thing;
-	    };
-	    thing.off = function (type, fn) {
-	      var c = arguments.length;
-	      if (c === 1) {
-	        delete evt[type];
-	      } else if (c === 0) {
-	        evt = {};
-	      } else {
-	        var et = evt[type];
-	        if (!et) {
-	          return thing;
-	        }
-	        et.splice(et.indexOf(fn), 1);
-	      }
-	      return thing;
-	    };
-	    thing.emit = function () {
-	      var args = atoa(arguments);
-	      return thing.emitterSnapshot(args.shift()).apply(this, args);
-	    };
-	    thing.emitterSnapshot = function (type) {
-	      var et = (evt[type] || []).slice(0);
-	      return function () {
-	        var args = atoa(arguments);
-	        var ctx = this || thing;
-	        if (type === 'error' && opts.throws !== false && !et.length) {
-	          throw args.length === 1 ? args[0] : args;
-	        }
-	        et.forEach(function emitter(listen) {
-	          if (opts.async) {
-	            debounce(listen, args, ctx);
-	          } else {
-	            listen.apply(ctx, args);
-	          }
-	          if (listen._once) {
-	            thing.off(type, listen);
-	          }
-	        });
-	        return thing;
-	      };
-	    };
-	    return thing;
-	  };
-	});
-
-	var emitter$1 = interopDefault(emitter);
-
-var require$$2 = Object.freeze({
-	  default: emitter$1
-	});
-
-	var index = createCommonjsModule(function (module) {
-	  var NativeCustomEvent = commonjsGlobal.CustomEvent;
-
-	  function useNative() {
-	    try {
-	      var p = new NativeCustomEvent('cat', { detail: { foo: 'bar' } });
-	      return 'cat' === p.type && 'bar' === p.detail.foo;
-	    } catch (e) {}
-	    return false;
-	  }
-
-	  /**
-	   * Cross-browser `CustomEvent` constructor.
-	   *
-	   * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent.CustomEvent
-	   *
-	   * @public
-	   */
-
-	  module.exports = useNative() ? NativeCustomEvent :
-
-	  // IE >= 9
-	  'function' === typeof document.createEvent ? function CustomEvent(type, params) {
-	    var e = document.createEvent('CustomEvent');
-	    if (params) {
-	      e.initCustomEvent(type, params.bubbles, params.cancelable, params.detail);
-	    } else {
-	      e.initCustomEvent(type, false, false, void 0);
-	    }
-	    return e;
-	  } :
-
-	  // IE <= 8
-	  function CustomEvent(type, params) {
-	    var e = document.createEventObject();
-	    e.type = type;
-	    if (params) {
-	      e.bubbles = Boolean(params.bubbles);
-	      e.cancelable = Boolean(params.cancelable);
-	      e.detail = params.detail;
-	    } else {
-	      e.bubbles = false;
-	      e.cancelable = false;
-	      e.detail = void 0;
-	    }
-	    return e;
-	  };
-	});
-
-	var index$1 = interopDefault(index);
-
-var require$$1$2 = Object.freeze({
-	  default: index$1
-	});
-
-	var eventmap = createCommonjsModule(function (module) {
-	  'use strict';
-
-	  var eventmap = [];
-	  var eventname = '';
-	  var ron = /^on/;
-
-	  for (eventname in commonjsGlobal) {
-	    if (ron.test(eventname)) {
-	      eventmap.push(eventname.slice(2));
-	    }
-	  }
-
-	  module.exports = eventmap;
-	});
-
-	var eventmap$1 = interopDefault(eventmap);
-
-var require$$0$2 = Object.freeze({
-	  default: eventmap$1
-	});
-
-	var crossvent = createCommonjsModule(function (module) {
-	  'use strict';
-
-	  var customEvent = interopDefault(require$$1$2);
-	  var eventmap = interopDefault(require$$0$2);
-	  var doc = commonjsGlobal.document;
-	  var addEvent = addEventEasy;
-	  var removeEvent = removeEventEasy;
-	  var hardCache = [];
-
-	  if (!commonjsGlobal.addEventListener) {
-	    addEvent = addEventHard;
-	    removeEvent = removeEventHard;
-	  }
-
-	  module.exports = {
-	    add: addEvent,
-	    remove: removeEvent,
-	    fabricate: fabricateEvent
-	  };
-
-	  function addEventEasy(el, type, fn, capturing) {
-	    return el.addEventListener(type, fn, capturing);
-	  }
-
-	  function addEventHard(el, type, fn) {
-	    return el.attachEvent('on' + type, wrap(el, type, fn));
-	  }
-
-	  function removeEventEasy(el, type, fn, capturing) {
-	    return el.removeEventListener(type, fn, capturing);
-	  }
-
-	  function removeEventHard(el, type, fn) {
-	    var listener = unwrap(el, type, fn);
-	    if (listener) {
-	      return el.detachEvent('on' + type, listener);
-	    }
-	  }
-
-	  function fabricateEvent(el, type, model) {
-	    var e = eventmap.indexOf(type) === -1 ? makeCustomEvent() : makeClassicEvent();
-	    if (el.dispatchEvent) {
-	      el.dispatchEvent(e);
-	    } else {
-	      el.fireEvent('on' + type, e);
-	    }
-	    function makeClassicEvent() {
-	      var e;
-	      if (doc.createEvent) {
-	        e = doc.createEvent('Event');
-	        e.initEvent(type, true, true);
-	      } else if (doc.createEventObject) {
-	        e = doc.createEventObject();
-	      }
-	      return e;
-	    }
-	    function makeCustomEvent() {
-	      return new customEvent(type, { detail: model });
-	    }
-	  }
-
-	  function wrapperFactory(el, type, fn) {
-	    return function wrapper(originalEvent) {
-	      var e = originalEvent || commonjsGlobal.event;
-	      e.target = e.target || e.srcElement;
-	      e.preventDefault = e.preventDefault || function preventDefault() {
-	        e.returnValue = false;
-	      };
-	      e.stopPropagation = e.stopPropagation || function stopPropagation() {
-	        e.cancelBubble = true;
-	      };
-	      e.which = e.which || e.keyCode;
-	      fn.call(el, e);
-	    };
-	  }
-
-	  function wrap(el, type, fn) {
-	    var wrapper = unwrap(el, type, fn) || wrapperFactory(el, type, fn);
-	    hardCache.push({
-	      wrapper: wrapper,
-	      element: el,
-	      type: type,
-	      fn: fn
-	    });
-	    return wrapper;
-	  }
-
-	  function unwrap(el, type, fn) {
-	    var i = find(el, type, fn);
-	    if (i) {
-	      var wrapper = hardCache[i].wrapper;
-	      hardCache.splice(i, 1); // free up a tad of memory
-	      return wrapper;
-	    }
-	  }
-
-	  function find(el, type, fn) {
-	    var i, item;
-	    for (i = 0; i < hardCache.length; i++) {
-	      item = hardCache[i];
-	      if (item.element === el && item.type === type && item.fn === fn) {
-	        return i;
-	      }
-	    }
-	  }
-	});
-
-	var crossvent$1 = interopDefault(crossvent);
-	var add = crossvent.add;
-	var remove = crossvent.remove;
-	var fabricate = crossvent.fabricate;
-
-var require$$1$1 = Object.freeze({
-	  default: crossvent$1,
-	  add: add,
-	  remove: remove,
-	  fabricate: fabricate
-	});
-
-	var classes = createCommonjsModule(function (module) {
-	  'use strict';
-
-	  var cache = {};
-	  var start = '(?:^|\\s)';
-	  var end = '(?:\\s|$)';
-
-	  function lookupClass(className) {
-	    var cached = cache[className];
-	    if (cached) {
-	      cached.lastIndex = 0;
-	    } else {
-	      cache[className] = cached = new RegExp(start + className + end, 'g');
-	    }
-	    return cached;
-	  }
-
-	  function addClass(el, className) {
-	    var current = el.className;
-	    if (!current.length) {
-	      el.className = className;
-	    } else if (!lookupClass(className).test(current)) {
-	      el.className += ' ' + className;
-	    }
-	  }
-
-	  function rmClass(el, className) {
-	    el.className = el.className.replace(lookupClass(className), ' ').trim();
-	  }
-
-	  module.exports = {
-	    add: addClass,
-	    rm: rmClass
-	  };
-	});
-
-	var classes$1 = interopDefault(classes);
-	var add$1 = classes.add;
-	var rm = classes.rm;
-
-var require$$0$3 = Object.freeze({
-	  default: classes$1,
-	  add: add$1,
-	  rm: rm
-	});
-
-	var dragula = createCommonjsModule(function (module) {
-	  'use strict';
-
-	  var emitter = interopDefault(require$$2);
-	  var crossvent = interopDefault(require$$1$1);
-	  var classes = interopDefault(require$$0$3);
-	  var doc = document;
-	  var documentElement = doc.documentElement;
-
-	  function dragula(initialContainers, options) {
-	    var len = arguments.length;
-	    if (len === 1 && Array.isArray(initialContainers) === false) {
-	      options = initialContainers;
-	      initialContainers = [];
-	    }
-	    var _mirror; // mirror image
-	    var _source; // source container
-	    var _item; // item being dragged
-	    var _offsetX; // reference x
-	    var _offsetY; // reference y
-	    var _moveX; // reference move x
-	    var _moveY; // reference move y
-	    var _initialSibling; // reference sibling when grabbed
-	    var _currentSibling; // reference sibling now
-	    var _copy; // item used for copying
-	    var _renderTimer; // timer for setTimeout renderMirrorImage
-	    var _lastDropTarget = null; // last container item was over
-	    var _grabbed; // holds mousedown context until first mousemove
-
-	    var o = options || {};
-	    if (o.moves === void 0) {
-	      o.moves = always;
-	    }
-	    if (o.accepts === void 0) {
-	      o.accepts = always;
-	    }
-	    if (o.invalid === void 0) {
-	      o.invalid = invalidTarget;
-	    }
-	    if (o.containers === void 0) {
-	      o.containers = initialContainers || [];
-	    }
-	    if (o.isContainer === void 0) {
-	      o.isContainer = never;
-	    }
-	    if (o.copy === void 0) {
-	      o.copy = false;
-	    }
-	    if (o.copySortSource === void 0) {
-	      o.copySortSource = false;
-	    }
-	    if (o.revertOnSpill === void 0) {
-	      o.revertOnSpill = false;
-	    }
-	    if (o.removeOnSpill === void 0) {
-	      o.removeOnSpill = false;
-	    }
-	    if (o.direction === void 0) {
-	      o.direction = 'vertical';
-	    }
-	    if (o.ignoreInputTextSelection === void 0) {
-	      o.ignoreInputTextSelection = true;
-	    }
-	    if (o.mirrorContainer === void 0) {
-	      o.mirrorContainer = doc.body;
-	    }
-
-	    var drake = emitter({
-	      containers: o.containers,
-	      start: manualStart,
-	      end: end,
-	      cancel: cancel,
-	      remove: remove,
-	      destroy: destroy,
-	      canMove: canMove,
-	      dragging: false
-	    });
-
-	    if (o.removeOnSpill === true) {
-	      drake.on('over', spillOver).on('out', spillOut);
-	    }
-
-	    events();
-
-	    return drake;
-
-	    function isContainer(el) {
-	      return drake.containers.indexOf(el) !== -1 || o.isContainer(el);
-	    }
-
-	    function events(remove) {
-	      var op = remove ? 'remove' : 'add';
-	      touchy(documentElement, op, 'mousedown', grab);
-	      touchy(documentElement, op, 'mouseup', release);
-	    }
-
-	    function eventualMovements(remove) {
-	      var op = remove ? 'remove' : 'add';
-	      touchy(documentElement, op, 'mousemove', startBecauseMouseMoved);
-	    }
-
-	    function movements(remove) {
-	      var op = remove ? 'remove' : 'add';
-	      crossvent[op](documentElement, 'selectstart', preventGrabbed); // IE8
-	      crossvent[op](documentElement, 'click', preventGrabbed);
-	    }
-
-	    function destroy() {
-	      events(true);
-	      release({});
-	    }
-
-	    function preventGrabbed(e) {
-	      if (_grabbed) {
-	        e.preventDefault();
-	      }
-	    }
-
-	    function grab(e) {
-	      _moveX = e.clientX;
-	      _moveY = e.clientY;
-
-	      var ignore = whichMouseButton(e) !== 1 || e.metaKey || e.ctrlKey;
-	      if (ignore) {
-	        return; // we only care about honest-to-god left clicks and touch events
-	      }
-	      var item = e.target;
-	      var context = canStart(item);
-	      if (!context) {
-	        return;
-	      }
-	      _grabbed = context;
-	      eventualMovements();
-	      if (e.type === 'mousedown') {
-	        if (isInput(item)) {
-	          // see also: https://github.com/bevacqua/dragula/issues/208
-	          item.focus(); // fixes https://github.com/bevacqua/dragula/issues/176
-	        } else {
-	            e.preventDefault(); // fixes https://github.com/bevacqua/dragula/issues/155
-	          }
-	      }
-	    }
-
-	    function startBecauseMouseMoved(e) {
-	      if (!_grabbed) {
-	        return;
-	      }
-	      if (whichMouseButton(e) === 0) {
-	        release({});
-	        return; // when text is selected on an input and then dragged, mouseup doesn't fire. this is our only hope
-	      }
-	      // truthy check fixes #239, equality fixes #207
-	      if (e.clientX !== void 0 && e.clientX === _moveX && e.clientY !== void 0 && e.clientY === _moveY) {
-	        return;
-	      }
-	      if (o.ignoreInputTextSelection) {
-	        var clientX = getCoord('clientX', e);
-	        var clientY = getCoord('clientY', e);
-	        var elementBehindCursor = doc.elementFromPoint(clientX, clientY);
-	        if (isInput(elementBehindCursor)) {
-	          return;
-	        }
-	      }
-
-	      var grabbed = _grabbed; // call to end() unsets _grabbed
-	      eventualMovements(true);
-	      movements();
-	      end();
-	      start(grabbed);
-
-	      var offset = getOffset(_item);
-	      _offsetX = getCoord('pageX', e) - offset.left;
-	      _offsetY = getCoord('pageY', e) - offset.top;
-
-	      classes.add(_copy || _item, 'gu-transit');
-	      renderMirrorImage();
-	      drag(e);
-	    }
-
-	    function canStart(item) {
-	      if (drake.dragging && _mirror) {
-	        return;
-	      }
-	      if (isContainer(item)) {
-	        return; // don't drag container itself
-	      }
-	      var handle = item;
-	      while (getParent(item) && isContainer(getParent(item)) === false) {
-	        if (o.invalid(item, handle)) {
-	          return;
-	        }
-	        item = getParent(item); // drag target should be a top element
-	        if (!item) {
-	          return;
-	        }
-	      }
-	      var source = getParent(item);
-	      if (!source) {
-	        return;
-	      }
-	      if (o.invalid(item, handle)) {
-	        return;
-	      }
-
-	      var movable = o.moves(item, source, handle, nextEl(item));
-	      if (!movable) {
-	        return;
-	      }
-
-	      return {
-	        item: item,
-	        source: source
-	      };
-	    }
-
-	    function canMove(item) {
-	      return !!canStart(item);
-	    }
-
-	    function manualStart(item) {
-	      var context = canStart(item);
-	      if (context) {
-	        start(context);
-	      }
-	    }
-
-	    function start(context) {
-	      if (isCopy(context.item, context.source)) {
-	        _copy = context.item.cloneNode(true);
-	        drake.emit('cloned', _copy, context.item, 'copy');
-	      }
-
-	      _source = context.source;
-	      _item = context.item;
-	      _initialSibling = _currentSibling = nextEl(context.item);
-
-	      drake.dragging = true;
-	      drake.emit('drag', _item, _source);
-	    }
-
-	    function invalidTarget() {
-	      return false;
-	    }
-
-	    function end() {
-	      if (!drake.dragging) {
-	        return;
-	      }
-	      var item = _copy || _item;
-	      drop(item, getParent(item));
-	    }
-
-	    function ungrab() {
-	      _grabbed = false;
-	      eventualMovements(true);
-	      movements(true);
-	    }
-
-	    function release(e) {
-	      ungrab();
-
-	      if (!drake.dragging) {
-	        return;
-	      }
-	      var item = _copy || _item;
-	      var clientX = getCoord('clientX', e);
-	      var clientY = getCoord('clientY', e);
-	      var elementBehindCursor = getElementBehindPoint(_mirror, clientX, clientY);
-	      var dropTarget = findDropTarget(elementBehindCursor, clientX, clientY);
-	      if (dropTarget && (_copy && o.copySortSource || !_copy || dropTarget !== _source)) {
-	        drop(item, dropTarget);
-	      } else if (o.removeOnSpill) {
-	        remove();
-	      } else {
-	        cancel();
-	      }
-	    }
-
-	    function drop(item, target) {
-	      var parent = getParent(item);
-	      if (_copy && o.copySortSource && target === _source) {
-	        parent.removeChild(_item);
-	      }
-	      if (isInitialPlacement(target)) {
-	        drake.emit('cancel', item, _source, _source);
-	      } else {
-	        drake.emit('drop', item, target, _source, _currentSibling);
-	      }
-	      cleanup();
-	    }
-
-	    function remove() {
-	      if (!drake.dragging) {
-	        return;
-	      }
-	      var item = _copy || _item;
-	      var parent = getParent(item);
-	      if (parent) {
-	        parent.removeChild(item);
-	      }
-	      drake.emit(_copy ? 'cancel' : 'remove', item, parent, _source);
-	      cleanup();
-	    }
-
-	    function cancel(revert) {
-	      if (!drake.dragging) {
-	        return;
-	      }
-	      var reverts = arguments.length > 0 ? revert : o.revertOnSpill;
-	      var item = _copy || _item;
-	      var parent = getParent(item);
-	      var initial = isInitialPlacement(parent);
-	      if (initial === false && reverts) {
-	        if (_copy) {
-	          if (parent) {
-	            parent.removeChild(_copy);
-	          }
-	        } else {
-	          _source.insertBefore(item, _initialSibling);
-	        }
-	      }
-	      if (initial || reverts) {
-	        drake.emit('cancel', item, _source, _source);
-	      } else {
-	        drake.emit('drop', item, parent, _source, _currentSibling);
-	      }
-	      cleanup();
-	    }
-
-	    function cleanup() {
-	      var item = _copy || _item;
-	      ungrab();
-	      removeMirrorImage();
-	      if (item) {
-	        classes.rm(item, 'gu-transit');
-	      }
-	      if (_renderTimer) {
-	        clearTimeout(_renderTimer);
-	      }
-	      drake.dragging = false;
-	      if (_lastDropTarget) {
-	        drake.emit('out', item, _lastDropTarget, _source);
-	      }
-	      drake.emit('dragend', item);
-	      _source = _item = _copy = _initialSibling = _currentSibling = _renderTimer = _lastDropTarget = null;
-	    }
-
-	    function isInitialPlacement(target, s) {
-	      var sibling;
-	      if (s !== void 0) {
-	        sibling = s;
-	      } else if (_mirror) {
-	        sibling = _currentSibling;
-	      } else {
-	        sibling = nextEl(_copy || _item);
-	      }
-	      return target === _source && sibling === _initialSibling;
-	    }
-
-	    function findDropTarget(elementBehindCursor, clientX, clientY) {
-	      var target = elementBehindCursor;
-	      while (target && !accepted()) {
-	        target = getParent(target);
-	      }
-	      return target;
-
-	      function accepted() {
-	        var droppable = isContainer(target);
-	        if (droppable === false) {
-	          return false;
-	        }
-
-	        var immediate = getImmediateChild(target, elementBehindCursor);
-	        var reference = getReference(target, immediate, clientX, clientY);
-	        var initial = isInitialPlacement(target, reference);
-	        if (initial) {
-	          return true; // should always be able to drop it right back where it was
-	        }
-	        return o.accepts(_item, target, _source, reference);
-	      }
-	    }
-
-	    function drag(e) {
-	      if (!_mirror) {
-	        return;
-	      }
-	      e.preventDefault();
-
-	      var clientX = getCoord('clientX', e);
-	      var clientY = getCoord('clientY', e);
-	      var x = clientX - _offsetX;
-	      var y = clientY - _offsetY;
-
-	      _mirror.style.left = x + 'px';
-	      _mirror.style.top = y + 'px';
-
-	      var item = _copy || _item;
-	      var elementBehindCursor = getElementBehindPoint(_mirror, clientX, clientY);
-	      var dropTarget = findDropTarget(elementBehindCursor, clientX, clientY);
-	      var changed = dropTarget !== null && dropTarget !== _lastDropTarget;
-	      if (changed || dropTarget === null) {
-	        out();
-	        _lastDropTarget = dropTarget;
-	        over();
-	      }
-	      var parent = getParent(item);
-	      if (dropTarget === _source && _copy && !o.copySortSource) {
-	        if (parent) {
-	          parent.removeChild(item);
-	        }
-	        return;
-	      }
-	      var reference;
-	      var immediate = getImmediateChild(dropTarget, elementBehindCursor);
-	      if (immediate !== null) {
-	        reference = getReference(dropTarget, immediate, clientX, clientY);
-	      } else if (o.revertOnSpill === true && !_copy) {
-	        reference = _initialSibling;
-	        dropTarget = _source;
-	      } else {
-	        if (_copy && parent) {
-	          parent.removeChild(item);
-	        }
-	        return;
-	      }
-	      if (reference === null && changed || reference !== item && reference !== nextEl(item)) {
-	        _currentSibling = reference;
-	        dropTarget.insertBefore(item, reference);
-	        drake.emit('shadow', item, dropTarget, _source);
-	      }
-	      function moved(type) {
-	        drake.emit(type, item, _lastDropTarget, _source);
-	      }
-	      function over() {
-	        if (changed) {
-	          moved('over');
-	        }
-	      }
-	      function out() {
-	        if (_lastDropTarget) {
-	          moved('out');
-	        }
-	      }
-	    }
-
-	    function spillOver(el) {
-	      classes.rm(el, 'gu-hide');
-	    }
-
-	    function spillOut(el) {
-	      if (drake.dragging) {
-	        classes.add(el, 'gu-hide');
-	      }
-	    }
-
-	    function renderMirrorImage() {
-	      if (_mirror) {
-	        return;
-	      }
-	      var rect = _item.getBoundingClientRect();
-	      _mirror = _item.cloneNode(true);
-	      _mirror.style.width = getRectWidth(rect) + 'px';
-	      _mirror.style.height = getRectHeight(rect) + 'px';
-	      classes.rm(_mirror, 'gu-transit');
-	      classes.add(_mirror, 'gu-mirror');
-	      o.mirrorContainer.appendChild(_mirror);
-	      touchy(documentElement, 'add', 'mousemove', drag);
-	      classes.add(o.mirrorContainer, 'gu-unselectable');
-	      drake.emit('cloned', _mirror, _item, 'mirror');
-	    }
-
-	    function removeMirrorImage() {
-	      if (_mirror) {
-	        classes.rm(o.mirrorContainer, 'gu-unselectable');
-	        touchy(documentElement, 'remove', 'mousemove', drag);
-	        getParent(_mirror).removeChild(_mirror);
-	        _mirror = null;
-	      }
-	    }
-
-	    function getImmediateChild(dropTarget, target) {
-	      var immediate = target;
-	      while (immediate !== dropTarget && getParent(immediate) !== dropTarget) {
-	        immediate = getParent(immediate);
-	      }
-	      if (immediate === documentElement) {
-	        return null;
-	      }
-	      return immediate;
-	    }
-
-	    function getReference(dropTarget, target, x, y) {
-	      var horizontal = o.direction === 'horizontal';
-	      var reference = target !== dropTarget ? inside() : outside();
-	      return reference;
-
-	      function outside() {
-	        // slower, but able to figure out any position
-	        var len = dropTarget.children.length;
-	        var i;
-	        var el;
-	        var rect;
-	        for (i = 0; i < len; i++) {
-	          el = dropTarget.children[i];
-	          rect = el.getBoundingClientRect();
-	          if (horizontal && rect.left + rect.width / 2 > x) {
-	            return el;
-	          }
-	          if (!horizontal && rect.top + rect.height / 2 > y) {
-	            return el;
-	          }
-	        }
-	        return null;
-	      }
-
-	      function inside() {
-	        // faster, but only available if dropped inside a child element
-	        var rect = target.getBoundingClientRect();
-	        if (horizontal) {
-	          return resolve(x > rect.left + getRectWidth(rect) / 2);
-	        }
-	        return resolve(y > rect.top + getRectHeight(rect) / 2);
-	      }
-
-	      function resolve(after) {
-	        return after ? nextEl(target) : target;
-	      }
-	    }
-
-	    function isCopy(item, container) {
-	      return typeof o.copy === 'boolean' ? o.copy : o.copy(item, container);
-	    }
-	  }
-
-	  function touchy(el, op, type, fn) {
-	    var touch = {
-	      mouseup: 'touchend',
-	      mousedown: 'touchstart',
-	      mousemove: 'touchmove'
-	    };
-	    var pointers = {
-	      mouseup: 'pointerup',
-	      mousedown: 'pointerdown',
-	      mousemove: 'pointermove'
-	    };
-	    var microsoft = {
-	      mouseup: 'MSPointerUp',
-	      mousedown: 'MSPointerDown',
-	      mousemove: 'MSPointerMove'
-	    };
-	    if (commonjsGlobal.navigator.pointerEnabled) {
-	      crossvent[op](el, pointers[type], fn);
-	    } else if (commonjsGlobal.navigator.msPointerEnabled) {
-	      crossvent[op](el, microsoft[type], fn);
-	    } else {
-	      crossvent[op](el, touch[type], fn);
-	      crossvent[op](el, type, fn);
-	    }
-	  }
-
-	  function whichMouseButton(e) {
-	    if (e.touches !== void 0) {
-	      return e.touches.length;
-	    }
-	    if (e.which !== void 0 && e.which !== 0) {
-	      return e.which;
-	    } // see https://github.com/bevacqua/dragula/issues/261
-	    if (e.buttons !== void 0) {
-	      return e.buttons;
-	    }
-	    var button = e.button;
-	    if (button !== void 0) {
-	      // see https://github.com/jquery/jquery/blob/99e8ff1baa7ae341e94bb89c3e84570c7c3ad9ea/src/event.js#L573-L575
-	      return button & 1 ? 1 : button & 2 ? 3 : button & 4 ? 2 : 0;
-	    }
-	  }
-
-	  function getOffset(el) {
-	    var rect = el.getBoundingClientRect();
-	    return {
-	      left: rect.left + getScroll('scrollLeft', 'pageXOffset'),
-	      top: rect.top + getScroll('scrollTop', 'pageYOffset')
-	    };
-	  }
-
-	  function getScroll(scrollProp, offsetProp) {
-	    if (typeof commonjsGlobal[offsetProp] !== 'undefined') {
-	      return commonjsGlobal[offsetProp];
-	    }
-	    if (documentElement.clientHeight) {
-	      return documentElement[scrollProp];
-	    }
-	    return doc.body[scrollProp];
-	  }
-
-	  function getElementBehindPoint(point, x, y) {
-	    var p = point || {};
-	    var state = p.className;
-	    var el;
-	    p.className += ' gu-hide';
-	    el = doc.elementFromPoint(x, y);
-	    p.className = state;
-	    return el;
-	  }
-
-	  function never() {
-	    return false;
-	  }
-	  function always() {
-	    return true;
-	  }
-	  function getRectWidth(rect) {
-	    return rect.width || rect.right - rect.left;
-	  }
-	  function getRectHeight(rect) {
-	    return rect.height || rect.bottom - rect.top;
-	  }
-	  function getParent(el) {
-	    return el.parentNode === doc ? null : el.parentNode;
-	  }
-	  function isInput(el) {
-	    return el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || isEditable(el);
-	  }
-	  function isEditable(el) {
-	    if (!el) {
-	      return false;
-	    } // no parents were editable
-	    if (el.contentEditable === 'false') {
-	      return false;
-	    } // stop the lookup
-	    if (el.contentEditable === 'true') {
-	      return true;
-	    } // found a contentEditable element in the chain
-	    return isEditable(getParent(el)); // contentEditable is set to 'inherit'
-	  }
-
-	  function nextEl(el) {
-	    return el.nextElementSibling || manually();
-	    function manually() {
-	      var sibling = el;
-	      do {
-	        sibling = sibling.nextSibling;
-	      } while (sibling && sibling.nodeType !== 1);
-	      return sibling;
-	    }
-	  }
-
-	  function getEventHost(e) {
-	    // on touchend event, we have to use `e.changedTouches`
-	    // see http://stackoverflow.com/questions/7192563/touchend-event-properties
-	    // see https://github.com/bevacqua/dragula/issues/34
-	    if (e.targetTouches && e.targetTouches.length) {
-	      return e.targetTouches[0];
-	    }
-	    if (e.changedTouches && e.changedTouches.length) {
-	      return e.changedTouches[0];
-	    }
-	    return e;
-	  }
-
-	  function getCoord(coord, e) {
-	    var host = getEventHost(e);
-	    var missMap = {
-	      pageX: 'clientX', // IE8
-	      pageY: 'clientY' // IE8
-	    };
-	    if (coord in missMap && !(coord in host) && missMap[coord] in host) {
-	      coord = missMap[coord];
-	    }
-	    return host[coord];
-	  }
-
-	  module.exports = dragula;
-	});
-
-	var dragula$1 = interopDefault(dragula);
-
-	if (!dragula$1) {
-	  throw new Error('[vue-dragula] cannot locate dragula.');
-	}
-
-	var raf = window.requestAnimationFrame;
-	var waitForTransition = raf ? function (fn) {
-	  raf(function () {
-	    raf(fn);
-	  });
-	} : function (fn) {
-	  window.setTimeout(fn, 50);
-	};
-
-	var DragulaService = function () {
-	  function DragulaService(Vue) {
-	    babelHelpers.classCallCheck(this, DragulaService);
-
-	    this.bags = []; // bag store
-	    this.eventBus = new Vue();
-	    this.events = ['cancel', 'cloned', 'drag', 'dragend', 'drop', 'out', 'over', 'remove', 'shadow', 'dropModel', 'removeModel'];
-	  }
-
-	  babelHelpers.createClass(DragulaService, [{
-	    key: 'add',
-	    value: function add(name, drake) {
-	      var bag = this.find(name);
-	      if (bag) {
-	        throw new Error('Bag named: "' + name + '" already exists.');
-	      }
-	      bag = {
-	        name: name,
-	        drake: drake
-	      };
-	      this.bags.push(bag);
-	      if (drake.models) {
-	        this.handleModels(name, drake);
-	      }
-	      if (!bag.initEvents) {
-	        this.setupEvents(bag);
-	      }
-	      return bag;
-	    }
-	  }, {
-	    key: 'find',
-	    value: function find(name) {
-	      var bags = this.bags;
-	      for (var i = 0; i < bags.length; i++) {
-	        if (bags[i].name === name) {
-	          return bags[i];
-	        }
-	      }
-	    }
-	  }, {
-	    key: 'handleModels',
-	    value: function handleModels(name, drake) {
-	      var _this2 = this;
-
-	      if (drake.registered) {
-	        // do not register events twice
-	        return;
-	      }
-	      var dragElm = void 0;
-	      var dragIndex = void 0;
-	      var dropIndex = void 0;
-	      var sourceModel = void 0;
-	      drake.on('remove', function (el, container, source) {
-	        if (!drake.models) {
-	          return;
-	        }
-	        sourceModel = _this2.findModelForContainer(source, drake);
-	        sourceModel.splice(dragIndex, 1);
-	        drake.cancel(true);
-	        _this2.eventBus.$emit('removeModel', [name, el, source, dragIndex]);
-	      });
-	      drake.on('drag', function (el, source) {
-	        dragElm = el;
-	        dragIndex = _this2.domIndexOf(el, source);
-	      });
-	      drake.on('drop', function (dropElm, target, source) {
-	        if (!drake.models || !target) {
-	          return;
-	        }
-	        dropIndex = _this2.domIndexOf(dropElm, target);
-	        sourceModel = _this2.findModelForContainer(source, drake);
-
-	        if (target === source) {
-	          sourceModel.splice(dropIndex, 0, sourceModel.splice(dragIndex, 1)[0]);
-	        } else {
-	          var notCopy = dragElm === dropElm;
-	          var targetModel = _this2.findModelForContainer(target, drake);
-	          var dropElmModel = notCopy ? sourceModel[dragIndex] : JSON.parse(JSON.stringify(sourceModel[dragIndex]));
-
-	          if (notCopy) {
-	            waitForTransition(function () {
-	              sourceModel.splice(dragIndex, 1);
-	            });
-	          }
-	          targetModel.splice(dropIndex, 0, dropElmModel);
-	          drake.cancel(true);
-	        }
-	        _this2.eventBus.$emit('dropModel', [name, dropElm, target, source, dropIndex]);
-	      });
-	      drake.registered = true;
-	    }
-	  }, {
-	    key: 'destroy',
-	    value: function destroy(name) {
-	      var bag = this.find(name);
-	      if (!bag) {
-	        return;
-	      }
-	      var bagIndex = this.bags.indexOf(bag);
-	      this.bags.splice(bagIndex, 1);
-	      bag.drake.destroy();
-	    }
-	  }, {
-	    key: 'setOptions',
-	    value: function setOptions(name, options) {
-	      var bag = this.add(name, dragula$1(options));
-	      this.handleModels(name, bag.drake);
-	    }
-	  }, {
-	    key: 'setupEvents',
-	    value: function setupEvents(bag) {
-	      bag.initEvents = true;
-	      var _this = this;
-	      var emitter = function emitter(type) {
-	        function replicate() {
-	          var args = Array.prototype.slice.call(arguments);
-	          _this.eventBus.$emit(type, [bag.name].concat(args));
-	        }
-	        bag.drake.on(type, replicate);
-	      };
-	      this.events.forEach(emitter);
-	    }
-	  }, {
-	    key: 'domIndexOf',
-	    value: function domIndexOf(child, parent) {
-	      return Array.prototype.indexOf.call(parent.children, child);
-	    }
-	  }, {
-	    key: 'findModelForContainer',
-	    value: function findModelForContainer(container, drake) {
-	      return (this.findModelContainerByContainer(container, drake) || {}).model;
-	    }
-	  }, {
-	    key: 'findModelContainerByContainer',
-	    value: function findModelContainerByContainer(container, drake) {
-	      if (!drake.models) {
-	        return;
-	      }
-	      return drake.models.find(function (model) {
-	        return model.container === container;
-	      });
-	    }
-	  }]);
-	  return DragulaService;
-	}();
-
-	if (!dragula$1) {
-	  throw new Error('[vue-dragula] cannot locate dragula.');
-	}
-
-	function VueDragula (Vue) {
-	  var service = new DragulaService(Vue);
-
-	  var name = 'globalBag';
-	  var drake = void 0;
-
-	  Vue.vueDragula = {
-	    options: service.setOptions.bind(service),
-	    find: service.find.bind(service),
-	    eventBus: service.eventBus
-	  };
-
-	  Vue.directive('dragula', {
-	    params: ['bag'],
-
-	    bind: function bind(container, binding, vnode) {
-	      var bagName = vnode ? vnode.data.attrs.bag // Vue 2
-	      : this.params.bag; // Vue 1
-	      if (!vnode) {
-	        container = this.el; // Vue 1
-	      }
-	      if (bagName !== undefined && bagName.length !== 0) {
-	        name = bagName;
-	      }
-	      var bag = service.find(name);
-	      if (bag) {
-	        drake = bag.drake;
-	        drake.containers.push(container);
-	        return;
-	      }
-	      drake = dragula$1({
-	        containers: [container]
-	      });
-	      service.add(name, drake);
-
-	      service.handleModels(name, drake);
-	    },
-	    update: function update(container, binding, vnode, oldVnode) {
-	      var newValue = vnode ? binding.value // Vue 2
-	      : container; // Vue 1
-	      if (!newValue) {
-	        return;
-	      }
-
-	      var bagName = vnode ? vnode.data.attrs.bag // Vue 2
-	      : this.params.bag; // Vue 1
-	      if (bagName !== undefined && bagName.length !== 0) {
-	        name = bagName;
-	      }
-	      var bag = service.find(name);
-	      drake = bag.drake;
-	      if (!drake.models) {
-	        drake.models = [];
-	      }
-
-	      if (!vnode) {
-	        container = this.el; // Vue 1
-	      }
-	      var modelContainer = service.findModelContainerByContainer(container, drake);
-
-	      if (modelContainer) {
-	        modelContainer.model = newValue;
-	      } else {
-	        drake.models.push({
-	          model: newValue,
-	          container: container
-	        });
-	      }
-	    },
-	    unbind: function unbind(container, binding, vnode) {
-	      var unbindBagName = 'globalBag';
-	      var bagName = vnode ? vnode.data.attrs.bag // Vue 2
-	      : this.params.bag; // Vue 1
-	      if (bagName !== undefined && bagName.length !== 0) {
-	        unbindBagName = bagName;
-	      }
-	      var drake = service.find(unbindBagName).drake;
-	      if (!drake) {
-	        return;
-	      }
-	      var containerIndex = drake.containers.indexOf(container);
-	      if (containerIndex > -1) {
-	        drake.containers.splice(containerIndex, 1);
-	      }
-	      if (drake.containers.length === 0) {
-	        service.destroy(unbindBagName);
-	      }
-	    }
-	  });
-	}
-
-	function plugin(Vue) {
-	  var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-
-	  if (plugin.installed) {
-	    console.warn('[vue-dragula] already installed.');
-	  }
-
-	  VueDragula(Vue);
-	}
-
-	plugin.version = '1.0.0';
-
-	if (true) {
-	  // eslint-disable-line
-	  !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-	    plugin;
-	  }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)); // eslint-disable-line
-	} else if (window.Vue) {
-	    window.Vue.use(plugin);
-	  }
-
-	return plugin;
-
-}));
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(191), __webpack_require__(189).setImmediate, __webpack_require__(122)))
-
-/***/ },
-/* 191 */
-/***/ function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() { return this; })();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
 
 /***/ }
 /******/ ]);

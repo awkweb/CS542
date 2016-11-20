@@ -1,23 +1,27 @@
 <template>
   <div id="split-view">
-    <h2 v-if="customers.length > 1">Split {{ customers.length }} Orders</h2>
-    <h2 v-else>Split {{ customers.length }} Order</h2>
+    <h2>Split</h2>
 
     <div class="wrapper">
       <div id="source">
-        <h3>Customers</h3>
-        <div class="container" v-dragula="col1" bag="first-bag">
-          <div v-for="text in col1">{{text}}</div>
+        <div class="split-header">
+          <h3>{{ customers.length }} Customers</h3>
+        </div>
+        <div class="container" v-dragula="customers" bag="first-bag">
+          <div v-for="customer in customers" :key="customer.id">Customer {{ customer.number }}</div>
         </div>
       </div>
       <div id="target">
-        <h3>Bill 1</h3>
-        <div class="container" v-dragula="col2" bag="first-bag">
-          <div v-for="text in col2">{{text}}</div>
-        </div>
-        <h3>Bill 2</h3>
-        <div class="container" v-dragula="col3" bag="first-bag">
-          <div v-for="text in col3">{{text}}</div>
+        <div v-for="bill in bills">
+          <div class="split-header">
+            <h3>Bill {{ bill.number }}</h3>
+            <div>
+              <button v-on:click="removeBill(bill.number)" class="c-btn c-btn--secondary">Remove</button>
+            </div>
+          </div>
+          <div class="container" v-dragula="bill.customers" bag="first-bag">
+            <div v-for="customer in bill.customers" :key="customer.id">Customer {{ customer.number }}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -26,7 +30,8 @@
       <button v-on:click="addBill" class="c-btn c-btn--secondary">Add Bill</button>
       <div>
         <button v-on:click="back" class="c-btn c-btn--secondary">Back</button>
-        <button v-on:click="splitOrders" class="c-btn c-btn--primary">Finish</button>
+        <button v-on:click="splitOrders" class="c-btn c-btn--primary" v-if="customers.length > 0" disabled>Finish</button>
+        <button v-on:click="splitOrders" class="c-btn c-btn--primary" v-else>Finish</button>
       </div>
     </div>
   </div>
@@ -46,20 +51,10 @@ export default {
   data () {
     return {
       customers: [],
-      col1: [
-        'The quick brown fox.',
-        'The sly snake.',
-        'The hungry hippo.'
-      ],
-      col2: [
-        'The lovely flamingo.',
-        'The shrewd llama.',
-        'The inquisitive toucan.'
-      ],
-      col3: [
-        'The boisterous lion.',
-        'The jaded panda.'
-      ],
+      bills: [
+        { 'number': 1, 'customers': [] },
+        { 'number': 2, 'customers': [] },
+      ]
     }
   },
 
@@ -69,7 +64,28 @@ export default {
       router.push({ name: 'order-update', params: { id: orderId } })
     },
 
+    removeBill: function (billNumber) {
+      const rBill = this.bills.filter(b => b.number == billNumber
+      )[0]
+      const billCustomers = rBill.customers
+      this.customers = this.customers.concat(billCustomers)
+
+      this.bills = this.bills.filter(bill => bill.number != billNumber
+      )
+    },
+
     addBill: function () {
+      var number = 0
+      if (this.bills.length > 0) {
+        var billNumbers = this.bills.map(b => b.number)
+        number = Math.max(...billNumbers)
+      }
+
+      const bill = {
+        'number': number + 1,
+        'customers': []
+      }
+      this.bills.push(bill)
     },
 
     splitOrders: function () {
@@ -86,7 +102,16 @@ export default {
         }
       })
       .then(function (response) {
-        vm.customers = response.data.orders
+        vm.customers = response.data.orders.map(function (order) {
+          return {
+            'number': order.id,
+            'id': order.id,
+            'master_order_id': order.master_order_id,
+            'bill_id': order.bill_id,
+            'dishes': order.order_dishes,
+            'note': order.note
+          }
+        })
       })
       .catch(function (error) {
         console.log(error);
@@ -106,6 +131,20 @@ export default {
 </script>
 
 <style lang="sass">
+.split-header {
+  display: flex;
+  justify-content: space-between;
+  height: 45px;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #EAEAEA;
+
+  .c-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+}
+
 .wrapper {
   display: flex;
   margin-bottom: 8rem;
@@ -124,6 +163,7 @@ export default {
 }
 
 .container {
+  min-height: 4rem;
   margin-bottom: 1rem;
   padding: 1rem;
   background: #F7F9FA;
