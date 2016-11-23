@@ -31,7 +31,6 @@ export default {
 
   methods: {
     handleClick: function (order) {
-      console.log(order)
       const orderId = order.id
       const orderStatus = order.status
       if (orderStatus === 'Open')

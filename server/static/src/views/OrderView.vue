@@ -91,28 +91,63 @@ export default {
       })
       .catch(function (error) {
         console.log(error);
-      });
+      })
     },
 
     createOrder: function () {
-      // Create master order
-      // For customer in customers, create order
-      // Add dish to order
-      // Navigate to home
       var vm = this
 
-      // axios.post('/api/masterorder/add')
-      // .then(function (response) {
-      //   const masterOrderId = response.data.id
-      //   console.log("masterOrderId", masterOrderId)
-      // })
-      // .catch(function (error) {
-      //   console.log(error)
-      // });
+      axios.post('/api/masterorder/add')
+      .then(function (response) {
+        const masterOrderId = response.data.id
+        console.log("Master Order Id: " + masterOrderId + "\n======================")
+
+        for (var i in vm.customers) {
+          const customer = vm.customers[i]
+
+          axios.post('/api/order/add', {
+            master_order_id: masterOrderId,
+            note: ''
+          })
+          .then(function (response) {
+            const orderId = response.data.id
+            console.log("Order Id: " + orderId + "\n======================")
+
+            for (var x in customer.dishes) {
+              const dish = customer.dishes[x]
+              axios.post('/api/orderdish/add', {
+                order_id: orderId,
+                dish_id: dish.dish_id,
+                quantity: dish.quantity
+              })
+              .then(function (response) {
+                console.log(response.data)
+                if (i == vm.customers.length - 1 && x == customer.dishes.length - 1) {
+                  router.push({ name: 'home' })
+                }
+              })
+              .catch(function (error) {
+                console.log(error);
+              })
+            } 
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+        }
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
     },
 
     updateOrder: function () {
+      var vm = this
+      console.log(vm.customers)
 
+      // add, delete customer
+      // create, update, delete dish
+      // keep track of orders in store.js
     }
   },
 

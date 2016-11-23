@@ -24785,7 +24785,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
   methods: {
     handleClick: function handleClick(order) {
-      console.log(order);
       var orderId = order.id;
       var orderStatus = order.status;
       if (orderStatus === 'Open') __WEBPACK_IMPORTED_MODULE_0__router__["a" /* default */].push({ name: 'order-update', params: { id: orderId } });else __WEBPACK_IMPORTED_MODULE_0__router__["a" /* default */].push({ name: 'bill', params: { id: orderId } });
@@ -24834,6 +24833,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
 //
 //
 //
@@ -24841,8 +24842,60 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 
+
+
 /* harmony default export */ exports["default"] = {
-  name: 'bill'
+  name: 'bill',
+
+  data: function data() {
+    return {
+      bills: []
+    };
+  },
+
+
+  methods: {
+    getBills: function getBills() {
+      var vm = this;
+      var masterOrderId = this.$route.params.id;
+
+      __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/api/masterorder', {
+        params: {
+          id: masterOrderId
+        }
+      }).then(function (response) {
+        var orders = response.data.orders;
+        var billRequests = [];
+        for (var i in orders) {
+          var order = orders[i];
+          var billRequest = getBill(order.bill_id);
+          billRequests.push(billRequest);
+        }
+
+        __WEBPACK_IMPORTED_MODULE_0_axios___default.a.all(billRequests).then(__WEBPACK_IMPORTED_MODULE_0_axios___default.a.spread(function (acct, perms) {
+          // Both requests are now complete
+        }));
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+
+    getBill: function getBill(billId) {
+      return __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/api/masterorder', {
+        params: {
+          id: billId
+        }
+      });
+    }
+  },
+
+  watch: {
+    '$route': 'getBill'
+  },
+
+  created: function created() {
+    if (this.$route.params.id) this.getBill();
+  }
 };
 
 /***/ },
@@ -25018,23 +25071,58 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     },
 
     createOrder: function createOrder() {
-      // Create master order
-      // For customer in customers, create order
-      // Add dish to order
-      // Navigate to home
       var vm = this;
 
-      // axios.post('/api/masterorder/add')
-      // .then(function (response) {
-      //   const masterOrderId = response.data.id
-      //   console.log("masterOrderId", masterOrderId)
-      // })
-      // .catch(function (error) {
-      //   console.log(error)
-      // });
+      __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/api/masterorder/add').then(function (response) {
+        var masterOrderId = response.data.id;
+        console.log("Master Order Id: " + masterOrderId + "\n======================");
+
+        var _loop = function _loop() {
+          var customer = vm.customers[i];
+
+          __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/api/order/add', {
+            master_order_id: masterOrderId,
+            note: ''
+          }).then(function (response) {
+            var orderId = response.data.id;
+            console.log("Order Id: " + orderId + "\n======================");
+
+            for (var x in customer.dishes) {
+              var dish = customer.dishes[x];
+              __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/api/orderdish/add', {
+                order_id: orderId,
+                dish_id: dish.dish_id,
+                quantity: dish.quantity
+              }).then(function (response) {
+                console.log(response.data);
+                if (i == vm.customers.length - 1 && x == customer.dishes.length - 1) {
+                  __WEBPACK_IMPORTED_MODULE_0__router__["a" /* default */].push({ name: 'home' });
+                }
+              }).catch(function (error) {
+                console.log(error);
+              });
+            }
+          }).catch(function (error) {
+            console.log(error);
+          });
+        };
+
+        for (var i in vm.customers) {
+          _loop();
+        }
+      }).catch(function (error) {
+        console.log(error);
+      });
     },
 
-    updateOrder: function updateOrder() {}
+    updateOrder: function updateOrder() {
+      var vm = this;
+      console.log(vm.customers);
+
+      // add, delete customer
+      // create, update, delete dish
+      // keep track of orders in store.js
+    }
   },
 
   watch: {
@@ -25052,12 +25140,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__router__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_dragula__ = __webpack_require__(163);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_dragula___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vue_dragula__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_axios__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue_dragula__ = __webpack_require__(163);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue_dragula___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_vue_dragula__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_axios__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_axios__);
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 //
@@ -25099,21 +25188,32 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
 
 
 
-__WEBPACK_IMPORTED_MODULE_1_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_vue_dragula___default.a);
+
+__WEBPACK_IMPORTED_MODULE_2_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_3_vue_dragula___default.a);
 
 /* harmony default export */ exports["default"] = {
   name: 'split',
 
   data: function data() {
     return {
+      numberOfCustomers: 0,
       customers: [],
-      bills: [{ 'number': 1, 'customers': [] }, { 'number': 2, 'customers': [] }]
+      bills: [{ 'number': 1, 'customers': [], 'total': 0 }]
     };
   },
 
@@ -25147,18 +25247,62 @@ __WEBPACK_IMPORTED_MODULE_1_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_vue_
 
       var bill = {
         'number': number + 1,
-        'customers': []
+        'customers': [],
+        'total': 0
       };
       this.bills.push(bill);
     },
 
-    splitOrders: function splitOrders() {},
+    splitOrders: function splitOrders() {
+      var vm = this;
+      var bills = vm.bills;
+
+      var _loop = function _loop() {
+        var bill = bills[i];
+        __WEBPACK_IMPORTED_MODULE_4_axios___default.a.post('/api/bill/add').then(function (response) {
+          var billId = response.data.id;
+
+          var _loop2 = function _loop2() {
+            var customer = bill.customers[x];
+            __WEBPACK_IMPORTED_MODULE_4_axios___default.a.post('/api/order/bill', {
+              order_id: customer.id,
+              bill_id: billId
+            }).then(function (response) {
+              console.log(response.data);
+              if (i == vm.bills.length - 1 && x == bill.customers.length - 1) {
+                __WEBPACK_IMPORTED_MODULE_4_axios___default.a.post('/api/masterorder/update/status', {
+                  id: customer.master_order_id,
+                  status: "Closed"
+                }).then(function (response) {
+                  console.log(response.data);
+                  __WEBPACK_IMPORTED_MODULE_0__router__["a" /* default */].push({ name: 'home' });
+                }).catch(function (error) {
+                  console.log(error);
+                });
+              }
+            }).catch(function (error) {
+              console.log(error);
+            });
+          };
+
+          for (var x in bill.customers) {
+            _loop2();
+          }
+        }).catch(function (error) {
+          console.log(error);
+        });
+      };
+
+      for (var i in bills) {
+        _loop();
+      }
+    },
 
     getOrder: function getOrder() {
       var vm = this;
       var orderId = this.$route.params.id;
 
-      __WEBPACK_IMPORTED_MODULE_3_axios___default.a.get('/api/masterorder', {
+      __WEBPACK_IMPORTED_MODULE_4_axios___default.a.get('/api/masterorder', {
         params: {
           id: orderId
         }
@@ -25173,9 +25317,38 @@ __WEBPACK_IMPORTED_MODULE_1_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_vue_
             'note': order.note
           };
         });
+        vm.numberOfCustomers = vm.customers.length;
       }).catch(function (error) {
         console.log(error);
       });
+    }
+  },
+
+  filters: {
+    total: function total(orders) {
+      var orderDict = {};
+      for (var n in orders) {
+        var dish = orders[n];
+        var _dishId = parseInt(dish.dish_id);
+
+        if (orderDict[_dishId]) {
+          orderDict[_dishId] += dish.quantity;
+        } else {
+          orderDict[_dishId] = dish.quantity;
+        }
+      }
+
+      var dishes = __WEBPACK_IMPORTED_MODULE_1__store__["a" /* default */].state.dishes;
+      var sum = 0;
+      for (var dishId in orderDict) {
+        var quantity = orderDict[dishId];
+        var _dish = dishes.filter(function (d) {
+          return d.id == dishId;
+        })[0];
+        sum += _dish.price * quantity;
+      }
+
+      return sum.toFixed(2);
     }
   },
 
@@ -25291,7 +25464,7 @@ exports = module.exports = __webpack_require__(2)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -25319,7 +25492,7 @@ exports = module.exports = __webpack_require__(2)();
 
 
 // module
-exports.push([module.i, "\n.split-header {\n  display: flex;\n  justify-content: space-between;\n  height: 45px;\n  align-items: center;\n  margin-bottom: 20px;\n  border-bottom: 1px solid #EAEAEA;\n}\n.split-header .c-btn {\n    padding: 5px 10px;\n    font-size: 12px;\n}\n.wrapper {\n  display: flex;\n  margin-bottom: 8rem;\n}\n#source, #target {\n  flex: 1;\n}\n#source {\n  padding-right: .5rem;\n}\n#target {\n  padding-left: .5rem;\n}\n.container {\n  min-height: 4rem;\n  margin-bottom: 1rem;\n  padding: 1rem;\n  background: #F7F9FA;\n  border-radius: 4px;\n}\n.container div {\n    background: #fff;\n    border: 1px solid #D0D4D9;\n    border-radius: 4px;\n    padding: 1rem;\n    cursor: move;\n    cursor: grab;\n    cursor: -moz-grab;\n    cursor: -webkit-grab;\n    margin-bottom: 10px;\n}\n.container div:hover {\n      background: linear-gradient(white, #f7f9fa);\n}\n.container div:last-child {\n      margin-bottom: 0;\n}\n.container .scale-transition {\n  overflow: hidden;\n  transition: height .2s;\n}\n.container .scale-enter {\n  height: 0px;\n}\n.container .scale-leave {\n  height: 0px;\n}\n.gu-mirror {\n  font-family: 'Avenir', Helvetica, Arial, sans-serif;\n  color: #2c3e50;\n  background: #fff;\n  transition: opacity 0.4s ease-in-out;\n  border: 1px solid #D0D4D9;\n  border-radius: 4px;\n  cursor: move;\n  cursor: grab;\n  cursor: -moz-grab;\n  cursor: -webkit-grab;\n}\n.gu-mirror {\n  position: fixed !important;\n  margin: 0 !important;\n  z-index: 9999 !important;\n  opacity: 0.8;\n  -ms-filter: \"progid:DXImageTransform.Microsoft.Alpha(Opacity=80)\";\n  filter: alpha(opacity=80);\n}\n.gu-hide {\n  display: none !important;\n}\n.gu-unselectable {\n  -webkit-user-select: none !important;\n  -moz-user-select: none !important;\n  -ms-user-select: none !important;\n  user-select: none !important;\n}\n.gu-transit {\n  opacity: 0.2;\n  -ms-filter: \"progid:DXImageTransform.Microsoft.Alpha(Opacity=20)\";\n  filter: alpha(opacity=20);\n}\n", ""]);
+exports.push([module.i, "\n.split-header {\n  display: flex;\n  justify-content: space-between;\n  height: 45px;\n  align-items: center;\n  margin-bottom: 20px;\n  border-bottom: 1px solid #EAEAEA;\n}\n.split-header .c-btn {\n    padding: 5px 10px;\n    font-size: 12px;\n}\n.split-header div {\n    display: flex;\n    align-items: center;\n}\n.split-header .bill-total {\n    padding-right: 10px;\n}\n.wrapper {\n  display: flex;\n  margin-bottom: 8rem;\n}\n#source, #target {\n  flex: 1;\n}\n#source {\n  padding-right: .5rem;\n}\n#target {\n  padding-left: .5rem;\n}\n.container {\n  min-height: 4rem;\n  margin-bottom: 1rem;\n  padding: 1rem;\n  background: #F7F9FA;\n  border-radius: 4px;\n}\n.container div {\n    display: flex;\n    justify-content: space-between;\n    background: #fff;\n    border: 1px solid #D0D4D9;\n    border-radius: 4px;\n    padding: 1rem;\n    cursor: move;\n    cursor: grab;\n    cursor: -moz-grab;\n    cursor: -webkit-grab;\n    margin-bottom: 10px;\n}\n.container div .customer-number {\n      font-weight: 500;\n}\n.container div:hover {\n      background: linear-gradient(white, #f7f9fa);\n}\n.container div:last-child {\n      margin-bottom: 0;\n}\n.container .scale-transition {\n  overflow: hidden;\n  transition: height .2s;\n}\n.container .scale-enter {\n  height: 0px;\n}\n.container .scale-leave {\n  height: 0px;\n}\n.gu-mirror {\n  font-family: 'Avenir', Helvetica, Arial, sans-serif;\n  color: #2c3e50;\n  background: #fff;\n  transition: opacity 0.4s ease-in-out;\n  border: 1px solid #D0D4D9;\n  border-radius: 4px;\n  cursor: move;\n  cursor: grab;\n  cursor: -moz-grab;\n  cursor: -webkit-grab;\n}\n.gu-mirror {\n  position: fixed !important;\n  margin: 0 !important;\n  z-index: 9999 !important;\n  opacity: 0.8;\n  -ms-filter: \"progid:DXImageTransform.Microsoft.Alpha(Opacity=80)\";\n  filter: alpha(opacity=80);\n}\n.gu-hide {\n  display: none !important;\n}\n.gu-unselectable {\n  -webkit-user-select: none !important;\n  -moz-user-select: none !important;\n  -ms-user-select: none !important;\n  user-select: none !important;\n}\n.gu-transit {\n  opacity: 0.2;\n  -ms-filter: \"progid:DXImageTransform.Microsoft.Alpha(Opacity=20)\";\n  filter: alpha(opacity=20);\n}\n", ""]);
 
 // exports
 
@@ -27556,7 +27729,7 @@ module.exports={render:function (){with(this) {
     attrs: {
       "id": "bill-view"
     }
-  }, [_h('h2', ["View Bill"])])
+  }, [_h('h2', ["View Bills"])])
 }}]}
 if (false) {
   module.hot.accept()
@@ -27619,7 +27792,9 @@ module.exports={render:function (){with(this) {
     }
   }, [_h('div', {
     staticClass: "split-header"
-  }, [_h('h3', [_s(customers.length) + " Customers"])]), " ", _h('div', {
+  }, [_m(1), " ", _h('span', {
+    staticClass: "bill-total"
+  }, [_s(customers.length) + " remaining"])]), " ", _h('div', {
     directives: [{
       name: "dragula",
       rawName: "v-dragula",
@@ -27633,7 +27808,9 @@ module.exports={render:function (){with(this) {
   }, [_l((customers), function(customer) {
     return _h('div', {
       key: customer.id
-    }, ["Customer " + _s(customer.number)])
+    }, [_h('span', {
+      staticClass: "customer-number"
+    }, ["Customer " + _s(customer.number)]), " ", _h('span', ["$" + _s(_f("total")(customer.dishes))])])
   })])]), " ", _h('div', {
     attrs: {
       "id": "target"
@@ -27641,7 +27818,9 @@ module.exports={render:function (){with(this) {
   }, [_l((bills), function(bill) {
     return _h('div', [_h('div', {
       staticClass: "split-header"
-    }, [_h('h3', ["Bill " + _s(bill.number)]), " ", _h('div', [_h('button', {
+    }, [_h('h3', ["Bill " + _s(bill.number)]), " ", _h('div', [_h('span', {
+      staticClass: "bill-total"
+    }, ["$" + _s(bill.total.toFixed(2))]), " ", _h('button', {
       staticClass: "c-btn c-btn--secondary",
       on: {
         "click": function($event) {
@@ -27662,16 +27841,26 @@ module.exports={render:function (){with(this) {
     }, [_l((bill.customers), function(customer) {
       return _h('div', {
         key: customer.id
-      }, ["Customer " + _s(customer.number)])
+      }, [_h('span', {
+        staticClass: "customer-number"
+      }, ["Customer " + _s(customer.number)]), " ", _h('span', ["$" + _s(_f("total")(customer.dishes))])])
     })])])
   })])]), " ", _h('div', {
     staticClass: "sticky-footer"
-  }, [_h('button', {
+  }, [(numberOfCustomers <= bills.length) ? _h('button', {
+    staticClass: "c-btn c-btn--secondary",
+    attrs: {
+      "disabled": ""
+    },
+    on: {
+      "click": addBill
+    }
+  }, ["Add Bill"]) : _h('button', {
     staticClass: "c-btn c-btn--secondary",
     on: {
       "click": addBill
     }
-  }, ["Add Bill"]), " ", _h('div', [_h('button', {
+  }, ["Add Bill"]), " ", " ", _h('div', [_h('button', {
     staticClass: "c-btn c-btn--secondary",
     on: {
       "click": back
@@ -27692,6 +27881,8 @@ module.exports={render:function (){with(this) {
   }, ["Finish"]), " "])])])
 }},staticRenderFns: [function (){with(this) {
   return _h('h2', ["Split"])
+}},function (){with(this) {
+  return _h('h3', ["Customers"])
 }}]}
 if (false) {
   module.hot.accept()

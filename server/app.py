@@ -72,6 +72,22 @@ def get_master_order_all():
 	else:
 		return not_found()
 
+@app.route('/api/masterorder/update/status', methods=['POST'])
+def update_master_order_status():
+	if request.method == 'POST':
+		json = request.get_json(force=True)
+		master_order_id = int(json['id'])
+		status = json['status']
+
+		master_order = MasterOrder.query.get(master_order_id)
+		if not master_order:
+			raise CustomException("Master order does not exist.", 404)
+		master_order.status = status
+		db.session.commit()
+		return jsonify(master_order)
+	else:
+		return not_found()
+
 
 # ORDER_DISH METHODS
 @app.route('/api/orderdish/add', methods=['POST'])
@@ -139,11 +155,16 @@ def add_order():
 	else:
 		return not_found()
 
-@app.route('/api/order/<orderId>/add/bill/<billId>', methods=['POST'])
-def add_order_to_bill(orderId, billId):
+@app.route('/api/order/bill', methods=['POST'])
+def add_order_to_bill():
 	if request.method == 'POST':
-		order = Order.query.get(orderId)
-		bill = Bill.query.get(billId)
+		orderJson = request.get_json(force=True)
+		
+		order_id = int(orderJson['order_id'])
+		bill_id = int(orderJson['bill_id'])
+
+		order = Order.query.get(order_id)
+		bill = Bill.query.get(bill_id)
 		if not order:
 			raise CustomException("Order does not exist.", 404)
 		if not bill:
@@ -177,8 +198,22 @@ def get_order():
 
 
 # BILL METHODS
-@app.route('/api/bill/start', methods=['POST'])
-def start_bill():
+@app.route('/api/bill', methods=['GET'])
+def get_bill():
+	id = request.args.get('id')
+	if request.method == 'GET':
+		if id is not None:
+			bill = Bill.query.get(id)
+			if bill is not None:
+				print(bill)
+				return jsonify(bill)
+		else:
+			raise CustomException('Bill was not found.', 404)
+	else:
+		return not_found()
+
+@app.route('/api/bill/add', methods=['POST'])
+def add_bill():
 	if request.method == 'POST':
 		bill = Bill()
 		db.session.add(bill)
