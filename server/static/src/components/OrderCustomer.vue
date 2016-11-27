@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import OrderDish from '../components/OrderDish.vue'
 
 export default {
@@ -27,7 +28,7 @@ export default {
 
   methods: {
     removeCustomer: function () {
-      this.$emit('removeCustomer', this.customer.number)
+      this.$emit('removeCustomer', this.customer)
     },
 
     addDish: function () {
@@ -45,8 +46,23 @@ export default {
       this.customer.dishes.push(dish)
     },
 
-    removeDish: function (dishNumber) {
-      this.customer.dishes = this.customer.dishes.filter(dish => dish.number != dishNumber)
+    removeDish: function (dish) {
+      if (dish.id) {
+        var vm = this
+        axios.delete('/api/orderdish/delete', {
+          params: {
+            id: dish.id
+          }
+        })
+        .then(function (response) {
+          vm.customer.dishes = vm.customer.dishes.filter(d => d.number != dish.number)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      } else {
+        this.customer.dishes = this.customer.dishes.filter(d => d.number != dish.number)        
+      }
     }
   }
 }

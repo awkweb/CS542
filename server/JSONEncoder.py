@@ -13,7 +13,8 @@ class MyJSONEncoder(JSONEncoder):
         elif isinstance(obj, Bill):
             return { \
                 'id':obj.id, \
-                'date': obj.date \
+                'date': obj.date, \
+                'orders': obj.orders \
             }
         elif isinstance(obj, Dish):
             return { \

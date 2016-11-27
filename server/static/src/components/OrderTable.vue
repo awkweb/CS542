@@ -3,19 +3,21 @@
     <thead>
       <th>Order #</th>
       <th>Date</th>
-      <th>Customers</th>
-      <th>Total</th>
-      <th>Status</th>
+      <th v-if="orderFilter == 'All'">Status</th>
+      <th class="align-number">Customers</th>
+      <th class="align-number" v-if="orderFilter == 'Closed'">Bills</th>
+      <th class="align-number">Grand Total</th>
     </thead>
-    <tbody v-for="order in orders">
-      <tr v-if="order.status == orderFilter || orderFilter == 'All'" v-on:click="handleClick(order)">
+    <tbody>
+      <tr v-for="order in orders" v-if="order.status == orderFilter || orderFilter == 'All'" v-on:click="handleClick(order)">
         <td>{{ order.id }}</td>
         <td>{{ order.date | prettyDate }}</td>
-        <td>{{ order.orders.length }}</td>
-        <td>${{ order.orders | total }}</td>
-        <td>{{ order.status }}</td>
+        <td v-if="orderFilter == 'All'">{{ order.status }}</td>
+        <td class="align-number">{{ order.orders.length }}</td>
+        <td class="align-number" v-if="orderFilter == 'Closed'">{{ order.orders | billCount }}</td>
+        <td class="align-number">${{ order.orders | total }}</td>
       </tr>
-    </tbody>  
+    </tbody>
   </table>
 </template>
 
@@ -25,7 +27,7 @@ import store from '../store'
 import moment from 'moment'
 
 export default {
-  name: 'homeTable',
+  name: 'orderTable',
   
   props: ['orders', 'orderFilter'],
 
@@ -69,8 +71,19 @@ export default {
       return sum.toFixed(2)
     },
 
+    billCount: function (orders) {
+      var orderIds = []
+      for (var i in orders) {
+        const order = orders[i]
+        if (!orderIds.includes(order.bill_id)) {
+          orderIds.push(order.bill_id)
+        }
+      }
+      return orderIds.length
+    },
+
     prettyDate: function (dateString) {
-      return moment(dateString).format('MMMM D, YYYY')
+      return moment(dateString).format('ddd, MMM D, h:mm a')
     }
   }
 }

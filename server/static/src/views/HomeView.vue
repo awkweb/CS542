@@ -1,5 +1,6 @@
 <template>
   <div id="home-view">
+    <success-message v-on:closeAlert="closeAlert" v-if="showAlert"></success-message>
     <h2>{{ orderFilter }} Orders</h2>
     <div class="toolbar">
         <div class="c-btn-group">
@@ -17,6 +18,8 @@
 
 <script>
 import OrderTable from '../components/OrderTable.vue'
+import SuccessMessage from '../components/SuccessMessage.vue'
+import router from '../router'
 import axios from 'axios'
 
 export default {
@@ -26,12 +29,13 @@ export default {
     return {
       orders: [],
       orderFilter: 'All',
-      active: true
+      showAlert: false,
     }
   },
 
   components: {
-    'order-table': OrderTable
+    'order-table': OrderTable,
+    'success-message': SuccessMessage
   },
 
   methods: {
@@ -44,10 +48,16 @@ export default {
         .catch(function (error) {
           console.log('Error! Could not reach the API. ' + error)
         })
+    },
+
+    closeAlert: function () {
+        this.showAlert = false
     }
   },
 
   created: function () {
+    if (this.$route.query.success)
+        this.showAlert = true
     this.fetchData();
   }
 }

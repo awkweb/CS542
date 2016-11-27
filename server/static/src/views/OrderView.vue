@@ -63,9 +63,38 @@ export default {
       this.customers.push(customer)
     },
 
-    removeCustomer: function (customerNumber) {
-      this.customers = this.customers.filter(customer => customer.number != customerNumber
-      )
+    removeCustomer: function (customer) {
+      if (customer.id) {
+        var vm = this
+        const dishRequests = customer.dishes.map(d => vm.deleteDishRequest(d.id))
+        axios.all(dishRequests)
+        .then(function (responses) {
+          axios.delete('/api/order/delete', {
+            params: {
+              id: customer.id
+            }
+          })
+          .then(function (response) {
+            vm.customers = vm.customers.filter(c => c.number != customer.number)
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      } else {
+        this.customers = this.customers.filter(c => c.number != customer.number)
+      }
+    },
+
+    deleteDishRequest: function (dishId) {
+      return axios.delete('/api/orderdish/delete', {
+        params: {
+          id: dishId
+        }
+      })
     },
 
     getOrder: function () {
@@ -79,12 +108,21 @@ export default {
       })
       .then(function (response) {
         vm.customers = response.data.orders.map(function (order) {
+          const order_dishes = order.order_dishes.map(function (od) {
+            return {
+              'number': od.id,
+              'id': od.id,
+              'dish_id': od.dish_id,
+              'order_id': od.order_id,
+              'quantity': od.quantity
+            }
+          })
           return {
             'number': order.id,
             'id': order.id,
             'master_order_id': order.master_order_id,
             'bill_id': order.bill_id,
-            'dishes': order.order_dishes,
+            'dishes': order_dishes,
             'note': order.note
           }
         })
@@ -100,7 +138,6 @@ export default {
       axios.post('/api/masterorder/add')
       .then(function (response) {
         const masterOrderId = response.data.id
-        console.log("Master Order Id: " + masterOrderId + "\n======================")
 
         for (var i in vm.customers) {
           const customer = vm.customers[i]
@@ -111,7 +148,6 @@ export default {
           })
           .then(function (response) {
             const orderId = response.data.id
-            console.log("Order Id: " + orderId + "\n======================")
 
             for (var x in customer.dishes) {
               const dish = customer.dishes[x]
@@ -121,9 +157,8 @@ export default {
                 quantity: dish.quantity
               })
               .then(function (response) {
-                console.log(response.data)
                 if (i == vm.customers.length - 1 && x == customer.dishes.length - 1) {
-                  router.push({ name: 'home' })
+                  router.push({ name: 'home', query: { success: 1 }})
                 }
               })
               .catch(function (error) {
@@ -141,6 +176,13 @@ export default {
       })
     },
 
+    postOrderRequest: function (masterOrderId) {
+      axios.post('/api/order/add', {
+        master_order_id: masterOrderId,
+        note: ''
+      })
+    },
+
     updateOrder: function () {
       var vm = this
       console.log(vm.customers)
@@ -148,6 +190,7 @@ export default {
       // add, delete customer
       // create, update, delete dish
       // keep track of orders in store.js
+      router.push({ name: 'home', query: { success: 1 }})
     }
   },
 

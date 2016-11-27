@@ -8,7 +8,7 @@
           <h3>Customers</h3>
           <span class="bill-total">{{ customers.length }} remaining</span>
         </div>
-        <div class="container" v-dragula="customers" bag="first-bag">
+        <div class="container" v-dragula="customers" bag="bill-bag">
           <div v-for="customer in customers" :key="customer.id">
             <span class="customer-number">Customer {{ customer.number }}</span>
             <span>${{ customer.dishes | total }}</span>
@@ -17,19 +17,7 @@
       </div>
       <div id="target">
         <div v-for="bill in bills">
-          <div class="split-header">
-            <h3>Bill {{ bill.number }}</h3>
-            <div>
-              <span class="bill-total">${{ bill.total.toFixed(2) }}</span>
-              <button v-on:click="removeBill(bill.number)" class="c-btn c-btn--secondary">Remove</button>
-            </div>
-          </div>
-          <div class="container" v-dragula="bill.customers" bag="first-bag">
-            <div v-for="customer in bill.customers" :key="customer.id">
-              <span class="customer-number">Customer {{ customer.number }}</span>
-              <span>${{ customer.dishes | total }}</span>
-            </div>
-          </div>
+          <split-customer v-bind:bill="bill"></split-customer>
         </div>
       </div>
     </div>
@@ -53,6 +41,8 @@ import Vue from 'vue'
 import VueDragula from 'vue-dragula'
 import axios from 'axios'
 
+import SplitCustomer from '../components/SplitCustomer.vue'
+
 Vue.use(VueDragula);
 
 export default {
@@ -66,6 +56,10 @@ export default {
         { 'number': 1, 'customers': [], 'total': 0 }
       ]
     }
+  },
+
+  components: {
+    'split-customer': SplitCustomer
   },
 
   methods: {
@@ -116,7 +110,6 @@ export default {
                 bill_id: billId
             })
             .then(function (response) {
-              console.log(response.data)
               if (i == vm.bills.length - 1 && x == bill.customers.length - 1) {
                 axios.post('/api/masterorder/update/status', {
                   id: customer.master_order_id,
@@ -203,11 +196,40 @@ export default {
   created () {
     if (this.$route.params.id)
       this.getOrder()
+    
+    // Vue.vueDragula.eventBus.$on('drop', function (args) {
+    //   console.log(args)
+    // })
+
+    // Vue.vueDragula.eventBus.$on('over', function (el, container) {
+    //   console.log(el)
+    //   // el.classList.add('ex-over')
+    // })
+
+    Vue.vueDragula.options('bill-bag', {
+      direction: 'horizontal'
+    })
   }
 }
 </script>
 
 <style lang="sass">
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+.ex-moved {
+  animation: fadeIn 2s ease-in 1 forwards;
+  border: 2px solid yellow;
+  padding: 2px
+}
+.ex-over {
+  animation: fadeIn .5s ease-in 1 forwards;
+  border: 4px solid green;
+  padding: 2px
+}
+
 .split-header {
   display: flex;
   justify-content: space-between;

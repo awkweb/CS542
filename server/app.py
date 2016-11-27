@@ -119,6 +119,20 @@ def add_order_dish():
 	else:
 		return not_found()
 
+@app.route('/api/orderdish/delete', methods=['DELETE'])
+def delete_order_dish():
+	id = request.args.get('id')
+	if request.method == 'DELETE' and id is not None:
+		order_dish = Order_Dish.query.get(id)
+		if order_dish is not None:
+			Order_Dish.query.filter_by(id=id).delete()
+			db.session.commit()
+			return '', 204
+		else:
+			raise CustomException('Dish was not found.', 404)
+	else:
+		return not_found()
+
 @app.route('/api/orderdish/<id>/updatequantity/<quantity>', methods=['PUT'])
 def update_order_dish_quantity(id, quantity):
 	if request.method == 'PUT':
@@ -152,6 +166,20 @@ def add_order():
 		db.session.add(order)
 		db.session.commit()
 		return jsonify(order)
+	else:
+		return not_found()
+
+@app.route('/api/order/delete', methods=['DELETE'])
+def delete_order():
+	id = request.args.get('id')
+	if request.method == 'DELETE' and id is not None:
+		order = Order.query.get(id)
+		if order is not None:
+			Order.query.filter_by(id=id).delete()
+			db.session.commit()
+			return '', 204
+		else:
+			raise CustomException('Dish was not found.', 404)
 	else:
 		return not_found()
 
@@ -205,7 +233,6 @@ def get_bill():
 		if id is not None:
 			bill = Bill.query.get(id)
 			if bill is not None:
-				print(bill)
 				return jsonify(bill)
 		else:
 			raise CustomException('Bill was not found.', 404)
@@ -243,6 +270,7 @@ def add_dish():
 @app.route('/api/dish/delete', methods=['DELETE'])
 def delete_dish():
 	id = request.args.get('id')
+	print(request.method == 'DELETE' and id is not None)
 	if request.method == 'DELETE' and id is not None:
 		dish = Dish.query.get(id)
 		if dish is not None:

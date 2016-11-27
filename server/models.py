@@ -8,12 +8,12 @@ class MasterOrder(db.Model):
     __tablename__ = 'master_order'
 
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.DATE)
+    date = db.Column(db.DateTime)
     status = db.Column(db.String())
     orders = db.relationship('Order', backref='master_order', lazy='select')
 
     def __init__(self):
-        self.date = datetime.today().date()
+        self.date = datetime.today()
         self.status = 'Open'
                                                             
     def __repr__(self):
@@ -42,8 +42,11 @@ class Bill(db.Model):
     __tablename__ = 'bill'
 
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.DATE)
+    date = db.Column(db.DateTime)
     orders = db.relationship('Order', backref='bill', lazy='select')
+
+    def __init__(self):
+        self.date = datetime.today()
                                                                                                     
     def __repr__(self):
         return '<id {}>'.format(self.id)  

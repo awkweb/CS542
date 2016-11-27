@@ -1,5 +1,5 @@
 <template>
-  <navbar class="test">
+  <navbar>
     <router-link :to="{ name: 'home' }">Split Bill</router-link>
   </navbar>
 </template>
@@ -11,5 +11,4 @@ export default {
 </script>
 
 <style lang="sass">
-    
 </style>

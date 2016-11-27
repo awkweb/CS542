@@ -26,7 +26,7 @@ export default {
 
   methods: {
     removeDish: function () {
-      this.$emit('removeDish', this.dish.number)
+      this.$emit('removeDish', this.dish)
     }
   }
 }
@@ -48,7 +48,7 @@ export default {
 
 .input-wrapper {
     flex: 1;
-    padding-right: 10px;
+    padding-right: 6px;
 }
 
 .c-label {

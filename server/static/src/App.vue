@@ -41,7 +41,7 @@ header {
   border-bottom: 1px solid #EAEAEA;
 
   a {
-    color: #0073C7;
+    color: #007ee5;
     font-size: 20px;
     font-weight: 700;
     text-decoration: none;
