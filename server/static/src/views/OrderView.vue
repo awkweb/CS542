@@ -14,8 +14,8 @@
       <div>
         <button v-on:click="cancel" class="c-btn c-btn--secondary">Cancel</button>
         <button v-on:click="split" class="c-btn c-btn--secondary" v-if="this.$route.params.id">Split</button>
-        <button v-on:click="updateOrder" class="c-btn c-btn--primary" v-if="this.$route.params.id">Update</button>
-        <button v-on:click="createOrder" class="c-btn c-btn--primary" v-else>Submit</button>
+        <button v-on:click="updateOrder" class="c-btn c-btn--primary" v-if="this.$route.params.id">{{ buttonText }}</button>
+        <button v-on:click="createOrder" class="c-btn c-btn--primary" v-else>{{ buttonText }}</button>
       </div>
     </div>
   </div>
@@ -31,7 +31,8 @@ export default {
 
   data () {
     return {
-      customers: []
+      customers: [],
+      buttonText: 'Submit'
     }
   },
 
@@ -133,6 +134,7 @@ export default {
     },
 
     createOrder: function () {
+      this.buttonText = 'Working...'
       var vm = this
 
       axios.post('/api/masterorder/add')
@@ -184,6 +186,8 @@ export default {
     },
 
     updateOrder: function () {
+      this.buttonText = 'Working...'
+
       var vm = this
       console.log(vm.customers)
 
@@ -201,8 +205,10 @@ export default {
   created () {
     if (this.$route.params.id)
       this.getOrder()
+      this.buttonText = 'Update'
     else
       this.addCustomer()
+      this.buttonText = 'Submit'
   }
 }
 </script>

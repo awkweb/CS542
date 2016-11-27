@@ -11,8 +11,8 @@
         </div>
         <div id="container-0" class="container">
           <div v-bind:id="'customer-' + customer.id" v-for="customer in bills[0].customers" :key="customer.id">
-            <span class="customer-number">Customer {{ customer.id }}</span>
-            <span>${{ customer.dishes | total }}</span>
+            <div class="customer-number">Customer {{ customer.id }}</div>
+            <div>${{ customer.dishes | total }}</div>
           </div>
         </div>
       </div>
@@ -28,8 +28,8 @@
           </div>
           <div v-bind:id="'container-' + bill.number" class="container">
             <div v-bind:id="'customer-' + customer.id" v-for="customer in bill.customers" :key="customer.id">
-              <span class="customer-number">Customer {{ customer.id }}</span>
-              <span>${{ customer.dishes | total }}</span>
+              <div class="customer-number">Customer {{ customer.id }}</div>
+              <div>${{ customer.dishes | total }}</div>
             </div>
           </div>
         </div>
@@ -40,8 +40,8 @@
         <button v-on:click="addBill" class="c-btn c-btn--secondary" v-else>Add Bill</button>
         <div>
           <button v-on:click="back" class="c-btn c-btn--secondary">Back</button>
-          <button v-on:click="splitOrders" class="c-btn c-btn--primary" v-if="bills[0].customers.length > 0" disabled>Finish</button>
-          <button v-on:click="splitOrders" class="c-btn c-btn--primary" v-else>Finish</button>
+          <button v-on:click="splitOrders" class="c-btn c-btn--primary" v-if="bills[0].customers.length > 0" disabled>{{ buttonText }}</button>
+          <button v-on:click="splitOrders" class="c-btn c-btn--primary" v-else>{{ buttonText }}</button>
         </div>
       </div>
     </div>
@@ -62,7 +62,8 @@ export default {
       numberOfCustomers: 0,
       bills: [
         { 'number': 0, 'customers': [], 'total': 0, 'dom_id': 'container-0' }
-      ]
+      ],
+      buttonText: 'Finish'
     }
   },
 
@@ -109,6 +110,7 @@ export default {
     },
 
     splitOrders: function () {
+      this.buttonText = 'Working...'
       const vm = this
       const bills = vm.bills
 
@@ -132,7 +134,7 @@ export default {
                 })
                 .then(function (response) {
                   console.log(response.data)
-                  router.push({ name: 'home' })                  
+                  router.push({ name: 'home', query: { success: 1 }})                 
                 })
                 .catch(function (error) {
                   console.log(error)
@@ -193,6 +195,30 @@ export default {
       )[0]
       return customer
     },
+
+    customerTotal: function (orders) {
+      var orderDict = {}
+      for (var n in orders) {
+        const dish = orders[n]
+        const dishId = parseInt(dish.dish_id)
+
+        if (orderDict[dishId]) {
+          orderDict[dishId] += dish.quantity
+        } else {
+          orderDict[dishId] = dish.quantity
+        }
+      }
+
+      const dishes = store.state.dishes
+      var sum = 0
+      for (var dishId in orderDict) {
+        const quantity = orderDict[dishId]
+        const dish = dishes.filter(d => d.id == dishId)[0]
+        sum += dish.price * quantity
+      }
+
+      return sum.toFixed(2)
+    }
   },
 
   filters: {
@@ -240,6 +266,9 @@ export default {
         const customer = vm.getCustomerWithDomId(source.id, element.id)
         targetBill.customers.splice(index, 0, customer)
         sourceBill.customers = sourceBill.customers.filter(c => c.id != customer.id)
+        const total = parseFloat(vm.customerTotal(customer.dishes))
+        sourceBill.total -= total
+        targetBill.total += total
       }
     })
   }
@@ -294,7 +323,7 @@ export default {
   background: #F7F9FA;
   border-radius: 4px;
 
-  div {
+  &>div {
     display: flex;
     justify-content: space-between;
     background: #fff;
@@ -322,8 +351,11 @@ export default {
 }
 
 .gu-mirror {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  color: #2c3e50;
+  color: #007ee5;
   background: #fff;
   transition: opacity 0.4s ease-in-out;
   border: 1px solid #D0D4D9;
@@ -332,6 +364,11 @@ export default {
   cursor: grab;
   cursor: -moz-grab;
   cursor: -webkit-grab;
+
+  div {
+    font-weight: 500;
+    padding: 0 1rem;
+  }
 }
 
 .gu-mirror {
