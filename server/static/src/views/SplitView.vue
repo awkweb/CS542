@@ -9,13 +9,12 @@
           <h3>Customers</h3>
           <span class="bill-total">{{ bills[0].customers.length }} remaining</span>
         </div>
-        <div class="container" v-dragula="bills[0].customers" bag="bill-bag">
-          <div v-for="customer in bills[0].customers" :key="customer.id">
+        <div id="container-0" class="container">
+          <div v-bind:id="'customer-' + customer.id" v-for="customer in bills[0].customers" :key="customer.id">
             <span class="customer-number">Customer {{ customer.id }}</span>
             <span>${{ customer.dishes | total }}</span>
           </div>
         </div>
-          {{ bills[0].customers }}
       </div>
 
       <div id="target">
@@ -23,50 +22,46 @@
           <div class="split-header">
             <h3>Bill {{ bill.number }}</h3>
             <div>
-              <span class="bill-total">${{ bill.total }}</span>
+              <span class="bill-total">${{ bill.total.toFixed(2) }}</span>
               <button v-on:click="removeBill(bill.number)" class="c-btn c-btn--secondary">Remove</button>
             </div>
           </div>
-          <div class="container" v-dragula="bill.customers" bag="bill-bag">
-            <div v-for="customer in bill.customers" :key="customer.id">
-              <span class="customer-number">Customer {{ customer.id }} [{{ bill.number }}]</span>
+          <div v-bind:id="'container-' + bill.number" class="container">
+            <div v-bind:id="'customer-' + customer.id" v-for="customer in bill.customers" :key="customer.id">
+              <span class="customer-number">Customer {{ customer.id }}</span>
               <span>${{ customer.dishes | total }}</span>
             </div>
           </div>
-          {{ bill.customers }}
         </div>
       </div>
 
-    <div class="sticky-footer">
-      <button v-on:click="addBill" class="c-btn c-btn--secondary" v-if="numberOfCustomers < bills.length" disabled>Add Bill</button>
-      <button v-on:click="addBill" class="c-btn c-btn--secondary" v-else>Add Bill</button>
-      <div>
-        <button v-on:click="back" class="c-btn c-btn--secondary">Back</button>
-        <button v-on:click="splitOrders" class="c-btn c-btn--primary" v-if="bills[0].customers.length > 0" disabled>Finish</button>
-        <button v-on:click="splitOrders" class="c-btn c-btn--primary" v-else>Finish</button>
+      <div class="sticky-footer">
+        <button v-on:click="addBill" class="c-btn c-btn--secondary" v-if="numberOfCustomers < bills.length" disabled>Add Bill</button>
+        <button v-on:click="addBill" class="c-btn c-btn--secondary" v-else>Add Bill</button>
+        <div>
+          <button v-on:click="back" class="c-btn c-btn--secondary">Back</button>
+          <button v-on:click="splitOrders" class="c-btn c-btn--primary" v-if="bills[0].customers.length > 0" disabled>Finish</button>
+          <button v-on:click="splitOrders" class="c-btn c-btn--primary" v-else>Finish</button>
+        </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
 import router from '../router'
 import store from '../store'
-import Vue from 'vue'
-import VueDragula from 'vue-dragula'
 import axios from 'axios'
-
-Vue.use(VueDragula);
+import dragula from 'dragula'
 
 export default {
   name: 'split',
 
   data () {
     return {
+      drake: dragula(),
       numberOfCustomers: 0,
       bills: [
-        { 'number': 0, 'customers': [] },
-        { 'number': 1, 'customers': [] },
+        { 'number': 0, 'customers': [], 'total': 0, 'dom_id': 'container-0' }
       ]
     }
   },
@@ -102,9 +97,15 @@ export default {
 
       const bill = {
         'number': number + 1,
-        'customers': []
+        'customers': [],
+        'total': 0,
+        'dom_id': 'container-' + (number + 1)
       }
       this.bills.push(bill)
+      this.$nextTick(function () {
+        const container = document.querySelector('#container-' + bill.number)
+        this.drake.containers.push(container)
+      })
     },
 
     splitOrders: function () {
@@ -162,6 +163,7 @@ export default {
         const customers = response.data.orders.map(function (order) {
           return {
             'id': order.id,
+            'dom_id': "customer-" + order.id,
             'master_order_id': order.master_order_id,
             'bill_id': order.bill_id,
             'dishes': order.order_dishes,
@@ -170,13 +172,27 @@ export default {
         })
         vm.numberOfCustomers = customers.length
         vm.bills[0].customers = customers
-        // vm.bills.push({'number': 0, 'customers': customers})
-        // vm.addBill()
+        const container = document.querySelector('#container-0')
+        vm.drake.containers.push(container)
+        vm.addBill()
       })
       .catch(function (error) {
         console.log(error)
       })
-    }
+    },
+
+    getBillWithDomId: function (domId) {
+      const bill = this.bills.filter(b => b.dom_id == domId
+      )[0]
+      return bill
+    },
+
+    getCustomerWithDomId: function (billDomId, customerDomId) {
+      const bill = this.getBillWithDomId(billDomId)
+      const customer = bill.customers.filter(c => c.dom_id == customerDomId
+      )[0]
+      return customer
+    },
   },
 
   filters: {
@@ -212,6 +228,20 @@ export default {
   created () {
     if (this.$route.params.id)
       this.getOrder()
+    
+    var vm = this
+
+    this.drake.on('drop', function(element, target, source, sibling) {
+      var index = [].indexOf.call(element.parentNode.children, element)
+
+      if (target.id != source.id) {
+        var sourceBill = vm.getBillWithDomId(source.id)
+        var targetBill = vm.getBillWithDomId(target.id)
+        const customer = vm.getCustomerWithDomId(source.id, element.id)
+        targetBill.customers.splice(index, 0, customer)
+        sourceBill.customers = sourceBill.customers.filter(c => c.id != customer.id)
+      }
+    })
   }
 }
 </script>
