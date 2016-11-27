@@ -3,31 +3,46 @@
     <h2>Split</h2>
 
     <div class="wrapper">
+
       <div id="source">
         <div class="split-header">
           <h3>Customers</h3>
-          <span class="bill-total">{{ customers.length }} remaining</span>
+          <span class="bill-total">{{ bills[0].customers.length }} remaining</span>
         </div>
-        <div class="container" v-dragula="customers" bag="bill-bag">
-          <div v-for="customer in customers" :key="customer.id">
-            <span class="customer-number">Customer {{ customer.number }}</span>
+        <div class="container" v-dragula="bills[0].customers" bag="bill-bag">
+          <div v-for="customer in bills[0].customers" :key="customer.id">
+            <span class="customer-number">Customer {{ customer.id }}</span>
             <span>${{ customer.dishes | total }}</span>
           </div>
         </div>
+          {{ bills[0].customers }}
       </div>
+
       <div id="target">
-        <div v-for="bill in bills">
-          <split-customer v-bind:bill="bill"></split-customer>
+        <div v-for="bill in bills.slice(1, bills.length)">
+          <div class="split-header">
+            <h3>Bill {{ bill.number }}</h3>
+            <div>
+              <span class="bill-total">${{ bill.total }}</span>
+              <button v-on:click="removeBill(bill.number)" class="c-btn c-btn--secondary">Remove</button>
+            </div>
+          </div>
+          <div class="container" v-dragula="bill.customers" bag="bill-bag">
+            <div v-for="customer in bill.customers" :key="customer.id">
+              <span class="customer-number">Customer {{ customer.id }} [{{ bill.number }}]</span>
+              <span>${{ customer.dishes | total }}</span>
+            </div>
+          </div>
+          {{ bill.customers }}
         </div>
       </div>
-    </div>
 
     <div class="sticky-footer">
-      <button v-on:click="addBill" class="c-btn c-btn--secondary" v-if="numberOfCustomers <= bills.length" disabled>Add Bill</button>
+      <button v-on:click="addBill" class="c-btn c-btn--secondary" v-if="numberOfCustomers < bills.length" disabled>Add Bill</button>
       <button v-on:click="addBill" class="c-btn c-btn--secondary" v-else>Add Bill</button>
       <div>
         <button v-on:click="back" class="c-btn c-btn--secondary">Back</button>
-        <button v-on:click="splitOrders" class="c-btn c-btn--primary" v-if="customers.length > 0" disabled>Finish</button>
+        <button v-on:click="splitOrders" class="c-btn c-btn--primary" v-if="bills[0].customers.length > 0" disabled>Finish</button>
         <button v-on:click="splitOrders" class="c-btn c-btn--primary" v-else>Finish</button>
       </div>
     </div>
@@ -41,8 +56,6 @@ import Vue from 'vue'
 import VueDragula from 'vue-dragula'
 import axios from 'axios'
 
-import SplitCustomer from '../components/SplitCustomer.vue'
-
 Vue.use(VueDragula);
 
 export default {
@@ -51,15 +64,11 @@ export default {
   data () {
     return {
       numberOfCustomers: 0,
-      customers: [],
       bills: [
-        { 'number': 1, 'customers': [], 'total': 0 }
+        { 'number': 0, 'customers': [] },
+        { 'number': 1, 'customers': [] },
       ]
     }
-  },
-
-  components: {
-    'split-customer': SplitCustomer
   },
 
   methods: {
@@ -69,13 +78,19 @@ export default {
     },
 
     removeBill: function (billNumber) {
-      const rBill = this.bills.filter(b => b.number == billNumber
-      )[0]
+      const rBill = this.getBillWithNumber(billNumber)
       const billCustomers = rBill.customers
-      this.customers = this.customers.concat(billCustomers)
+      var cBill = this.getBillWithNumber(0)
+      cBill.customers = cBill.customers.concat(billCustomers)
 
       this.bills = this.bills.filter(bill => bill.number != billNumber
       )
+    },
+
+    getBillWithNumber: function (billNumber) {
+      const bill = this.bills.filter(b => b.number == billNumber
+      )[0]
+      return bill
     },
 
     addBill: function () {
@@ -87,8 +102,7 @@ export default {
 
       const bill = {
         'number': number + 1,
-        'customers': [],
-        'total': 0 
+        'customers': []
       }
       this.bills.push(bill)
     },
@@ -145,9 +159,8 @@ export default {
         }
       })
       .then(function (response) {
-        vm.customers = response.data.orders.map(function (order) {
+        const customers = response.data.orders.map(function (order) {
           return {
-            'number': order.id,
             'id': order.id,
             'master_order_id': order.master_order_id,
             'bill_id': order.bill_id,
@@ -155,7 +168,10 @@ export default {
             'note': order.note
           }
         })
-        vm.numberOfCustomers = vm.customers.length
+        vm.numberOfCustomers = customers.length
+        vm.bills[0].customers = customers
+        // vm.bills.push({'number': 0, 'customers': customers})
+        // vm.addBill()
       })
       .catch(function (error) {
         console.log(error)
@@ -190,46 +206,17 @@ export default {
   },
 
   watch: {
-      '$route': 'getOrder'
+    '$route': 'getOrder'
   },
 
   created () {
     if (this.$route.params.id)
       this.getOrder()
-    
-    // Vue.vueDragula.eventBus.$on('drop', function (args) {
-    //   console.log(args)
-    // })
-
-    // Vue.vueDragula.eventBus.$on('over', function (el, container) {
-    //   console.log(el)
-    //   // el.classList.add('ex-over')
-    // })
-
-    Vue.vueDragula.options('bill-bag', {
-      direction: 'horizontal'
-    })
   }
 }
 </script>
 
 <style lang="sass">
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
-}
-.ex-moved {
-  animation: fadeIn 2s ease-in 1 forwards;
-  border: 2px solid yellow;
-  padding: 2px
-}
-.ex-over {
-  animation: fadeIn .5s ease-in 1 forwards;
-  border: 4px solid green;
-  padding: 2px
-}
-
 .split-header {
   display: flex;
   justify-content: space-between;
@@ -304,19 +291,6 @@ export default {
   }
 }
 
-.container .scale-transition {
-  overflow: hidden;
-  transition: height .2s;
-}
-
-.container .scale-enter {
-  height: 0px;
-}
-
-.container .scale-leave {
-  height: 0px;
-}
-
 .gu-mirror {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   color: #2c3e50;
@@ -355,5 +329,4 @@ export default {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
   filter: alpha(opacity=20);
 }
-
 </style>
