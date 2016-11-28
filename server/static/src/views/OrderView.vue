@@ -61,6 +61,13 @@ export default {
         'number': number + 1,
         'dishes': []
       }
+
+      const dish = {
+        'number': number + 1,
+        'dish_id': -1,
+        'quantity': 0
+      }
+      customer.dishes.push(dish)
       this.customers.push(customer)
     },
 
@@ -203,12 +210,14 @@ export default {
   },
 
   created () {
-    if (this.$route.params.id)
-      this.getOrder()
+    if (this.$route.params.id) {
       this.buttonText = 'Update'
-    else
-      this.addCustomer()
+      this.getOrder()
+    }
+    else {
       this.buttonText = 'Submit'
+      this.addCustomer()
+    }
   }
 }
 </script>

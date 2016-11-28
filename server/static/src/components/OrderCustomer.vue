@@ -42,7 +42,7 @@ export default {
         'number': number + 1,
         'dish_id': -1,
         'quantity': 0
-      };
+      }
       this.customer.dishes.push(dish)
     },
 

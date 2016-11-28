@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import jsonify
 from datetime import datetime
+import pytz
 
 db = SQLAlchemy()
 
@@ -13,7 +14,7 @@ class MasterOrder(db.Model):
     orders = db.relationship('Order', backref='master_order', lazy='select')
 
     def __init__(self):
-        self.date = datetime.today()
+        self.date = datetime.now(tz=pytz.timezone('America/New_York'))
         self.status = 'Open'
                                                             
     def __repr__(self):
@@ -46,7 +47,7 @@ class Bill(db.Model):
     orders = db.relationship('Order', backref='bill', lazy='select')
 
     def __init__(self):
-        self.date = datetime.today()
+        self.date = datetime.now(tz=pytz.timezone('America/New_York'))
                                                                                                     
     def __repr__(self):
         return '<id {}>'.format(self.id)  

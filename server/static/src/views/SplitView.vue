@@ -36,8 +36,13 @@
       </div>
 
       <div class="sticky-footer">
-        <button v-on:click="addBill" class="c-btn c-btn--secondary" v-if="numberOfCustomers < bills.length" disabled>Add Bill</button>
-        <button v-on:click="addBill" class="c-btn c-btn--secondary" v-else>Add Bill</button>
+        <div>
+          <button v-on:click="addBill" class="c-btn c-btn--secondary" v-if="numberOfCustomers < bills.length" disabled>Add Bill</button>
+          <button v-on:click="addBill" class="c-btn c-btn--secondary" v-else>Add Bill</button>
+
+          <button v-on:click="individualBills" class="c-btn c-btn--secondary" v-if="numberOfCustomers < bills.length" disabled>Individual Bills</button>
+          <button v-on:click="individualBills" class="c-btn c-btn--secondary" v-else>Individual Bills</button>
+        </div>
         <div>
           <button v-on:click="back" class="c-btn c-btn--secondary">Back</button>
           <button v-on:click="splitOrders" class="c-btn c-btn--primary" v-if="bills[0].customers.length > 0" disabled>{{ buttonText }}</button>
@@ -71,6 +76,21 @@ export default {
     back: function () {
       const orderId = this.$route.params.id
       router.push({ name: 'order-update', params: { id: orderId } })
+    },
+
+    individualBills: function () {
+      var cBill = this.bills[0]
+      this.bills = [cBill]
+      for (var i in cBill.customers) {
+        const customer = cBill.customers[i]
+        const total = parseFloat(this.customerTotal(customer.dishes))
+        this.addBill()
+        var lastBill = this.bills[this.bills.length - 1]
+        lastBill.customers.push(customer)
+        lastBill.total += total
+        cBill.total -= total
+      }
+      cBill.customers = []
     },
 
     removeBill: function (billNumber) {

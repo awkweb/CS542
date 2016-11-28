@@ -24726,7 +24726,7 @@ module.exports = function spread(callback) {
 
   filters: {
     prettyDate: function prettyDate(dateString) {
-      return __WEBPACK_IMPORTED_MODULE_0_moment___default()(dateString).format('ddd, MMM D, h:mm a');
+      return __WEBPACK_IMPORTED_MODULE_0_moment___default()(dateString).add(5, 'hours').format('ddd, MMM D, h:mm a');
     }
   }
 };
@@ -24839,8 +24839,128 @@ module.exports = function spread(callback) {
 };
 
 /***/ },
-/* 148 */,
-/* 149 */,
+/* 148 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_OrderDish_vue__ = __webpack_require__(185);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_OrderDish_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_OrderDish_vue__);
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ exports["default"] = {
+  name: 'customerOrder',
+
+  props: ['customer'],
+
+  components: {
+    'order-dish': __WEBPACK_IMPORTED_MODULE_1__components_OrderDish_vue___default.a
+  },
+
+  methods: {
+    removeCustomer: function removeCustomer() {
+      this.$emit('removeCustomer', this.customer);
+    },
+
+    addDish: function addDish() {
+      var number = 0;
+      if (this.customer.dishes.length > 0) {
+        var dishNumbers = this.customer.dishes.map(function (d) {
+          return d.number;
+        });
+        number = Math.max.apply(Math, _toConsumableArray(dishNumbers));
+      }
+
+      var dish = {
+        'number': number + 1,
+        'dish_id': -1,
+        'quantity': 0
+      };
+      this.customer.dishes.push(dish);
+    },
+
+    removeDish: function removeDish(dish) {
+      if (dish.id) {
+        var vm = this;
+        __WEBPACK_IMPORTED_MODULE_0_axios___default.a.delete('/api/orderdish/delete', {
+          params: {
+            id: dish.id
+          }
+        }).then(function (response) {
+          vm.customer.dishes = vm.customer.dishes.filter(function (d) {
+            return d.number != dish.number;
+          });
+        }).catch(function (error) {
+          console.log(error);
+        });
+      } else {
+        this.customer.dishes = this.customer.dishes.filter(function (d) {
+          return d.number != dish.number;
+        });
+      }
+    }
+  }
+};
+
+/***/ },
+/* 149 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ exports["default"] = {
+  name: 'customerDish',
+
+  props: ['dish'],
+
+  methods: {
+    removeDish: function removeDish() {
+      this.$emit('removeDish', this.dish);
+    }
+  }
+};
+
+/***/ },
 /* 150 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -24933,7 +25053,7 @@ module.exports = function spread(callback) {
     },
 
     prettyDate: function prettyDate(dateString) {
-      return __WEBPACK_IMPORTED_MODULE_2_moment___default()(dateString).format('ddd, MMM D, h:mm a');
+      return __WEBPACK_IMPORTED_MODULE_2_moment___default()(dateString).add(5, 'hours').format('ddd, MMM D, h:mm a');
     }
   }
 };
@@ -25151,9 +25271,238 @@ module.exports = function spread(callback) {
 
 /***/ },
 /* 154 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-throw new Error("Module build failed: SyntaxError: Unexpected token (209:4)\n\n\u001b[0m \u001b[90m 207 | \u001b[39m      \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mgetOrder()\n \u001b[90m 208 | \u001b[39m      \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mbuttonText \u001b[33m=\u001b[39m \u001b[32m'Update'\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 209 | \u001b[39m    \u001b[36melse\u001b[39m\n \u001b[90m     | \u001b[39m    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 210 | \u001b[39m      \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39maddCustomer()\n \u001b[90m 211 | \u001b[39m      \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mbuttonText \u001b[33m=\u001b[39m \u001b[32m'Submit'\u001b[39m\n \u001b[90m 212 | \u001b[39m  }\u001b[0m\n");
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__router__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_OrderCustomer_vue__ = __webpack_require__(184);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_OrderCustomer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_OrderCustomer_vue__);
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ exports["default"] = {
+  name: 'order',
+
+  data: function data() {
+    return {
+      customers: [],
+      buttonText: 'Submit'
+    };
+  },
+
+
+  components: {
+    'order-customer': __WEBPACK_IMPORTED_MODULE_2__components_OrderCustomer_vue___default.a
+  },
+
+  methods: {
+    cancel: function cancel() {
+      __WEBPACK_IMPORTED_MODULE_0__router__["a" /* default */].push({ name: 'home' });
+    },
+
+    split: function split() {
+      var orderId = this.$route.params.id;
+      __WEBPACK_IMPORTED_MODULE_0__router__["a" /* default */].push({ name: 'split', params: { id: orderId } });
+    },
+
+    addCustomer: function addCustomer() {
+      var number = 0;
+      if (this.customers.length > 0) {
+        var customerNumbers = this.customers.map(function (c) {
+          return c.number;
+        });
+        number = Math.max.apply(Math, _toConsumableArray(customerNumbers));
+      }
+
+      var customer = {
+        'number': number + 1,
+        'dishes': []
+      };
+
+      var dish = {
+        'number': number + 1,
+        'dish_id': -1,
+        'quantity': 0
+      };
+      customer.dishes.push(dish);
+      this.customers.push(customer);
+    },
+
+    removeCustomer: function removeCustomer(customer) {
+      if (customer.id) {
+        var vm = this;
+        var dishRequests = customer.dishes.map(function (d) {
+          return vm.deleteDishRequest(d.id);
+        });
+        __WEBPACK_IMPORTED_MODULE_1_axios___default.a.all(dishRequests).then(function (responses) {
+          __WEBPACK_IMPORTED_MODULE_1_axios___default.a.delete('/api/order/delete', {
+            params: {
+              id: customer.id
+            }
+          }).then(function (response) {
+            vm.customers = vm.customers.filter(function (c) {
+              return c.number != customer.number;
+            });
+          }).catch(function (error) {
+            console.log(error);
+          });
+        }).catch(function (error) {
+          console.log(error);
+        });
+      } else {
+        this.customers = this.customers.filter(function (c) {
+          return c.number != customer.number;
+        });
+      }
+    },
+
+    deleteDishRequest: function deleteDishRequest(dishId) {
+      return __WEBPACK_IMPORTED_MODULE_1_axios___default.a.delete('/api/orderdish/delete', {
+        params: {
+          id: dishId
+        }
+      });
+    },
+
+    getOrder: function getOrder() {
+      var vm = this;
+      var orderId = this.$route.params.id;
+
+      __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get('/api/masterorder', {
+        params: {
+          id: orderId
+        }
+      }).then(function (response) {
+        vm.customers = response.data.orders.map(function (order) {
+          var order_dishes = order.order_dishes.map(function (od) {
+            return {
+              'number': od.id,
+              'id': od.id,
+              'dish_id': od.dish_id,
+              'order_id': od.order_id,
+              'quantity': od.quantity
+            };
+          });
+          return {
+            'number': order.id,
+            'id': order.id,
+            'master_order_id': order.master_order_id,
+            'bill_id': order.bill_id,
+            'dishes': order_dishes,
+            'note': order.note
+          };
+        });
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+
+    createOrder: function createOrder() {
+      this.buttonText = 'Working...';
+      var vm = this;
+
+      __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/api/masterorder/add').then(function (response) {
+        var masterOrderId = response.data.id;
+
+        var _loop = function _loop() {
+          var customer = vm.customers[i];
+
+          __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/api/order/add', {
+            master_order_id: masterOrderId,
+            note: ''
+          }).then(function (response) {
+            var orderId = response.data.id;
+
+            for (var x in customer.dishes) {
+              var dish = customer.dishes[x];
+              __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/api/orderdish/add', {
+                order_id: orderId,
+                dish_id: dish.dish_id,
+                quantity: dish.quantity
+              }).then(function (response) {
+                if (i == vm.customers.length - 1 && x == customer.dishes.length - 1) {
+                  __WEBPACK_IMPORTED_MODULE_0__router__["a" /* default */].push({ name: 'home', query: { success: 1 } });
+                }
+              }).catch(function (error) {
+                console.log(error);
+              });
+            }
+          }).catch(function (error) {
+            console.log(error);
+          });
+        };
+
+        for (var i in vm.customers) {
+          _loop();
+        }
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+
+    postOrderRequest: function postOrderRequest(masterOrderId) {
+      __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/api/order/add', {
+        master_order_id: masterOrderId,
+        note: ''
+      });
+    },
+
+    updateOrder: function updateOrder() {
+      this.buttonText = 'Working...';
+
+      var vm = this;
+      console.log(vm.customers);
+
+      // add, delete customer
+      // create, update, delete dish
+      // keep track of orders in store.js
+      __WEBPACK_IMPORTED_MODULE_0__router__["a" /* default */].push({ name: 'home', query: { success: 1 } });
+    }
+  },
+
+  watch: {
+    '$route': 'getOrder'
+  },
+
+  created: function created() {
+    if (this.$route.params.id) {
+      this.buttonText = 'Update';
+      this.getOrder();
+    } else {
+      this.buttonText = 'Submit';
+      this.addCustomer();
+    }
+  }
+};
 
 /***/ },
 /* 155 */
@@ -25168,6 +25517,11 @@ throw new Error("Module build failed: SyntaxError: Unexpected token (209:4)\n\n\
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_dragula___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_dragula__);
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
+//
+//
+//
+//
+//
 //
 //
 //
@@ -25240,6 +25594,21 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     back: function back() {
       var orderId = this.$route.params.id;
       __WEBPACK_IMPORTED_MODULE_0__router__["a" /* default */].push({ name: 'order-update', params: { id: orderId } });
+    },
+
+    individualBills: function individualBills() {
+      var cBill = this.bills[0];
+      this.bills = [cBill];
+      for (var i in cBill.customers) {
+        var customer = cBill.customers[i];
+        var total = parseFloat(this.customerTotal(customer.dishes));
+        this.addBill();
+        var lastBill = this.bills[this.bills.length - 1];
+        lastBill.customers.push(customer);
+        lastBill.total += total;
+        cBill.total -= total;
+      }
+      cBill.customers = [];
     },
 
     removeBill: function removeBill(billNumber) {
@@ -25693,7 +26062,20 @@ module.exports = eventmap;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
-/* 161 */,
+/* 161 */
+/***/ function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.customer-dish {\n  display: flex;\n  align-items: flex-end;\n  margin-bottom: 10px;\n}\n.button-wrapper .c-btn {\n  padding: 5px 10px;\n  font-size: 12px;\n}\n.input-wrapper {\n  flex: 1;\n  padding-right: 6px;\n}\n.c-label {\n  display: block;\n  padding-left: 2px;\n  font-size: 12px;\n  color: #7b8994;\n}\n.c-input {\n  width: 100%;\n  display: block;\n  padding: 5px 7px;\n  box-sizing: border-box;\n  font-size: 13px;\n  text-align: left;\n  color: #47525d;\n  border: 1px solid rgba(37, 40, 43, 0.1);\n  border-radius: 3px;\n  background-color: white;\n  background-clip: padding-box;\n}\n.c-input:focus {\n    border-color: #72b6ec;\n    outline: 0;\n}\n.c-input:disabled, .c-input.is-disabled {\n    background-color: #f7f9fa;\n}\n.c-input.is-invalid,\n  .c-form--validated .c-input:invalid {\n    background-image: url(" + __webpack_require__(177) + ");\n    background-size: 14px;\n    background-position: right 10px center;\n    background-repeat: no-repeat;\n    padding-right: 34px;\n    border-color: #ED1A1E;\n    box-shadow: none;\n    outline: 0;\n}\n.c-input.is-valid,\n  .c-form--validated .c-input:valid {\n    background-image: url(" + __webpack_require__(178) + ");\n    background-size: 14px;\n    background-position: right 10px center;\n    background-repeat: no-repeat;\n    padding-right: 34px;\n}\ntextarea.c-input {\n  resize: vertical;\n}\nselect.c-input {\n  background-image: url(" + __webpack_require__(176) + ");\n  background-size: 7px 14px;\n  background-position: right 10px center;\n  background-repeat: no-repeat;\n  -webkit-appearance: none;\n  padding-right: 27px;\n}\ninput[type=number]::-webkit-inner-spin-button,\ninput[type=number]::-webkit-outer-spin-button {\n  -webkit-appearance: none;\n  margin: 0;\n}\n", ""]);
+
+// exports
+
+
+/***/ },
 /* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -25806,7 +26188,20 @@ exports.push([module.i, "\n#bill-view {\n  margin-bottom: 8rem;\n}\n", ""]);
 
 
 /***/ },
-/* 170 */,
+/* 170 */
+/***/ function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.customer-header {\n  display: flex;\n  justify-content: space-between;\n  height: 45px;\n  align-items: center;\n  margin-bottom: 20px;\n  border-bottom: 1px solid #EAEAEA;\n}\n.customer-header .c-btn {\n    padding: 5px 10px;\n    font-size: 12px;\n}\n.order-customer {\n  margin-bottom: 40px;\n}\n", ""]);
+
+// exports
+
+
+/***/ },
 /* 171 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -26546,9 +26941,24 @@ module.exports = dragula;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
-/* 176 */,
-/* 177 */,
-/* 178 */,
+/* 176 */
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "icon-form-dropdown.svg?eb0bc7362f10592dac676a5632941dfa";
+
+/***/ },
+/* 177 */
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "icon-form-invalid.svg?8f700bccff956f5205e132b8a7274946";
+
+/***/ },
+/* 178 */
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "icon-form-valid.svg?eb1565b7d487059036ed96a1599c5e04";
+
+/***/ },
 /* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -26943,8 +27353,100 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 184 */,
-/* 185 */,
+/* 184 */
+/***/ function(module, exports, __webpack_require__) {
+
+var __vue_exports__, __vue_options__
+var __vue_styles__ = {}
+
+/* styles */
+__webpack_require__(214)
+
+/* script */
+__vue_exports__ = __webpack_require__(148)
+
+/* template */
+var __vue_template__ = __webpack_require__(201)
+__vue_options__ = __vue_exports__ = __vue_exports__ || {}
+if (
+  typeof __vue_exports__.default === "object" ||
+  typeof __vue_exports__.default === "function"
+) {
+if (Object.keys(__vue_exports__).some(function (key) { return key !== "default" && key !== "__esModule" })) {console.error("named exports are not supported in *.vue files.")}
+__vue_options__ = __vue_exports__ = __vue_exports__.default
+}
+if (typeof __vue_options__ === "function") {
+  __vue_options__ = __vue_options__.options
+}
+__vue_options__.__file = "/Users/thomasmeagher/Documents/cs542/server/static/src/components/OrderCustomer.vue"
+__vue_options__.render = __vue_template__.render
+__vue_options__.staticRenderFns = __vue_template__.staticRenderFns
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-8ac3fcac", __vue_options__)
+  } else {
+    hotAPI.reload("data-v-8ac3fcac", __vue_options__)
+  }
+})()}
+if (__vue_options__.functional) {console.error("[vue-loader] OrderCustomer.vue: functional components are not supported and should be defined in plain js files using render functions.")}
+
+module.exports = __vue_exports__
+
+
+/***/ },
+/* 185 */
+/***/ function(module, exports, __webpack_require__) {
+
+var __vue_exports__, __vue_options__
+var __vue_styles__ = {}
+
+/* styles */
+__webpack_require__(205)
+
+/* script */
+__vue_exports__ = __webpack_require__(149)
+
+/* template */
+var __vue_template__ = __webpack_require__(192)
+__vue_options__ = __vue_exports__ = __vue_exports__ || {}
+if (
+  typeof __vue_exports__.default === "object" ||
+  typeof __vue_exports__.default === "function"
+) {
+if (Object.keys(__vue_exports__).some(function (key) { return key !== "default" && key !== "__esModule" })) {console.error("named exports are not supported in *.vue files.")}
+__vue_options__ = __vue_exports__ = __vue_exports__.default
+}
+if (typeof __vue_options__ === "function") {
+  __vue_options__ = __vue_options__.options
+}
+__vue_options__.__file = "/Users/thomasmeagher/Documents/cs542/server/static/src/components/OrderDish.vue"
+__vue_options__.render = __vue_template__.render
+__vue_options__.staticRenderFns = __vue_template__.staticRenderFns
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0624e934", __vue_options__)
+  } else {
+    hotAPI.reload("data-v-0624e934", __vue_options__)
+  }
+})()}
+if (__vue_options__.functional) {console.error("[vue-loader] OrderDish.vue: functional components are not supported and should be defined in plain js files using render functions.")}
+
+module.exports = __vue_exports__
+
+
+/***/ },
 /* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -27227,7 +27729,88 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 192 */,
+/* 192 */
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){with(this) {
+  return _h('div', {
+    staticClass: "customer-dish"
+  }, [_h('div', {
+    staticClass: "input-wrapper"
+  }, [_m(0), " ", _h('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (dish.dish_id),
+      expression: "dish.dish_id"
+    }],
+    staticClass: "c-input",
+    on: {
+      "change": function($event) {
+        dish.dish_id = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        })[0]
+      }
+    }
+  }, [_l((this.$store.state.dishes), function(item) {
+    return _h('option', {
+      domProps: {
+        "value": item.id
+      }
+    }, [_s(item.name) + " ($" + _s(item.price) + ")"])
+  })])]), " ", _h('div', {
+    staticClass: "input-wrapper"
+  }, [_m(1), " ", _h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model.number",
+      value: (dish.quantity),
+      expression: "dish.quantity",
+      modifiers: {
+        "number": true
+      }
+    }],
+    staticClass: "c-input",
+    attrs: {
+      "type": "number"
+    },
+    domProps: {
+      "value": _s(dish.quantity)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) return;
+        dish.quantity = _n($event.target.value)
+      }
+    }
+  })]), " ", _h('div', {
+    staticClass: "button-wrapper"
+  }, [_h('button', {
+    staticClass: "c-btn c-btn--secondary",
+    on: {
+      "click": removeDish
+    }
+  }, ["Remove"])])])
+}},staticRenderFns: [function (){with(this) {
+  return _h('label', {
+    staticClass: "c-label"
+  }, ["Dish"])
+}},function (){with(this) {
+  return _h('label', {
+    staticClass: "c-label"
+  }, ["Quantity"])
+}}]}
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-0624e934", module.exports)
+  }
+}
+
+/***/ },
 /* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -27529,7 +28112,43 @@ if (false) {
 }
 
 /***/ },
-/* 201 */,
+/* 201 */
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){with(this) {
+  return _h('div', {
+    staticClass: "order-customer"
+  }, [_h('div', {
+    staticClass: "customer-header"
+  }, [_h('h3', ["Customer " + _s(customer.number)]), " ", _h('div', [_h('button', {
+    staticClass: "c-btn c-btn--secondary",
+    on: {
+      "click": addDish
+    }
+  }, ["Add Dish"]), " ", _h('button', {
+    staticClass: "c-btn c-btn--secondary",
+    on: {
+      "click": removeCustomer
+    }
+  }, ["Remove"])])]), " ", _l((customer.dishes), function(dish) {
+    return _h('div', [_h('order-dish', {
+      attrs: {
+        "dish": dish
+      },
+      on: {
+        "removeDish": removeDish
+      }
+    })])
+  })])
+}},staticRenderFns: []}
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-8ac3fcac", module.exports)
+  }
+}
+
+/***/ },
 /* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -27618,7 +28237,7 @@ module.exports={render:function (){with(this) {
     })])])
   })]), " ", _h('div', {
     staticClass: "sticky-footer"
-  }, [(numberOfCustomers < bills.length) ? _h('button', {
+  }, [_h('div', [(numberOfCustomers < bills.length) ? _h('button', {
     staticClass: "c-btn c-btn--secondary",
     attrs: {
       "disabled": ""
@@ -27631,7 +28250,20 @@ module.exports={render:function (){with(this) {
     on: {
       "click": addBill
     }
-  }, ["Add Bill"]), " ", " ", _h('div', [_h('button', {
+  }, ["Add Bill"]), " ", " ", (numberOfCustomers < bills.length) ? _h('button', {
+    staticClass: "c-btn c-btn--secondary",
+    attrs: {
+      "disabled": ""
+    },
+    on: {
+      "click": individualBills
+    }
+  }, ["Individual Bills"]) : _h('button', {
+    staticClass: "c-btn c-btn--secondary",
+    on: {
+      "click": individualBills
+    }
+  }, ["Individual Bills"]), " "]), " ", _h('div', [_h('button', {
     staticClass: "c-btn c-btn--secondary",
     on: {
       "click": back
@@ -29546,7 +30178,32 @@ return VueRouter;
 })));
 
 /***/ },
-/* 205 */,
+/* 205 */
+/***/ function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(161);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(3)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-0624e934!./../../../../node_modules/sass-loader/index.js!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./OrderDish.vue", function() {
+			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-0624e934!./../../../../node_modules/sass-loader/index.js!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./OrderDish.vue");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ },
 /* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -29755,7 +30412,32 @@ if(false) {
 }
 
 /***/ },
-/* 214 */,
+/* 214 */
+/***/ function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(170);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(3)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-8ac3fcac!./../../../../node_modules/sass-loader/index.js!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./OrderCustomer.vue", function() {
+			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-8ac3fcac!./../../../../node_modules/sass-loader/index.js!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./OrderCustomer.vue");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ },
 /* 215 */
 /***/ function(module, exports, __webpack_require__) {
 

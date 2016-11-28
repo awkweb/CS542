@@ -15,7 +15,7 @@ export default {
 
   filters: {
     prettyDate: function (dateString) {
-      return moment(dateString).format('ddd, MMM D, h:mm a')
+      return moment(dateString).add(5, 'hours').format('ddd, MMM D, h:mm a')
     }
   }
 }
