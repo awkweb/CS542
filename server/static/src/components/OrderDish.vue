@@ -2,14 +2,14 @@
   <div class="customer-dish">
     <div class="input-wrapper">
         <label class="c-label">Dish</label>
-        <select v-model="dish.dish_id" class="c-input">
-          <option v-for="item in this.$store.state.dishes" v-bind:value="item.id">{{ item.name }} (${{ item.price }})</option>
+        <select v-on:change="changeDish" v-model="dish.dish_id" class="c-input">
+          <option v-for="item in this.$store.state.dishes" v-bind:value="item.id">{{ item.name }} (${{ item.price.toFixed(2) }})</option>
         </select>
     </div>
 
     <div class="input-wrapper">
         <label class="c-label">Quantity</label>
-        <input v-model.number="dish.quantity" type="number"  class="c-input">
+        <input v-on:change="changeDish" v-model.number="dish.quantity" type="number" class="c-input">
     </div>
 
     <div class="button-wrapper">
@@ -27,6 +27,10 @@ export default {
   methods: {
     removeDish: function () {
       this.$emit('removeDish', this.dish)
+    },
+
+    changeDish: function () {
+      this.$emit('changeDish', this.dish)
     }
   }
 }

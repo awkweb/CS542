@@ -122,6 +122,7 @@ def add_order_dish():
 @app.route('/api/orderdish/delete', methods=['DELETE'])
 def delete_order_dish():
 	id = request.args.get('id')
+	order_id = request.args.get('order_id')
 	if request.method == 'DELETE' and id is not None:
 		order_dish = Order_Dish.query.get(id)
 		if order_dish is not None:
@@ -133,17 +134,27 @@ def delete_order_dish():
 	else:
 		return not_found()
 
-@app.route('/api/orderdish/<id>/updatequantity/<quantity>', methods=['PUT'])
-def update_order_dish_quantity(id, quantity):
-	if request.method == 'PUT':
-		orderDish = Order_Dish.query.get(id)
+@app.route('/api/orderdish/update', methods=['POST'])
+def update_order_dish_quantity():
+	if request.method == 'POST':
+		orderJson = request.get_json(force=True)
+		quantity = int(orderJson['quantity'])
+		dish_id = int(orderJson['dish_id'])
+		dish = Dish.query.get(dish_id)
 
-		if orderDish is not None:
-			orderDish.quantity = quantity
-			db.session.commit()
-			return '', 204
-		else:
-			raise CustomException('Order dish was not found.', 404)
+		order_dish_id = int(orderJson['id'])
+		order_dish = Order_Dish.query.get(order_dish_id)
+
+		if not dish:
+			raise CustomException('Dish does not exist.', 404)
+		if not order_dish:
+			raise CustomException('Order does not exist.', 404)
+		if quantity <= 0:
+			raise CustomException('Quantity cannot be less than 1.', 400)
+		order_dish.dish_id = dish_id
+		order_dish.quantity = quantity
+		db.session.commit()
+		return jsonify(order_dish)
 	else:
 		return not_found()
 
@@ -175,6 +186,7 @@ def delete_order():
 	if request.method == 'DELETE' and id is not None:
 		order = Order.query.get(id)
 		if order is not None:
+			Order_Dish.query.filter_by(order_id=id).delete()
 			Order.query.filter_by(id=id).delete()
 			db.session.commit()
 			return '', 204

@@ -37,16 +37,12 @@
 
       <div class="sticky-footer">
         <div>
-          <button v-on:click="addBill" class="c-btn c-btn--secondary" v-if="numberOfCustomers < bills.length" disabled>Add Bill</button>
-          <button v-on:click="addBill" class="c-btn c-btn--secondary" v-else>Add Bill</button>
-
-          <button v-on:click="individualBills" class="c-btn c-btn--secondary" v-if="numberOfCustomers < bills.length" disabled>Individual Bills</button>
-          <button v-on:click="individualBills" class="c-btn c-btn--secondary" v-else>Individual Bills</button>
+          <button v-on:click="addBill" class="c-btn c-btn--secondary" v-bind:disabled="numberOfCustomers < bills.length">Add Bill</button>
+          <button v-on:click="individualBills" class="c-btn c-btn--secondary" v-bind:disabled="numberOfCustomers != bills[0].customers.length">Individual Bills</button>
         </div>
         <div>
           <button v-on:click="back" class="c-btn c-btn--secondary">Back</button>
-          <button v-on:click="splitOrders" class="c-btn c-btn--primary" v-if="bills[0].customers.length > 0" disabled>{{ buttonText }}</button>
-          <button v-on:click="splitOrders" class="c-btn c-btn--primary" v-else>{{ buttonText }}</button>
+          <button v-on:click="splitOrders" class="c-btn c-btn--primary" v-bind:disabled="bills[0].customers.length > 0">{{ buttonText }}</button>
         </div>
       </div>
     </div>

@@ -1,11 +1,15 @@
 <template>
   <div id="order-view">
-    <h2 v-if="this.$route.params.id">Update Order #{{ this.$route.params.id }}</h2>
-    <h2 v-else>New Order</h2>
+    <h2>{{ titleText }}</h2>
 
     <div class="customer-container">
       <div v-for="customer in customers">
-        <order-customer v-bind:customer="customer" v-on:removeCustomer="removeCustomer"></order-customer>
+        <order-customer
+          v-bind:customer="customer"
+          v-on:removeCustomer="removeCustomer"
+          v-on:removeDish="removeDish"
+          v-on:changeDish="changeDish"
+        ></order-customer>
       </div>
     </div>
 
@@ -14,8 +18,8 @@
       <div>
         <button v-on:click="cancel" class="c-btn c-btn--secondary">Cancel</button>
         <button v-on:click="split" class="c-btn c-btn--secondary" v-if="this.$route.params.id">Split</button>
-        <button v-on:click="updateOrder" class="c-btn c-btn--primary" v-if="this.$route.params.id">{{ buttonText }}</button>
-        <button v-on:click="createOrder" class="c-btn c-btn--primary" v-else>{{ buttonText }}</button>
+        <button v-on:click="updateOrder" class="c-btn c-btn--primary" v-if="this.$route.params.id" v-bind:disabled="readyForSubmit">{{ buttonText }}</button>
+        <button v-on:click="createOrder" class="c-btn c-btn--primary" v-bind:disabled="readyForSubmit" v-else>{{ buttonText }}</button>
       </div>
     </div>
   </div>
@@ -31,8 +35,23 @@ export default {
 
   data () {
     return {
+      masterOrderId: -1,
       customers: [],
-      buttonText: 'Submit'
+      titleText: 'New Order',
+      buttonText: 'Submit',
+      removeIds: {
+        customerIds: [],
+        dishIds: []
+      },
+      addCustomers: [],
+      addDishes: [],
+      updateDishes: []
+    }
+  },
+
+  computed: {
+    readyForSubmit: function () {
+      return (this.customers.length == 0)
     }
   },
 
@@ -65,36 +84,56 @@ export default {
       const dish = {
         'number': number + 1,
         'dish_id': -1,
-        'quantity': 0
+        'quantity': 1
       }
       customer.dishes.push(dish)
       this.customers.push(customer)
+      this.addCustomers.push(customer)
     },
 
     removeCustomer: function (customer) {
       if (customer.id) {
-        var vm = this
-        const dishRequests = customer.dishes.map(d => vm.deleteDishRequest(d.id))
-        axios.all(dishRequests)
-        .then(function (responses) {
-          axios.delete('/api/order/delete', {
-            params: {
-              id: customer.id
-            }
-          })
-          .then(function (response) {
-            vm.customers = vm.customers.filter(c => c.number != customer.number)
-          })
-          .catch(function (error) {
-            console.log(error)
-          })
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-      } else {
-        this.customers = this.customers.filter(c => c.number != customer.number)
+        this.removeIds.customerIds.push(customer.id)
       }
+      this.customers = this.customers.filter(c => c.number != customer.number)
+    },
+
+    changeDish: function (customerId, dish) {
+      if (!this.removeIds.customerIds.includes(customerId) && dish.dish_id != -1) {
+        if (dish.id) {
+          this.updateDishes = this.updateDishes.filter(d => d.id != dish.id)
+          this.updateDishes.push({
+            'id': dish.id,
+            'dishId': dish.dish_id,
+            'quantity': dish.quantity
+          })
+        } else {
+          this.addDishes = this.addDishes.filter(d => d.number != dish.number)
+          this.addDishes.push({
+            'orderId': customerId,
+            'dishId': dish.dish_id,
+            'quantity': dish.quantity,
+            'number': dish.number
+          })
+        }
+      }
+    },
+
+    removeDish: function (dish) {
+      if (dish.id) {
+        this.removeIds.dishIds.push(dish.id)        
+        this.updateDishes = this.updateDishes.filter(d => d.id != dish.id)
+      } else {
+        this.addDishes = this.addDishes.filter(d => d.number != dish.number)
+      }
+    },
+
+    deleteCustomerRequest: function (customerId) {
+      return axios.delete('/api/order/delete', {
+        params: {
+          id: customerId
+        }
+      })
     },
 
     deleteDishRequest: function (dishId) {
@@ -115,6 +154,7 @@ export default {
         }
       })
       .then(function (response) {
+        vm.masterOrderId = response.data.id
         vm.customers = response.data.orders.map(function (order) {
           const order_dishes = order.order_dishes.map(function (od) {
             return {
@@ -151,10 +191,7 @@ export default {
         for (var i in vm.customers) {
           const customer = vm.customers[i]
 
-          axios.post('/api/order/add', {
-            master_order_id: masterOrderId,
-            note: ''
-          })
+          vm.postOrderRequest(masterOrderId)
           .then(function (response) {
             const orderId = response.data.id
 
@@ -186,22 +223,84 @@ export default {
     },
 
     postOrderRequest: function (masterOrderId) {
-      axios.post('/api/order/add', {
+      return axios.post('/api/order/add', {
         master_order_id: masterOrderId,
         note: ''
       })
     },
 
-    updateOrder: function () {
-      this.buttonText = 'Working...'
+    postOrderDishRequest: function (orderId, dishId, quantity) {
+      return axios.post('/api/orderdish/add', {
+        order_id: orderId,
+        dish_id: dishId,
+        quantity: quantity
+      })
+    },
 
+    addCustomerRequest: function (customer) {
       var vm = this
-      console.log(vm.customers)
+      this.postOrderRequest(this.masterOrderId)
+      .then(function (response) {
+        const orderId = response.data.id
 
-      // add, delete customer
-      // create, update, delete dish
-      // keep track of orders in store.js
-      router.push({ name: 'home', query: { success: 1 }})
+        const dishRequests = customer.dishes.map(dish => vm.postOrderDishRequest(orderId, dish.dish_id, dish.quantity))
+        axios.all(dishRequests)
+        .then(function (response) {
+          console.log(response)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+    },
+
+    updateOrderDishRequest: function (id, dishId, quantity) {
+      return axios.post('/api/orderdish/update', {
+        id: id,
+        dish_id: dishId,
+        quantity: quantity
+      })
+    },
+
+    updateOrder: function () {
+      var vm = this
+      this.buttonText = 'Working...'
+      
+      var deleteRequests = []
+      deleteRequests = deleteRequests.concat(this.removeIds.dishIds.map(id => this.deleteDishRequest(id)))
+      deleteRequests = deleteRequests.concat(this.removeIds.customerIds.map(id => this.deleteCustomerRequest(id)))
+
+      var changeRequests = []
+      changeRequests = changeRequests.concat(this.updateDishes.map(dish => this.updateOrderDishRequest(dish.id, dish.dishId, dish.quantity)))
+      changeRequests = changeRequests.concat(this.addDishes.map(dish => this.postOrderDishRequest(dish.orderId, dish.dishId, dish.quantity)))
+
+      axios.all(deleteRequests)
+      .then(function (response) {
+        axios.all(changeRequests)
+        .then(function (response) {
+          if (vm.addCustomers.length > 0) {
+            for (var i in vm.addCustomers) {
+              const customer = vm.addCustomers[i]
+              vm.addCustomerRequest(customer)
+
+              if (i == vm.addCustomers.length - 1) {
+                router.push({ name: 'home', query: { success: 1 }})
+              }
+            }
+          } else {
+            router.push({ name: 'home', query: { success: 1 }})
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      })
+      .catch(function (error) {
+        console.log(error)
+      })      
     }
   },
 
@@ -211,6 +310,7 @@ export default {
 
   created () {
     if (this.$route.params.id) {
+      this.titleText = 'Update Order #' + this.$route.params.id
       this.buttonText = 'Update'
       this.getOrder()
     }

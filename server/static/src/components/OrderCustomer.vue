@@ -8,7 +8,11 @@
       </div>
     </div>
     <div v-for="dish in customer.dishes">
-      <order-dish v-bind:dish="dish" v-on:removeDish="removeDish"></order-dish>
+      <order-dish
+        v-bind:dish="dish"
+        v-on:removeDish="removeDish"
+        v-on:changeDish="changeDish"
+      ></order-dish>
     </div>
   </div>
 </template>
@@ -31,6 +35,12 @@ export default {
       this.$emit('removeCustomer', this.customer)
     },
 
+    changeDish: function (dish) {
+      if (this.customer.id) {
+        this.$emit('changeDish', this.customer.id, dish)
+      }
+    },
+
     addDish: function () {
       var number = 0
       if (this.customer.dishes.length > 0) {
@@ -41,28 +51,14 @@ export default {
       const dish = {
         'number': number + 1,
         'dish_id': -1,
-        'quantity': 0
+        'quantity': 1
       }
       this.customer.dishes.push(dish)
     },
 
     removeDish: function (dish) {
-      if (dish.id) {
-        var vm = this
-        axios.delete('/api/orderdish/delete', {
-          params: {
-            id: dish.id
-          }
-        })
-        .then(function (response) {
-          vm.customer.dishes = vm.customer.dishes.filter(d => d.number != dish.number)
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-      } else {
-        this.customer.dishes = this.customer.dishes.filter(d => d.number != dish.number)        
-      }
+      this.$emit('removeDish', dish)
+      this.customer.dishes = this.customer.dishes.filter(d => d.number != dish.number)        
     }
   }
 }

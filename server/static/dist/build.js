@@ -24864,6 +24864,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -24882,6 +24886,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       this.$emit('removeCustomer', this.customer);
     },
 
+    changeDish: function changeDish(dish) {
+      if (this.customer.id) {
+        this.$emit('changeDish', this.customer.id, dish);
+      }
+    },
+
     addDish: function addDish() {
       var number = 0;
       if (this.customer.dishes.length > 0) {
@@ -24894,30 +24904,16 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var dish = {
         'number': number + 1,
         'dish_id': -1,
-        'quantity': 0
+        'quantity': 1
       };
       this.customer.dishes.push(dish);
     },
 
     removeDish: function removeDish(dish) {
-      if (dish.id) {
-        var vm = this;
-        __WEBPACK_IMPORTED_MODULE_0_axios___default.a.delete('/api/orderdish/delete', {
-          params: {
-            id: dish.id
-          }
-        }).then(function (response) {
-          vm.customer.dishes = vm.customer.dishes.filter(function (d) {
-            return d.number != dish.number;
-          });
-        }).catch(function (error) {
-          console.log(error);
-        });
-      } else {
-        this.customer.dishes = this.customer.dishes.filter(function (d) {
-          return d.number != dish.number;
-        });
-      }
+      this.$emit('removeDish', dish);
+      this.customer.dishes = this.customer.dishes.filter(function (d) {
+        return d.number != dish.number;
+      });
     }
   }
 };
@@ -24956,6 +24952,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   methods: {
     removeDish: function removeDish() {
       this.$emit('removeDish', this.dish);
+    },
+
+    changeDish: function changeDish() {
+      this.$emit('changeDish', this.dish);
     }
   }
 };
@@ -25304,6 +25304,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -25314,11 +25318,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
   data: function data() {
     return {
+      masterOrderId: -1,
       customers: [],
-      buttonText: 'Submit'
+      titleText: 'New Order',
+      buttonText: 'Submit',
+      removeIds: {
+        customerIds: [],
+        dishIds: []
+      },
+      addCustomers: [],
+      addDishes: [],
+      updateDishes: []
     };
   },
 
+
+  computed: {
+    readyForSubmit: function readyForSubmit() {
+      return this.customers.length == 0;
+    }
+  },
 
   components: {
     'order-customer': __WEBPACK_IMPORTED_MODULE_2__components_OrderCustomer_vue___default.a
@@ -25351,38 +25370,66 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var dish = {
         'number': number + 1,
         'dish_id': -1,
-        'quantity': 0
+        'quantity': 1
       };
       customer.dishes.push(dish);
       this.customers.push(customer);
+      this.addCustomers.push(customer);
     },
 
     removeCustomer: function removeCustomer(customer) {
       if (customer.id) {
-        var vm = this;
-        var dishRequests = customer.dishes.map(function (d) {
-          return vm.deleteDishRequest(d.id);
-        });
-        __WEBPACK_IMPORTED_MODULE_1_axios___default.a.all(dishRequests).then(function (responses) {
-          __WEBPACK_IMPORTED_MODULE_1_axios___default.a.delete('/api/order/delete', {
-            params: {
-              id: customer.id
-            }
-          }).then(function (response) {
-            vm.customers = vm.customers.filter(function (c) {
-              return c.number != customer.number;
-            });
-          }).catch(function (error) {
-            console.log(error);
+        this.removeIds.customerIds.push(customer.id);
+      }
+      this.customers = this.customers.filter(function (c) {
+        return c.number != customer.number;
+      });
+    },
+
+    changeDish: function changeDish(customerId, dish) {
+      if (!this.removeIds.customerIds.includes(customerId) && dish.dish_id != -1) {
+        if (dish.id) {
+          this.updateDishes = this.updateDishes.filter(function (d) {
+            return d.id != dish.id;
           });
-        }).catch(function (error) {
-          console.log(error);
+          this.updateDishes.push({
+            'id': dish.id,
+            'dishId': dish.dish_id,
+            'quantity': dish.quantity
+          });
+        } else {
+          this.addDishes = this.addDishes.filter(function (d) {
+            return d.number != dish.number;
+          });
+          this.addDishes.push({
+            'orderId': customerId,
+            'dishId': dish.dish_id,
+            'quantity': dish.quantity,
+            'number': dish.number
+          });
+        }
+      }
+    },
+
+    removeDish: function removeDish(dish) {
+      if (dish.id) {
+        this.removeIds.dishIds.push(dish.id);
+        this.updateDishes = this.updateDishes.filter(function (d) {
+          return d.id != dish.id;
         });
       } else {
-        this.customers = this.customers.filter(function (c) {
-          return c.number != customer.number;
+        this.addDishes = this.addDishes.filter(function (d) {
+          return d.number != dish.number;
         });
       }
+    },
+
+    deleteCustomerRequest: function deleteCustomerRequest(customerId) {
+      return __WEBPACK_IMPORTED_MODULE_1_axios___default.a.delete('/api/order/delete', {
+        params: {
+          id: customerId
+        }
+      });
     },
 
     deleteDishRequest: function deleteDishRequest(dishId) {
@@ -25402,6 +25449,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           id: orderId
         }
       }).then(function (response) {
+        vm.masterOrderId = response.data.id;
         vm.customers = response.data.orders.map(function (order) {
           var order_dishes = order.order_dishes.map(function (od) {
             return {
@@ -25436,10 +25484,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         var _loop = function _loop() {
           var customer = vm.customers[i];
 
-          __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/api/order/add', {
-            master_order_id: masterOrderId,
-            note: ''
-          }).then(function (response) {
+          vm.postOrderRequest(masterOrderId).then(function (response) {
             var orderId = response.data.id;
 
             for (var x in customer.dishes) {
@@ -25470,22 +25515,88 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     },
 
     postOrderRequest: function postOrderRequest(masterOrderId) {
-      __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/api/order/add', {
+      return __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/api/order/add', {
         master_order_id: masterOrderId,
         note: ''
       });
     },
 
+    postOrderDishRequest: function postOrderDishRequest(orderId, dishId, quantity) {
+      return __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/api/orderdish/add', {
+        order_id: orderId,
+        dish_id: dishId,
+        quantity: quantity
+      });
+    },
+
+    addCustomerRequest: function addCustomerRequest(customer) {
+      var vm = this;
+      this.postOrderRequest(this.masterOrderId).then(function (response) {
+        var orderId = response.data.id;
+
+        var dishRequests = customer.dishes.map(function (dish) {
+          return vm.postOrderDishRequest(orderId, dish.dish_id, dish.quantity);
+        });
+        __WEBPACK_IMPORTED_MODULE_1_axios___default.a.all(dishRequests).then(function (response) {
+          console.log(response);
+        }).catch(function (error) {
+          console.log(error);
+        });
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+
+    updateOrderDishRequest: function updateOrderDishRequest(id, dishId, quantity) {
+      return __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/api/orderdish/update', {
+        id: id,
+        dish_id: dishId,
+        quantity: quantity
+      });
+    },
+
     updateOrder: function updateOrder() {
-      this.buttonText = 'Working...';
+      var _this = this;
 
       var vm = this;
-      console.log(vm.customers);
+      this.buttonText = 'Working...';
 
-      // add, delete customer
-      // create, update, delete dish
-      // keep track of orders in store.js
-      __WEBPACK_IMPORTED_MODULE_0__router__["a" /* default */].push({ name: 'home', query: { success: 1 } });
+      var deleteRequests = [];
+      deleteRequests = deleteRequests.concat(this.removeIds.dishIds.map(function (id) {
+        return _this.deleteDishRequest(id);
+      }));
+      deleteRequests = deleteRequests.concat(this.removeIds.customerIds.map(function (id) {
+        return _this.deleteCustomerRequest(id);
+      }));
+
+      var changeRequests = [];
+      changeRequests = changeRequests.concat(this.updateDishes.map(function (dish) {
+        return _this.updateOrderDishRequest(dish.id, dish.dishId, dish.quantity);
+      }));
+      changeRequests = changeRequests.concat(this.addDishes.map(function (dish) {
+        return _this.postOrderDishRequest(dish.orderId, dish.dishId, dish.quantity);
+      }));
+
+      __WEBPACK_IMPORTED_MODULE_1_axios___default.a.all(deleteRequests).then(function (response) {
+        __WEBPACK_IMPORTED_MODULE_1_axios___default.a.all(changeRequests).then(function (response) {
+          if (vm.addCustomers.length > 0) {
+            for (var i in vm.addCustomers) {
+              var _customer = vm.addCustomers[i];
+              vm.addCustomerRequest(_customer);
+
+              if (i == vm.addCustomers.length - 1) {
+                __WEBPACK_IMPORTED_MODULE_0__router__["a" /* default */].push({ name: 'home', query: { success: 1 } });
+              }
+            }
+          } else {
+            __WEBPACK_IMPORTED_MODULE_0__router__["a" /* default */].push({ name: 'home', query: { success: 1 } });
+          }
+        }).catch(function (error) {
+          console.log(error);
+        });
+      }).catch(function (error) {
+        console.log(error);
+      });
     }
   },
 
@@ -25495,6 +25606,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
   created: function created() {
     if (this.$route.params.id) {
+      this.titleText = 'Update Order #' + this.$route.params.id;
       this.buttonText = 'Update';
       this.getOrder();
     } else {
@@ -25517,10 +25629,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_dragula___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_dragula__);
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-//
-//
-//
-//
 //
 //
 //
@@ -27746,21 +27854,21 @@ module.exports={render:function (){with(this) {
     }],
     staticClass: "c-input",
     on: {
-      "change": function($event) {
+      "change": [function($event) {
         dish.dish_id = Array.prototype.filter.call($event.target.options, function(o) {
           return o.selected
         }).map(function(o) {
           var val = "_value" in o ? o._value : o.value;
           return val
         })[0]
-      }
+      }, changeDish]
     }
   }, [_l((this.$store.state.dishes), function(item) {
     return _h('option', {
       domProps: {
         "value": item.id
       }
-    }, [_s(item.name) + " ($" + _s(item.price) + ")"])
+    }, [_s(item.name) + " ($" + _s(item.price.toFixed(2)) + ")"])
   })])]), " ", _h('div', {
     staticClass: "input-wrapper"
   }, [_m(1), " ", _h('input', {
@@ -27781,6 +27889,7 @@ module.exports={render:function (){with(this) {
       "value": _s(dish.quantity)
     },
     on: {
+      "change": changeDish,
       "input": function($event) {
         if ($event.target.composing) return;
         dish.quantity = _n($event.target.value)
@@ -27863,7 +27972,7 @@ module.exports={render:function (){with(this) {
     attrs: {
       "id": "order-view"
     }
-  }, [(this.$route.params.id) ? _h('h2', ["Update Order #" + _s(this.$route.params.id)]) : _h('h2', ["New Order"]), " ", " ", _h('div', {
+  }, [_h('h2', [_s(titleText)]), " ", _h('div', {
     staticClass: "customer-container"
   }, [_l((customers), function(customer) {
     return _h('div', [_h('order-customer', {
@@ -27871,7 +27980,9 @@ module.exports={render:function (){with(this) {
         "customer": customer
       },
       on: {
-        "removeCustomer": removeCustomer
+        "removeCustomer": removeCustomer,
+        "removeDish": removeDish,
+        "changeDish": changeDish
       }
     })])
   })]), " ", _h('div', {
@@ -27893,11 +28004,17 @@ module.exports={render:function (){with(this) {
     }
   }, ["Split"]) : _e(), " ", (this.$route.params.id) ? _h('button', {
     staticClass: "c-btn c-btn--primary",
+    attrs: {
+      "disabled": readyForSubmit
+    },
     on: {
       "click": updateOrder
     }
   }, [_s(buttonText)]) : _h('button', {
     staticClass: "c-btn c-btn--primary",
+    attrs: {
+      "disabled": readyForSubmit
+    },
     on: {
       "click": createOrder
     }
@@ -28136,7 +28253,8 @@ module.exports={render:function (){with(this) {
         "dish": dish
       },
       on: {
-        "removeDish": removeDish
+        "removeDish": removeDish,
+        "changeDish": changeDish
       }
     })])
   })])
@@ -28237,51 +28355,36 @@ module.exports={render:function (){with(this) {
     })])])
   })]), " ", _h('div', {
     staticClass: "sticky-footer"
-  }, [_h('div', [(numberOfCustomers < bills.length) ? _h('button', {
+  }, [_h('div', [_h('button', {
     staticClass: "c-btn c-btn--secondary",
     attrs: {
-      "disabled": ""
+      "disabled": numberOfCustomers < bills.length
     },
     on: {
       "click": addBill
     }
-  }, ["Add Bill"]) : _h('button', {
-    staticClass: "c-btn c-btn--secondary",
-    on: {
-      "click": addBill
-    }
-  }, ["Add Bill"]), " ", " ", (numberOfCustomers < bills.length) ? _h('button', {
+  }, ["Add Bill"]), " ", _h('button', {
     staticClass: "c-btn c-btn--secondary",
     attrs: {
-      "disabled": ""
+      "disabled": numberOfCustomers != bills[0].customers.length
     },
     on: {
       "click": individualBills
     }
-  }, ["Individual Bills"]) : _h('button', {
-    staticClass: "c-btn c-btn--secondary",
-    on: {
-      "click": individualBills
-    }
-  }, ["Individual Bills"]), " "]), " ", _h('div', [_h('button', {
+  }, ["Individual Bills"])]), " ", _h('div', [_h('button', {
     staticClass: "c-btn c-btn--secondary",
     on: {
       "click": back
     }
-  }, ["Back"]), " ", (bills[0].customers.length > 0) ? _h('button', {
+  }, ["Back"]), " ", _h('button', {
     staticClass: "c-btn c-btn--primary",
     attrs: {
-      "disabled": ""
+      "disabled": bills[0].customers.length > 0
     },
     on: {
       "click": splitOrders
     }
-  }, [_s(buttonText)]) : _h('button', {
-    staticClass: "c-btn c-btn--primary",
-    on: {
-      "click": splitOrders
-    }
-  }, [_s(buttonText)]), " "])])])])
+  }, [_s(buttonText)])])])])])
 }},staticRenderFns: [function (){with(this) {
   return _h('h2', ["Split"])
 }},function (){with(this) {
