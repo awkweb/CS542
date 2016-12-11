@@ -9,7 +9,9 @@
   "dependencies": {
     "axios": "^0.15.2",
     "dragula": "^3.7.2",
+    "jquery": "^3.1.1",
     "moment": "^2.16.0",
+    "selectize": "^0.12.4",
     "vue": "^2.0.5",
     "vue-router": "^2.0.1",
     "vuex": "^2.0.0"
