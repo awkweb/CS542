@@ -10,6 +10,7 @@
     <div v-for="dish in customer.dishes">
       <order-dish
         v-bind:dish="dish"
+        v-bind:customer="customer"
         v-on:removeDish="removeDish"
         v-on:changeDish="changeDish"
       ></order-dish>

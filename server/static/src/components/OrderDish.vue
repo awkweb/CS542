@@ -2,7 +2,7 @@
   <div class="customer-dish">
     <div class="input-wrapper">
         <label class="c-label">Dish</label>
-        <select v-bind:id="'select-animal-' + dish.number" v-model="dish.dish_id" placeholder="Select a dish..."></select>
+        <select v-bind:id="'select-dish-' + customer.number + '-' + dish.number" v-model="dish.dish_id" placeholder="Select a dish..."></select>
     </div>
 
     <div class="input-wrapper">
@@ -23,7 +23,7 @@ import $ from 'jquery'
 export default {
   name: 'customerDish',
 
-  props: ['dish'],
+  props: ['dish', 'customer'],
 
   methods: {
     removeDish: function () {
@@ -49,7 +49,7 @@ export default {
             }
         }
 
-        const id = '#select-animal-' + this.dish.number
+        const id = '#select-dish-' + this.customer.number + '-' + this.dish.number
         $(id).selectize({
             options: this.$store.state.dishes,
             optgroups: groups,

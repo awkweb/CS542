@@ -35094,6 +35094,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
+//
 
 
 
@@ -35178,7 +35179,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 /* harmony default export */ exports["default"] = {
     name: 'customerDish',
 
-    props: ['dish'],
+    props: ['dish', 'customer'],
 
     methods: {
         removeDish: function removeDish() {
@@ -35204,7 +35205,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 }
             }
 
-            var id = '#select-animal-' + this.dish.number;
+            var id = '#select-dish-' + this.customer.number + '-' + this.dish.number;
             __WEBPACK_IMPORTED_MODULE_1_jquery___default()(id).selectize({
                 options: this.$store.state.dishes,
                 optgroups: groups,
@@ -41964,7 +41965,7 @@ module.exports={render:function (){with(this) {
       expression: "dish.dish_id"
     }],
     attrs: {
-      "id": 'select-animal-' + dish.number,
+      "id": 'select-dish-' + customer.number + '-' + dish.number,
       "placeholder": "Select a dish..."
     },
     on: {
@@ -42358,7 +42359,8 @@ module.exports={render:function (){with(this) {
   }, ["Remove"])])]), " ", _l((customer.dishes), function(dish) {
     return _h('div', [_h('order-dish', {
       attrs: {
-        "dish": dish
+        "dish": dish,
+        "customer": customer
       },
       on: {
         "removeDish": removeDish,
