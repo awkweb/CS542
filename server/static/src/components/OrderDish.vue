@@ -190,6 +190,7 @@ input[type=number]::-webkit-outer-spin-button {
 // Selectize
 .selectize-control {
   position: relative;
+  margin-bottom: 2px;
 }
 .selectize-dropdown,
 .selectize-input,

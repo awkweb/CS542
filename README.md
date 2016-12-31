@@ -1,46 +1,73 @@
 # CS 542
 
-Fall 2016 database management systems project
+Fall 2016 database management systems project: split restaurant bills.
 
-## Development
+![Orders Dashboard](screenshots/01.png)
+
+![New Order](screenshots/02.png)
+
+![Drag & Drop Split](screenshots/03.png)
+
+![View Bill](screenshots/04.png)
+
+## Install & Setup
 
 A (somewhat) comprehensive list of commands to get started.
 
-### 1. Setup for Python and Postgres
+### 1. Create Postgres database (see [Loading Test Data](https://github.com/tmm/CS542#loading-test-data) for more)
 
-Run the following command to install all the necessary requirements to run this project. 
+### 2. Setup Python
+
 ```shell
 > virtualenv -p path/to/python3.5 CS542
 > pip install -r requirements.txt
 ```
 
-Go up a directory. When you cd back into the project, the shell should show that it is loading the .env file. Type 'y' to accept and that should automatically activate the virtual environment and set the enviornment variables.
+### 3. Add .env file
 
- We are using Postgres for our database and Alembic to migrate and update the schema. To configure the project to use a local Postgres database, open the .env file and change the DATABASE_URL as so,
-```
+```shell
 source CS542/Scripts/activate
 export APP_SETTINGS="config.DevelopmentConfig"
 export DATABASE_URL="postgresql://[username]:[password]@localhost/[dbname]"
 ```
 
-Next, you will need to migrate to update the local database's schema.
+### 4. Sync DB with Flask models
+
 ```shell
+> cd server
 > python manage.py db init
 > python manage.py db migrate
 > python manage.py db upgrade
 ```
 
-At this point the database should now be ready to use. You can check that the tables have been loaded successfully into the database by running commands like the following:
+### 5. Install NPM dependencies
+
+```shell
+> npm install
 ```
+### 6. Build & run the project
+
+```shell
+> npm run build
+> cd server
+> python manage.py runserver
+```
+
+## Loading test data
+
+At this point the database should now be ready to use. You can check that the tables have been loaded successfully into the database by running commands like the following:
+
+```shell
 > psql
 postgres=# \c [dbname]
 postgres=# \dt
 ```
+
 This should result in a list of the tables in the database. 
 
 Finally, to get some data loaded into your database, run 
 
-```
+```shell
 postgres=# COPY employee(first, last, address, phone, email, city, state, zipcode) 
 postgres=# FROM '/path/to/data/employees.csv' 
 postgres=# DELIMITER ',' CSV HEADER;
@@ -55,25 +82,6 @@ To view your sucessfully preloaded data, run
 
 ```
 postgres=# select * from employee;
-```
-
-
-### 2. Install NPM dependencies, ready for development
-
-```shell
-> npm install
-```
-
-## Build
-
-```shell
-> npm run build
-```
-
-## Run
-
-```shell
-> python server/app.py
 ```
 
 ## License
